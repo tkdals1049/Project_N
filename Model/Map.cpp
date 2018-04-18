@@ -1,0 +1,346 @@
+#include "../stdafx.h"
+#include "Map.h"
+#include "ModelMaterial.h"
+#include "ModelSkeleton.h"
+#include "ModelSkeletonBone.h"
+#include "ModelAnimationController.h"
+#include "Model.h"
+#include "../Content/BinModel.h"
+#include "../Content/FbxModel.h"
+#include "../Content/Texture.h"
+
+Map::Map():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
+{
+	SaveFile="";
+	attitude=NULL;
+	another=NULL;
+	skeletonList=NULL;
+}
+
+Map::~Map()
+{
+	for (size_t i = 0; i <models.size(); i++)
+	SAFE_DELETE(models[i]);
+}
+
+void Map::CreateFBX(wstring file)
+{
+}
+void Map::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
+{
+	if (Mouse::Get()->Down(0)&&OnModel==true)
+	{
+		if (another == NULL) 
+		Check(origin, direction);
+		else 
+		{
+			if(dot!=D3DXVECTOR2(-1,-1))
+			{
+				SetModel(another);
+			}
+		}
+	}
+	if (Keyboard::Get()->Down(VK_ESCAPE))another = NULL;
+
+}
+void Map::Update()
+{
+	for (size_t i = 0; i <models.size(); i++)
+	{
+		models[i]->Update();
+
+		for each(Weapon temp in weapons[models[i]])
+		{
+			temp.second->Update();
+
+			temp.second->SetWorld(models[i]->GetWeaponWorld(temp.first));
+		}
+	}
+
+	if (attitude != NULL)attitude->Update();
+	if (another != NULL)
+	{
+		another->SetPosition(D3DXVECTOR3(dot.x, 0, dot.y));
+		another->Update();
+	}
+}
+void Map::PostRender()
+{
+		static Model* model=NULL;
+		if (another != NULL)
+		{	
+			if(model!=another)
+			{
+				model = another;
+				D3DXVECTOR3 temp1=model->GetPosition();
+				D3DXVECTOR3 temp2=model->GetRotate();
+				D3DXVECTOR3 temp3=model->GetScale();
+				c_temp1[0] = temp1.x;c_temp1[1] = temp1.y;c_temp1[2] = temp1.z;
+				c_temp2[0] = temp2.x;c_temp2[1] = temp2.y;c_temp2[2] = temp2.z;
+				c_temp3[0] = temp3.x;c_temp3[1] = temp3.y;c_temp3[2] = temp3.z;
+			}
+		}
+		else if (attitude != NULL)
+		{
+			if (model != attitude)
+			
+			{
+				model = attitude;
+				D3DXVECTOR3 temp1 = model->GetPosition();
+				D3DXVECTOR3 temp2 = model->GetRotate();
+				D3DXVECTOR3 temp3 = model->GetScale();
+				c_temp1[0] = temp1.x;c_temp1[1] = temp1.y;c_temp1[2] = temp1.z;
+				c_temp2[0] = temp2.x;c_temp2[1] = temp2.y;c_temp2[2] = temp2.z;
+				c_temp3[0] = temp3.x;c_temp3[1] = temp3.y;c_temp3[2] = temp3.z;
+			}
+		}
+
+	ImGui::Begin("Editor");
+	OnModel = ImGui::CollapsingHeader("Model");
+	if (OnModel)
+	{
+		static int curModel = 0, preModel = 0;
+		if (curModel != preModel)
+		{
+			MoLoader::LoadBinary(BinModel::Get()->GetBinModelPath(curModel), &another);
+			another->Reset();
+			preModel=curModel;
+		}
+
+		string str="";
+		if(model!=NULL)str=model->GetFile();
+		ImGui::InputText("Model Name",(char*)str.c_str(),str.size());
+
+		ImGui::ListBox("", &curModel, BinModel::Get()->GetBinmodelList(), BinModel::Get()->GetBinmodelPathSize(), 4);
+		if (ImGui::Button("Refresh", ImVec2(60, 20)))
+		{
+			BinModel::Get()->Refresh();
+		}
+
+		ImGui::Separator();
+
+		if(model!=NULL)
+		{
+			ImGui::PushItemWidth(300);
+
+			ImGui::LabelText("", "x");ImGui::SameLine(110);
+			ImGui::LabelText("", "y");ImGui::SameLine(210);
+			ImGui::LabelText("", "z");
+
+			ImGui::InputFloat3("Position",c_temp1,1);
+			ImGui::InputFloat3("Rotate", c_temp2, 1);
+			ImGui::InputFloat3("Scale", c_temp3,  1);
+
+			ImGui::PopItemWidth();
+
+			ImGui::InputText("", (char*)SaveFile.c_str(), IM_ARRAYSIZE(SaveFile.c_str()));ImGui::SameLine();
+			if (ImGui::Button("Save", ImVec2(40, 20)))
+			{	
+			if(SaveFile!="")
+				MoLoader::WriteBinary("..\\_Contents\\BinModels\\"+SaveFile, model);
+			}
+			if (ImGui::Button("Enter", ImVec2(40, 20)))
+			{
+				model->SetPosition(D3DXVECTOR3(c_temp1));
+				model->SetRotate(D3DXVECTOR3(c_temp2));
+				model->SetScale(D3DXVECTOR3(c_temp3));
+			}
+			ImGui::InputFloat("input float", &a);
+		}
+	}
+
+	static bool OnMaterial=false;
+	OnMaterial = ImGui::CollapsingHeader("Material");
+	if (OnMaterial)
+	{
+		if(model!=NULL)
+		{
+			int num=model->GetMaterialCount();
+			ImGui::Columns(2, "mycolumns"); // 4-ways, with border
+			ImGui::Separator();
+			ImGui::Text("Name"); ImGui::NextColumn();
+			ImGui::Text("Path"); ImGui::NextColumn();
+			ImGui::Separator();
+
+			for (int i = 0; i < num; i++)
+			{
+				ModelMaterial* material=model->GetMaterial(i);
+				ImGui::Text(material->GetName().c_str()); ImGui::NextColumn();
+				ImGui::Text(material->GetDiffuseFile().c_str()); ImGui::NextColumn();
+			}
+			ImGui::Columns(1);
+			ImGui::Separator();
+
+			static int curTexture = 0, textureNum = 0;
+
+			ImGui::InputInt("Texture Number", (int *)&textureNum);
+			ImGui::ListBox("Texture List", &curTexture, Texture::Get()->GetTextureList(), Texture::Get()->GetTexturePathSize(), 4);
+			ImGui::SameLine();
+			if (ImGui::Button("Change"))
+			{
+				if (textureNum >= 0 && textureNum < num)
+				{
+					model->MakeMaterial(textureNum, Texture::Get()->GetTexturePath(curTexture));
+
+				}
+			}
+
+		}
+	}
+
+	static bool OnSkeleton = false;
+	OnSkeleton = ImGui::CollapsingHeader("Skeleton");
+	if (OnSkeleton)
+	{
+			static int curModel = 0, curSkeleton = 0;
+
+			ImGui::PushItemWidth(200);
+			ImGui::ListBox("1", &curModel, BinModel::Get()->GetBinmodelList(), BinModel::Get()->GetBinmodelPathSize(), 8);ImGui::SameLine();
+			if (model != NULL&&another==NULL)if(attitude->GetSkeleton()->GetBoneCount()>=1)ImGui::ListBox("2", &curSkeleton, skeletonList, attitude->GetSkeleton()->GetBoneCount(), 8);
+			ImGui::PopItemWidth();
+
+			if (ImGui::Button("equip"))
+			{
+				Model* temp=NULL;
+				MoLoader::LoadBinary(BinModel::Get()->GetBinModelPath(curModel),&temp);
+				if (model != NULL&&another == NULL)AddWeaponVector(model,skeletonList[curSkeleton],temp);
+			}
+	}
+
+
+	static bool OnAni = false;
+	OnAni = ImGui::CollapsingHeader("Animation");
+	if (OnAni)
+	{
+			static int curModel = 0, curSkeleton = 0;
+
+			ImGui::PushItemWidth(200);
+			ImGui::ListBox("Ani List", &curModel, FbxModel::Get()->GetFbxModelList(), FbxModel::Get()->GetFbxModelSize(), 8);
+			static char aniName[100] = "";
+			ImGui::InputText("Ani Name", aniName, IM_ARRAYSIZE(aniName));ImGui::SameLine();
+			static float speed=1.0f;
+			ImGui::InputFloat("Speed",&speed,0.1f,1.0f);
+			static int root=0;
+			ImGui::InputInt("Root",&root);
+
+			ImGui::PopItemWidth();
+
+			if (model != NULL&&another == NULL)
+			{
+				if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName,speed,root);ImGui::SameLine();
+				if (ImGui::Button("AniPlay "))model->GetAnimationController()->Play();ImGui::SameLine();
+				if (ImGui::Button("AniStop "))model->GetAnimationController()->Stop();ImGui::SameLine();
+				if (ImGui::Button("AniPause "))model->GetAnimationController()->Pause();
+
+				static int aniCount = 0;
+				int curCount=model->GetAnimationController()->GetAnimationCount();
+				ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
+				ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
+				if (ImGui::Button("AniChange "))model->AniChage(aniCount);
+				static int lines = 0, size=0;
+				size=model->GetAnimationController()->GetCurrentAnimationCount();
+				lines=model->GetAnimationController()->GetCurrentKeyFrame();
+				ImGui::SliderInt("Number of lines", &lines, 0, size);
+				model->GetAnimationController()->SetCurrentKeyFrame(lines);
+			}
+	}
+
+	ImGui::End();
+}
+void Map::Render()
+{
+	for (size_t i = 0; i <models.size(); i++)
+	{
+		models[i]->Render();
+
+		for each(Weapon temp in weapons[models[i]])
+		{
+			temp.second->Render();
+		}
+
+	}
+	if (attitude != NULL)attitude->Render();
+	if (another != NULL)another->Render();
+}
+
+void Map::SetModel(Model* another)
+{
+	Model* model = NULL;
+	MoLoader::LoadBinary(another->GetFile(), &model);
+	model->SetPosition(another->GetPosition());
+	model->SetRotate(another->GetRotate());
+	model->SetScale(another->GetScale());
+	model->Reset();
+
+	for(size_t i=0;i<another->GetMaterialCount();i++)
+	{
+		model->MakeMaterial(i,another->GetMaterial(i)->GetDiffuseFile());
+	}
+
+	models.push_back(model);
+}
+
+void Map::SetModel()
+{
+	Model* model = NULL;
+	MoLoader::LoadBinary(attitude->GetFile(), &model);
+	model->SetPosition(attitude->GetPosition());
+	model->SetRotate(attitude->GetRotate());
+	model->SetScale(attitude->GetScale());
+	model->Reset();
+
+	for (size_t i = 0;i<attitude->GetMaterialCount();i++)
+	{
+		model->MakeMaterial(i, attitude->GetMaterial(i)->GetDiffuseFile());
+	}
+
+	models.push_back(model);
+}
+
+Model * Map::GetModel() 
+{ 
+	return models[models.size() - 1]; 
+}
+
+void Map::AddWeaponVector(Model * model, string weaponName, Model * weaponFile)
+{	
+	weapons[model].push_back(Weapon(weaponName,weaponFile));
+}
+
+void Map::SetAttitude(Model * model)
+{
+	attitude=model;
+}
+
+Model * Map::GetAttitude()
+{
+	return attitude;
+}
+
+void Map::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
+{
+	for (size_t i = 0; i <models.size(); i++)
+	{
+		if(models[i]->Check(origin,direction))
+		{
+		if(attitude!=models[i])
+		{
+		SetAttitude(models[i]);
+		if(attitude->GetSkeleton()!=NULL)
+		{
+			int num=attitude->GetSkeleton()->GetBoneCount();
+			skeletonList = new const char*[num];
+			for (size_t i = 0; i < num; i++)
+			{
+				ModelSkeletonBone* bone= attitude->GetSkeleton()->GetSkeletonBone(i);
+				skeletonList[i] = new char[bone->GetName().size() + 1];
+				strcpy_s((char*)skeletonList[i], bone->GetName().size() + 1, bone->GetName().c_str());
+			}
+		}
+		different=true;
+		}
+		return;
+		}
+	}
+
+}

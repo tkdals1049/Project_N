@@ -1,0 +1,344 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="Program.cpp" />
+    <ClCompile Include="Environment\Sky.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExeModel.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ExeGui.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Plane.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\States.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\VertexLayouts.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\RenderTarget.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\Shader.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Time.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Window.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\D3D.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Keyboard.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\Mouse.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\Mesh.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\String.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\BinaryFile.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Camera.cpp">
+      <Filter>Viewer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\FirstPerson.cpp">
+      <Filter>Viewer\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Orthographic.cpp">
+      <Filter>Viewer\view</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Perspective.cpp">
+      <Filter>Viewer\view</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\Viewport.cpp">
+      <Filter>Viewer\view</Filter>
+    </ClCompile>
+    <ClCompile Include="Meshes\Brush.cpp">
+      <Filter>Meshes</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\Texture.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\BinModel.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\FbxModel.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelAnimation.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelAnimationController.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelAnimationKeyFrames.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelBoneWeights.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMaterial.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelMesh.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelSkeleton.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelSkeletonBone.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoAnimation.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoAnimationController.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoBoneWeights.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoKeyFrame.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoLoader.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoMaterial.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoModel.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoModelMesh.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoSkeleton.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="FbxModel\MoSkeletonBone.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Map.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="Program.h" />
+    <ClInclude Include="Environment\Sky.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExeGui.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ExeModel.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\Execute.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Plane.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\ShaderBuffer.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\States.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\VertexLayouts.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\GlobalBuffers.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\RenderTarget.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\Shader.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Mouse.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Time.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Window.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\D3D.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\Keyboard.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Mesh.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\String.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\BinaryFile.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\FirstPerson.h">
+      <Filter>Viewer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Camera.h">
+      <Filter>Viewer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Orthographic.h">
+      <Filter>Viewer\view</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Perspective.h">
+      <Filter>Viewer\view</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\Viewport.h">
+      <Filter>Viewer\view</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\Brush.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Meshes\BrushBuffer.h">
+      <Filter>Meshes</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\Texture.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\BinModel.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\FbxModel.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BoneBuffer.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Model.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelAnimation.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelAnimationController.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelAnimationKeyFrames.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelBoneWeights.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelBuffer.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMaterial.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelMesh.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelSkeleton.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelSkeletonBone.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoAnimation.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoAnimationController.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoBoneWeights.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MokeyFrame.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoLoader.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoMaterial.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoModel.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoModelMesh.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoModelUtility.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoSkeleton.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="FbxModel\MoSkeletonBone.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Map.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Environment">
+      <UniqueIdentifier>{5613a10d-4085-4f58-8ee8-bd3579495a9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Executes">
+      <UniqueIdentifier>{44c15cce-ed7c-4047-ab8e-f1635064071c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{a97c5022-e1b3-4514-99a9-a984c5a6a9bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renders">
+      <UniqueIdentifier>{5be0f9c7-b904-4b82-820a-77e3eb6f12d0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{9c469bf1-057e-4609-ae4d-839800a066a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{b2508bbd-a7c6-4233-84af-20192f5f2b54}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer">
+      <UniqueIdentifier>{d20a44cf-42aa-4551-9ca7-b06dd5ced8cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Meshes">
+      <UniqueIdentifier>{35c364a5-a140-40bc-80d3-c768e621ba7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\BinModel">
+      <UniqueIdentifier>{1ac8c0a9-91d3-4369-94e4-8754a8e07306}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\FbxModel">
+      <UniqueIdentifier>{72e0f56d-18f7-4aca-8591-f86f90e66f9d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\Camera">
+      <UniqueIdentifier>{3ac98c3b-7def-413d-ad55-df9cbd670927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Viewer\view">
+      <UniqueIdentifier>{f0fa037d-c194-437f-989f-9fab4ef020e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Content">
+      <UniqueIdentifier>{c1fa11b6-4f3f-4578-a1a7-d8b582779061}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
