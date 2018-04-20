@@ -6,6 +6,8 @@
 #include "../Model/Map.h"
 #include "../Environment/Sky.h"
 #include "../Meshes/Plane.h"
+#include "../FbxModel/MoLoader.h"
+#include "../Utilities/Path.h"
 
 ExeModel::ExeModel(ExecuteValues* values)
 	: Execute(values)
@@ -16,7 +18,7 @@ ExeModel::ExeModel(ExecuteValues* values)
 	Texture::Get();
 	BinModel::Get();
 	FbxModel::Get();
-
+	model= new Model();
 	sky = new Sky();
 	plane = new Plane();
 	map=new Map();
@@ -25,6 +27,7 @@ ExeModel::ExeModel(ExecuteValues* values)
 
 ExeModel::~ExeModel()
 {
+	SAFE_DELETE(model);
 	SAFE_DELETE(plane);
 	SAFE_DELETE(sky);
 }
@@ -62,35 +65,12 @@ void ExeModel::PostRender()
 		{
 			if (ImGui::MenuItem("Convert", "Ctrl+C")) 
 			{
-				char szFile[256];
-				//API file dialog
-				OPENFILENAMEA ofn;
-				ZeroMemory(&ofn, sizeof(ofn));
-				ofn.lStructSize = sizeof(ofn);
-				ofn.hwndOwner = NULL;
-				ofn.lpstrFile = szFile;
-				ofn.lpstrFile[0] = '\0';
-				ofn.nMaxFile = sizeof(szFile);
-				ofn.lpstrFilter = "All\0*.*\0Map\0*.map\0";
-				ofn.nFilterIndex = 1;
-				ofn.lpstrFileTitle = NULL;
-				ofn.nMaxFileTitle = 0;
-				ofn.lpstrInitialDir = NULL;
-				ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
-				BOOL ret = GetOpenFileNameA(&ofn);
-
-				D3DDesc desc;
-				D3D::GetDesc(&desc);
-				if (ret) {
-					string str= ofn.lpstrTitle;
-					MessageBox(desc.Handle,String::StringToWString(str).c_str(),L"aaa",MB_OK);
-					// load map and enter training mode
-				}
-
+				OpenConvertDialog();
 			}
 
 			ImGui::Separator();
-			if (ImGui::MenuItem("Open", "Ctrl+O"));
+			if (ImGui::MenuItem("Open", "Ctrl+O"))
+				OpenModelDialog();
 
 			ImGui::EndMenu();
 		}//if(BeiginMenu)
@@ -142,69 +122,69 @@ void ExeModel::GetRay(D3DXVECTOR3 * origin, D3DXVECTOR3 * direction)
 	*direction = dir;
 }
 
-//void ExeModel::OpenConvertDialog(wstring file)
-//{
-//	D3DDesc desc;
-//	D3D::GetDesc(&desc);
-//
-//	if (file.length() < 1)
-//	{
-//		function<void(wstring)> func = bind(&ExeModel::OpenConvertDialog, this, placeholders::_1);
-//		Path::OpenFileDialog(L"", Path::FbxModelFilter, FbxModels, func, desc.Handle);
-//	}
-//	else
-//	{
-//		selectedFbxFile = file;
-//		{
-//			wstring fileName = Path::GetFileNameWithoutExtension(file);
-//
-//			function<void(wstring)> func = bind(&ExeModel::Convert, this, placeholders::_1);
-//			Path::SaveFileDialog(fileName, Path::BinModelFilter, BinModels, func, desc.Handle);
-//		}
-//		selectedFbxFile = L"";
-//	}
-//}
-//
-//void ExeModel::Convert(wstring file)
-//{
-//	if (selectedFbxFile.length() < 1)
-//		return;
-//
-//	wstring saveFile = file + L".model";
-//	FbxLoader::Convert(selectedFbxFile, saveFile);
-//
-//	D3DDesc desc;
-//	D3D::GetDesc(&desc);
-//	MessageBox(desc.Handle, L"변환 완료!", L"성공", MB_OK);
-//}
-//
-//void ExeModel::OpenModelDialog(wstring file)
-//{
-//	if (file.length() < 1)
-//	{
-//		D3DDesc desc;
-//		D3D::GetDesc(&desc);
-//
-//		function<void(wstring)> func = bind(&ExeModel::OpenModelDialog, this, placeholders::_1);
-//		Path::OpenFileDialog(L"", Path::BinModelFilter, BinModels, func, desc.Handle);
-//	}
-//	else
-//	{
-//		SAFE_DELETE(model);
-//
-//
-//		loadThread = new thread([&](wstring fileName)
-//		{
-//			isLoaded = false;
-//
-//			FbxLoader::LoadBinary(fileName, &model);
-//			isLoaded = true;
-//		}, file);
-//
-//	}
-//}
-//
-//void ExeModel::OpenModelFile(wstring file)
-//{
-//
-//}
+void ExeModel::OpenConvertDialog(wstring file)
+{
+	D3DDesc desc;
+	D3D::GetDesc(&desc);
+
+	if (file.length() < 1)
+	{
+		function<void(wstring)> func = bind(&ExeModel::OpenConvertDialog, this, placeholders::_1);
+		Path::OpenFileDialog(L"", Path::FbxModelFilter, FbxModels, func, desc.Handle);
+	}
+	else
+	{
+		selectedFbxFile = file;
+		{
+			wstring fileName = Path::GetFileNameWithoutExtension(file);
+
+			function<void(wstring)> func = bind(&ExeModel::Convert, this, placeholders::_1);
+			Path::SaveFileDialog(fileName, Path::BinModelFilter, BinModels, func, desc.Handle);
+		}
+		selectedFbxFile = L"";
+	}
+}
+
+void ExeModel::Convert(wstring file)
+{
+	if (selectedFbxFile.length() < 1)
+		return;
+
+	wstring saveFile = file + L".model";
+	MoLoader::Convert(String::WStringToString(selectedFbxFile), String::WStringToString(saveFile));
+
+	D3DDesc desc;
+	D3D::GetDesc(&desc);
+	MessageBox(desc.Handle, L"변환 완료!", L"성공", MB_OK);
+}
+
+void ExeModel::OpenModelDialog(wstring file)
+{
+	if (file.length() < 1)
+	{
+		D3DDesc desc;
+		D3D::GetDesc(&desc);
+
+		function<void(wstring)> func = bind(&ExeModel::OpenModelDialog, this, placeholders::_1);
+		Path::OpenFileDialog(L"", Path::BinModelFilter, BinModels, func, desc.Handle);
+	}
+	else
+	{
+		SAFE_DELETE(model);
+
+
+		loadThread = new thread([&](wstring fileName)
+		{
+			isLoaded = false;
+
+			MoLoader::LoadBinary(String::WStringToString(fileName), &model);
+			isLoaded = true;
+		}, file);
+
+	}
+}
+
+void ExeModel::OpenModelFile(wstring file)
+{
+
+}

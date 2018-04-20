@@ -12,6 +12,7 @@
 #include <vector>
 #include <list>
 #include <map>
+#include <thread>
 #include <functional>
 #include <iostream>
 using namespace std;
@@ -52,8 +53,9 @@ using namespace fbxsdk;
 #define UINT unsigned int
 
 const wstring Contents = L"../_Contents/";
+const wstring BinModels = L"../_Contents/BinModels/";
+const wstring FbxModels = L"../_Contents/FbxModels/";
 const wstring Shaders = L"../_Shaders/";
-
 #include "./Systems/D3D.h"
 #include "./Systems/Keyboard.h"
 #include "./Systems/Mouse.h"
@@ -68,6 +70,7 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Viewer/Camera.h"
 
 #include "./Utilities/BinaryFile.h"
+#include "./Utilities/Path.h"
 #include "./Utilities/String.h"
 
 #include "./Model/Model.h"

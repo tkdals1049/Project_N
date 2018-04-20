@@ -139,6 +139,9 @@
     <ClCompile Include="Viewer\FirstPerson.cpp">
       <Filter>Viewer\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Utilities\Path.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h" />
@@ -286,6 +289,9 @@
     </ClInclude>
     <ClInclude Include="Viewer\FirstPerson.h">
       <Filter>Viewer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\Path.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

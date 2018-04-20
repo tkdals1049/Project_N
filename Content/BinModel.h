@@ -13,6 +13,7 @@ class BinModel
 	UINT GetBinmodelPathSize() { return binmodelList.size(); }
 
 	private:
+
 	static BinModel* instance;
 	struct BinModelList
 	{

@@ -66,6 +66,7 @@
     <ClCompile Include="Systems\Window.cpp" />
     <ClCompile Include="Utilities\BinaryFile.cpp" />
     <ClCompile Include="Utilities\Mesh.cpp" />
+    <ClCompile Include="Utilities\Path.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
     <ClCompile Include="Viewer\Camera.cpp" />
     <ClCompile Include="Viewer\FirstPerson.cpp" />
@@ -124,6 +125,7 @@
     <ClInclude Include="Systems\Window.h" />
     <ClInclude Include="Utilities\BinaryFile.h" />
     <ClInclude Include="Utilities\Mesh.h" />
+    <ClInclude Include="Utilities\Path.h" />
     <ClInclude Include="Utilities\String.h" />
     <ClInclude Include="Viewer\Camera.h" />
     <ClInclude Include="Viewer\FirstPerson.h" />
