@@ -37,7 +37,7 @@ public:
 
 	void Update();
 	void Render();
-	void PostRender();
+	void PostRender(bool& isUse);
 
 	D3DXVECTOR2 GetDot() { return dot; }
 	void SetSample(int num);

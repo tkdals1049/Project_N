@@ -12,7 +12,7 @@ public:
 	void CreateFBX(wstring file);
 	void PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Update();
-	void PostRender();
+	void PostRender(bool& isUse);
 	void Render();
 
 	void SetDot(D3DXVECTOR2 dot){this->dot=dot;}

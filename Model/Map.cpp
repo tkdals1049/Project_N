@@ -64,7 +64,7 @@ void Map::Update()
 		another->Update();
 	}
 }
-void Map::PostRender()
+void Map::PostRender(bool& isUse)
 {
 		static Model* model=NULL;
 		if (another != NULL)
@@ -95,7 +95,7 @@ void Map::PostRender()
 			}
 		}
 
-	ImGui::Begin("Model");
+	ImGui::Begin("Model",&isUse);
 	OnModel = ImGui::CollapsingHeader("Model");
 	if (OnModel)
 	{

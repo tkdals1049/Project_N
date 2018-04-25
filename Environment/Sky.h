@@ -26,7 +26,7 @@ public:
 
 	void Update(Camera* camera);
 	void Render();
-	void PostRender();
+	void PostRender(bool& isUse);
 
 private:
 	typedef Vertex VertexType;

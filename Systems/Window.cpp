@@ -59,9 +59,9 @@ WPARAM Window::Run()
 				ImGui::SetNextWindowSize(ImVec2(100, 0));
 				ImGui::SetNextWindowBgAlpha(0);
 
-				ImGui::Begin("Fps Window", NULL, flag);
-				ImGui::Text("Fps %d", (int)ImGui::GetIO().Framerate);
-				ImGui::End();
+				//ImGui::Begin("Fps Window", NULL, flag);
+				//ImGui::Text("Fps %d", (int)ImGui::GetIO().Framerate);
+				//ImGui::End();
 
 
 				program->Render();

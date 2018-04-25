@@ -114,9 +114,9 @@ void Sky::Render()
 	States::SetDepthStencil(depthOnState);
 }
 
-void Sky::PostRender()
+void Sky::PostRender(bool& isUse)
 {
-	ImGui::Begin("Enviroment");
+	ImGui::Begin("Enviroment",&isUse);
 	if (ImGui::CollapsingHeader("Sky"))
 	{
 		ImGui::ColorEdit3("Center", (float *)&skyBuffer->Data.Center);

@@ -10,7 +10,7 @@
 #include "../Utilities/Path.h"
 
 ExeModel::ExeModel(ExecuteValues* values)
-	: Execute(values)
+	: Execute(values),isEnviroment(false),isModel(false)
 {
 	D3DDesc desc;
 	D3D::GetDesc(&desc);
@@ -23,6 +23,25 @@ ExeModel::ExeModel(ExecuteValues* values)
 	plane = new Plane();
 	map=new Map();
 	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
+
+
+	//_finddata_t fd;
+	//long handle;
+	//int result = 1;
+	//handle = _findfirst("..\\_Contents\\FbxModels\\*.fbx", &fd);  //현재 폴더 내 모든 파일을 찾는다.
+	//if (handle == -1)return;
+	//UINT num = 0;
+	//while (result != -1)
+	//{
+	//	string name = fd.name;
+	//	selectedFbxFile = L"..\\_Contents\\FbxModels\\"+String::StringToWString(fd.name);
+	//	string name2= name.substr(0, name.find_last_of('.'));
+	//	wstring file = L"..\\_Contents\\BinModels\\" + String::StringToWString(name.substr(0, name.find_last_of('.')));
+	//	Convert(file);
+	//
+	//	result = _findnext(handle, &fd);
+	//}
+	//_findclose(handle);
 }
 
 ExeModel::~ExeModel()
@@ -74,13 +93,32 @@ void ExeModel::PostRender()
 
 			ImGui::EndMenu();
 		}//if(BeiginMenu)
+		if (ImGui::BeginMenu("Tool"))
+		{
+			if (ImGui::MenuItem("Convert", "Ctrl+C"))
+			{
+				isEnviroment=!isEnviroment;
+			}
 
+			ImGui::Separator();
+			if (ImGui::MenuItem("Open", "Ctrl+O"))
+			{
+				isModel=!isModel;
+			}
+
+			ImGui::EndMenu();
+		}
 		ImGui::EndMainMenuBar();
 	}
-
-	sky->PostRender();
-	plane->PostRender();
-	map->PostRender();
+	if(isEnviroment==true)
+	{
+	sky->PostRender(isEnviroment);
+	plane->PostRender(isEnviroment);
+	}
+	if(isModel)
+	{
+	map->PostRender(isModel);
+	}
 }
 
 void ExeModel::ResizeScreen()
@@ -155,7 +193,7 @@ void ExeModel::Convert(wstring file)
 
 	D3DDesc desc;
 	D3D::GetDesc(&desc);
-	MessageBox(desc.Handle, L"변환 완료!", L"성공", MB_OK);
+	//MessageBox(desc.Handle, L"변환 완료!", L"성공", MB_OK);
 }
 
 void ExeModel::OpenModelDialog(wstring file)

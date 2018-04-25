@@ -36,6 +36,6 @@ private:
 	Model* model;
 	wstring selectedFbxFile;
 
-	bool isLoaded;
+	bool isLoaded,isEnviroment,isModel;
 	thread* loadThread;
 };

@@ -137,9 +137,9 @@ void Plane::Render()
 	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
 }
 
-void Plane::PostRender()
+void Plane::PostRender(bool& isUse)
 {
-	ImGui::Begin("Enviroment");
+	ImGui::Begin("Enviroment",&isUse);
 	brush->brushOn= ImGui::CollapsingHeader("Plane");
 	if (brush->brushOn)
 	{
