@@ -95,7 +95,7 @@ void Map::PostRender()
 			}
 		}
 
-	ImGui::Begin("Editor");
+	ImGui::Begin("Model");
 	OnModel = ImGui::CollapsingHeader("Model");
 	if (OnModel)
 	{

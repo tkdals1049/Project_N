@@ -116,7 +116,7 @@ void Sky::Render()
 
 void Sky::PostRender()
 {
-	ImGui::Begin("Editor");
+	ImGui::Begin("Enviroment");
 	if (ImGui::CollapsingHeader("Sky"))
 	{
 		ImGui::ColorEdit3("Center", (float *)&skyBuffer->Data.Center);

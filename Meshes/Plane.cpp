@@ -139,7 +139,7 @@ void Plane::Render()
 
 void Plane::PostRender()
 {
-	ImGui::Begin("Editor");
+	ImGui::Begin("Enviroment");
 	brush->brushOn= ImGui::CollapsingHeader("Plane");
 	if (brush->brushOn)
 	{
