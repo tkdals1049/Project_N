@@ -47,7 +47,7 @@ void FbxModel::Search(string path)
 		{
 			if(name!="."&&name!="..")
 			{
-				if (strstr(fd.name, "fbx"))
+				if (strstr(fd.name, "fbx")|| strstr(fd.name, "FBX"))
 				{
 					FbxModelList list;
 					list.file=name;

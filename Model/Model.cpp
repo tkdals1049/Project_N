@@ -44,6 +44,7 @@ Model::~Model()
 void Model::Update()
 {
 	AnotherUpdate();
+	
 	SetWorld();
 
 
@@ -86,7 +87,7 @@ void Model::AnotherUpdate()
 			{
 				skeleton->UpdateAnimation(animationController,root);
 			}
-			UpdateAnimation();
+			//UpdateAnimation();
 		}
 	}
 
@@ -136,6 +137,7 @@ void Model::AddAni(string file,string mode, float speed, int root)
 
 	animationController->SetCurrentAnimation(animationController->GetAnimationCount() - 1);
 	animationController->Play();
+
 }
 void Model::AniChage(int num)
 {
@@ -184,8 +186,6 @@ void Model::ProcessAnimations()
 {
 	FbxNode* rootNode = scene->GetRootNode();
 	if (rootNode == NULL) return;
-
-	string test = rootNode->GetName();
 	float frameRate = (float)FbxTime::GetFrameRate(scene->GetGlobalSettings().GetTimeMode());
 
 	FbxArray<FbxString *> takeArray;
@@ -230,7 +230,6 @@ void Model::ProcessAnimation(FbxNode * node, string takeName, float frameRate, f
 		{
 			if (skeleton != NULL)
 			{
-				string test = node->GetName();
 				ModelSkeletonBone* bone = skeleton->FindBone(node->GetName());
 
 				if (bone != NULL)

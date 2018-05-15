@@ -61,6 +61,8 @@ MoModel * MoLoader::Load(string file)
 	bool check = importer->Initialize(file.c_str(), -1, ios);
 	assert(check == true);
 
+
+
 	importer->Import(scene);
 	converter = new FbxGeometryConverter(manager);
 	{

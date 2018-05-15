@@ -13,7 +13,9 @@ public:
 	void SetName(string name) { this->name = name; }
 
 	string GetName() const { return name; }
-	int GetKeyFrames() const { return keyFrame; }
+	int GetKeyFrames() const { 
+	return keyFrame;
+	}
 
 	float GetFrameRate() const { return frameRate; }
 	void SetFrameRate(float frameRate) { this->frameRate = frameRate; }

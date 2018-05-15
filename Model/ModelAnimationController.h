@@ -46,7 +46,7 @@ public:
 private:
 	AnimationMode animationMode; /// 재생 모드
 	ModelAnimation* currentAnimation; /// 현재 Animation
-	ModelAnimation* prevAnimation; /// 현재 Animation
+	ModelAnimation* prevAnimation; /// 전 Animation
 
 	typedef pair<string, ModelAnimation *> Pair;
 	vector<Pair> animations; /// Animation 벡터

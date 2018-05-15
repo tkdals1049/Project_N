@@ -95,13 +95,13 @@ void ExeModel::PostRender()
 		}//if(BeiginMenu)
 		if (ImGui::BeginMenu("Tool"))
 		{
-			if (ImGui::MenuItem("Convert", "Ctrl+C"))
+			if (ImGui::MenuItem("Envireoment", "Ctrl+E"))
 			{
 				isEnviroment=!isEnviroment;
 			}
 
 			ImGui::Separator();
-			if (ImGui::MenuItem("Open", "Ctrl+O"))
+			if (ImGui::MenuItem("Model", "Ctrl+M"))
 			{
 				isModel=!isModel;
 			}

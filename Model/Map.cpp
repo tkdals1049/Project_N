@@ -45,6 +45,7 @@ void Map::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 }
 void Map::Update()
 {
+
 	for (size_t i = 0; i <models.size(); i++)
 	{
 		models[i]->Update();
@@ -183,6 +184,10 @@ void Map::PostRender(bool& isUse)
 					model->MakeMaterial(textureNum, Texture::Get()->GetTexturePath(curTexture));
 
 				}
+			}		
+			if (ImGui::Button("Refresh", ImVec2(60, 20)))
+			{
+				Texture::Get()->Refresh();
 			}
 
 		}
@@ -216,6 +221,12 @@ void Map::PostRender(bool& isUse)
 
 			ImGui::PushItemWidth(200);
 			ImGui::ListBox("Ani List", &curModel, FbxModel::Get()->GetFbxModelList(), FbxModel::Get()->GetFbxModelSize(), 8);
+			if (ImGui::Button("Refresh", ImVec2(60, 20)))
+			{
+				FbxModel::Get()->Refresh();
+			}
+
+			ImGui::Separator();
 			static char aniName[100] = "";
 			ImGui::InputText("Ani Name", aniName, IM_ARRAYSIZE(aniName));ImGui::SameLine();
 			static float speed=1.0f;
@@ -227,21 +238,24 @@ void Map::PostRender(bool& isUse)
 
 			if (model != NULL&&another == NULL)
 			{
-				if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName,speed,root);ImGui::SameLine();
-				if (ImGui::Button("AniPlay "))model->GetAnimationController()->Play();ImGui::SameLine();
-				if (ImGui::Button("AniStop "))model->GetAnimationController()->Stop();ImGui::SameLine();
-				if (ImGui::Button("AniPause "))model->GetAnimationController()->Pause();
-
-				static int aniCount = 0;
-				int curCount=model->GetAnimationController()->GetAnimationCount();
-				ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
-				ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
-				if (ImGui::Button("AniChange "))model->AniChage(aniCount);
-				static int lines = 0, size=0;
-				size=model->GetAnimationController()->GetCurrentAnimationCount();
-				lines=model->GetAnimationController()->GetCurrentKeyFrame();
-				ImGui::SliderInt("Number of lines", &lines, 0, size);
-				model->GetAnimationController()->SetCurrentKeyFrame(lines);
+				if(model->GetAnimationController()!=NULL)
+				{
+					if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName,speed,root);ImGui::SameLine();
+					if (ImGui::Button("AniPlay "))model->GetAnimationController()->Play();ImGui::SameLine();
+					if (ImGui::Button("AniStop "))model->GetAnimationController()->Stop();ImGui::SameLine();
+					if (ImGui::Button("AniPause "))model->GetAnimationController()->Pause();
+					//
+					//static int aniCount = 0;
+					//int curCount=model->GetAnimationController()->GetAnimationCount();
+					//ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
+					//ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
+					//if (ImGui::Button("AniChange "))model->AniChage(aniCount);
+					//static int lines = 0, size=0;
+					////size=model->GetAnimationController()->GetCurrentAnimationCount();
+					//lines=model->GetAnimationController()->GetCurrentKeyFrame();
+					//ImGui::SliderInt("Number of lines", &lines, 0, size);
+					//model->GetAnimationController()->SetCurrentKeyFrame(lines);
+				}
 			}
 	}
 
@@ -249,6 +263,7 @@ void Map::PostRender(bool& isUse)
 }
 void Map::Render()
 {
+
 	for (size_t i = 0; i <models.size(); i++)
 	{
 		models[i]->Render();
