@@ -318,7 +318,7 @@ void Model::Reset()
 void Model::SetWorld()
 {
 		D3DXVECTOR3 size = maxp - minp;
-		D3DXVECTOR3 center = minp + size / 2;
+		D3DXVECTOR3 center = minp+size/2;
 		D3DXMATRIX matS, matISC, matSC;
 		D3DXMatrixTranslation(&matSC, center.x, center.y, center.z);
 		D3DXMatrixInverse(&matISC, NULL, &matSC);
@@ -328,13 +328,13 @@ void Model::SetWorld()
 		D3DXMATRIX matR, matIRC, matRC, matX, matY, matZ;
 		D3DXMatrixTranslation(&matRC, center.x, center.y, center.z);
 		D3DXMatrixInverse(&matIRC, NULL, &matRC);
-		D3DXMatrixRotationX(&matX, rotate.x);
-		D3DXMatrixRotationY(&matY, rotate.y);
-		D3DXMatrixRotationZ(&matZ, rotate.z);
+		D3DXMatrixRotationX(&matX, rotate.x*(float)D3DX_PI/180);
+		D3DXMatrixRotationY(&matY, rotate.y*(float)D3DX_PI/180);
+		D3DXMatrixRotationZ(&matZ, rotate.z*(float)D3DX_PI/180);
 		matR = matIRC * matX*matY*matZ*matRC;
 
 		D3DXMATRIX matT, matRT;
-		D3DXMatrixTranslation(&matRT, center.x, 0, center.z);
+		D3DXMatrixTranslation(&matRT, center.x, center.y, center.z);
 		D3DXMatrixInverse(&matRT, NULL, &matRT);
 		D3DXMatrixTranslation(&matT, position.x, position.y, position.z);
 		matT = matRT * matT;

@@ -182,7 +182,7 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 		{
 			D3DXMatrixIdentity(&matParentAnimation);
 			//if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
-			//matAnimation = bone->GetBindPoseTransform();
+			matAnimation = bone->GetBindPoseTransform();
 			//matAnimation=animationkeyFrames->GetKeyFrameTransform(0);
 		}
 		else

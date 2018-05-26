@@ -52,9 +52,6 @@
     <ClCompile Include="Model\ModelSkeletonBone.cpp">
       <Filter>Model\BinModel</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Map.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="FbxModel\MoAnimation.cpp">
       <Filter>Model\FbxModel</Filter>
     </ClCompile>
@@ -142,6 +139,12 @@
     <ClCompile Include="Utilities\Path.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Player.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\ModelGruop.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h" />
@@ -199,9 +202,6 @@
     </ClInclude>
     <ClInclude Include="Model\ModelSkeletonBone.h">
       <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Map.h">
-      <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="FbxModel\MoAnimation.h">
       <Filter>Model\FbxModel</Filter>
@@ -292,6 +292,12 @@
     </ClInclude>
     <ClInclude Include="Utilities\Path.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\ModelGroup.h">
+      <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

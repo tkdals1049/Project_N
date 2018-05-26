@@ -18,23 +18,22 @@ void FirstPerson::Update()
 	GetPosition(&position);
 	{
 		if (Keyboard::Get()->Press('W'))
-			position += D3DXVECTOR3(0, 0, 1) * moveSpeed * Time::Delta();
+			position += GetForward() * moveSpeed * Time::Delta();
 		else if (Keyboard::Get()->Press('S'))
-			position += D3DXVECTOR3(0, 0, -1) * moveSpeed * Time::Delta();
+			position += -GetForward() * moveSpeed * Time::Delta();
 
 		if (Keyboard::Get()->Press('A'))
-			position += D3DXVECTOR3(-1, 0, 0) * moveSpeed * Time::Delta();
+			position += -GetRight() * moveSpeed * Time::Delta();
 		else if (Keyboard::Get()->Press('D'))
-			position += D3DXVECTOR3(1, 0, 0) * moveSpeed * Time::Delta();
+			position += GetRight() * moveSpeed * Time::Delta();
 
 		if (Keyboard::Get()->Press('E'))
-			position += D3DXVECTOR3(0, 1, 0) * moveSpeed * Time::Delta();
+			position += GetUp() * moveSpeed * Time::Delta();
 		else if (Keyboard::Get()->Press('Q'))
-			position += D3DXVECTOR3(0, -1, 0) * moveSpeed * Time::Delta();
+			position += -GetUp() * moveSpeed * Time::Delta();
 	}
 	SetPosition(position);
 
-	
 	D3DXVECTOR2 rotation;
 	GetRotation(&rotation);
 	{

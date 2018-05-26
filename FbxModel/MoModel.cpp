@@ -70,6 +70,9 @@ void MoModel::Write(string file)
 
 	w->Open(temp);
 	{
+		w->Color3f(D3DXCOLOR(0, 0, 0, 0));
+		w->Color3f(D3DXCOLOR(0, 0, 0, 0));
+		w->Color3f(D3DXCOLOR(1,1,1,0));
 		w->Matrix(geometricOffset);
 
 		w->UInt(materials.size());
@@ -103,6 +106,9 @@ void MoModel::Write(string file, Model * model)
 
 	w->Open(temp);
 	{
+		w->Color3f(D3DXCOLOR(model->GetPosition()));
+		w->Color3f(D3DXCOLOR(model->GetRotate()));
+		w->Color3f(D3DXCOLOR(model->GetScale()));
 		w->Matrix(model->matGeometricOffset);
 
 		w->UInt(model->materials.size());
@@ -140,6 +146,9 @@ void MoModel::Read(string file, Model ** model)
 	r->Open(temp);
 	{
 		*model = new Model();
+		(*model)->SetPosition(D3DXVECTOR3(r->Color3f()));
+		(*model)->SetRotate(D3DXVECTOR3(r->Color3f()));
+		(*model)->SetScale(D3DXVECTOR3(r->Color3f()));
 		(*model)->matGeometricOffset = r->Matrix();
 		(*model)->file=file;
 

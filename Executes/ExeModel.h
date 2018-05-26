@@ -23,12 +23,11 @@ private:
 	void Convert(wstring file);
 
 	void OpenModelDialog(wstring file = L"");
-	void OpenModelFile(wstring file);
-
+	void SaveModelDialog(wstring file = L"");
 
 	class Sky* sky;
 	class Plane* plane;
-	class Map* map;
+	class ModelGroup* group;
 
 	ID3D11RasterizerState * getRasterizer;
 	ID3D11RasterizerState* setRasterizer;

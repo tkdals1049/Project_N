@@ -3,7 +3,7 @@
 #include "../Content/Texture.h"
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
-#include "../Model/Map.h"
+#include "../Model/ModelGroup.h"
 #include "../Environment/Sky.h"
 #include "../Meshes/Plane.h"
 #include "../FbxModel/MoLoader.h"
@@ -18,35 +18,15 @@ ExeModel::ExeModel(ExecuteValues* values)
 	Texture::Get();
 	BinModel::Get();
 	FbxModel::Get();
-	model= new Model();
+
 	sky = new Sky();
 	plane = new Plane();
-	map=new Map();
+	group=new ModelGroup();
 	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
-
-
-	//_finddata_t fd;
-	//long handle;
-	//int result = 1;
-	//handle = _findfirst("..\\_Contents\\FbxModels\\*.fbx", &fd);  //현재 폴더 내 모든 파일을 찾는다.
-	//if (handle == -1)return;
-	//UINT num = 0;
-	//while (result != -1)
-	//{
-	//	string name = fd.name;
-	//	selectedFbxFile = L"..\\_Contents\\FbxModels\\"+String::StringToWString(fd.name);
-	//	string name2= name.substr(0, name.find_last_of('.'));
-	//	wstring file = L"..\\_Contents\\BinModels\\" + String::StringToWString(name.substr(0, name.find_last_of('.')));
-	//	Convert(file);
-	//
-	//	result = _findnext(handle, &fd);
-	//}
-	//_findclose(handle);
 }
 
 ExeModel::~ExeModel()
 {
-	SAFE_DELETE(model);
 	SAFE_DELETE(plane);
 	SAFE_DELETE(sky);
 }
@@ -59,9 +39,9 @@ void ExeModel::Update()
 	sky->Update(values->MainCamera);
 	plane->UpdatePointBuffer(origin,direction);
 	plane->Update();
-	map->SetDot(plane->GetDot());
-	map->PreUpdate(origin,direction);
-	map->Update();
+	group->SetDot(plane->GetDot());
+	group->PreUpdate(origin,direction);
+	group->Update();
 }
 
 void ExeModel::PreRender()
@@ -73,7 +53,7 @@ void ExeModel::Render()
 {
 	sky->Render();
 	plane->Render();
-	map->Render();
+	group->Render();
 }
 
 void ExeModel::PostRender()
@@ -90,6 +70,9 @@ void ExeModel::PostRender()
 			ImGui::Separator();
 			if (ImGui::MenuItem("Open", "Ctrl+O"))
 				OpenModelDialog();
+
+			if (ImGui::MenuItem("Save", "Ctrl+S"))
+				SaveModelDialog();
 
 			ImGui::EndMenu();
 		}//if(BeiginMenu)
@@ -117,7 +100,7 @@ void ExeModel::PostRender()
 	}
 	if(isModel)
 	{
-	map->PostRender(isModel);
+	group->PostRender(isModel);
 	}
 }
 
@@ -208,21 +191,22 @@ void ExeModel::OpenModelDialog(wstring file)
 	}
 	else
 	{
-		SAFE_DELETE(model);
-
-
-		loadThread = new thread([&](wstring fileName)
-		{
-			isLoaded = false;
-
-			MoLoader::LoadBinary(String::WStringToString(fileName), &model);
-			isLoaded = true;
-		}, file);
-
+		group->SetModel(String::WStringToString(file));
 	}
 }
 
-void ExeModel::OpenModelFile(wstring file)
+void ExeModel::SaveModelDialog(wstring file)
 {
+	if (file.length() < 1)
+	{
+		D3DDesc desc;
+		D3D::GetDesc(&desc);
 
+		function<void(wstring)> func = bind(&ExeModel::SaveModelDialog, this, placeholders::_1);
+		Path::SaveFileDialog(L"", Path::BinModelFilter, BinModels, func, desc.Handle);
+	}
+	else
+	{
+		MoLoader::WriteBinary(String::WStringToString(file + L".model"),group->GetAttitude());
+	}
 }

@@ -59,6 +59,11 @@ protected:
 	virtual void UpdateRotation();
 	virtual void UpdateView();
 
+	D3DXVECTOR3 GetForward(){return forward;}
+	D3DXVECTOR3 GetRight() { return right; }
+	D3DXVECTOR3 GetUp() { return up; }
+	
+
 private:
 	D3DXVECTOR3 position;
 	D3DXVECTOR2 rotation;
