@@ -1,5 +1,5 @@
 #include "../stdafx.h"
-#include "Map.h"
+#include "ModelGroup.h"
 #include "ModelMaterial.h"
 #include "ModelSkeleton.h"
 #include "ModelSkeletonBone.h"
@@ -9,7 +9,7 @@
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
 
-Map::Map():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
+ModelGroup::ModelGroup():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
 {
 	SaveFile="";
 	attitude=NULL;
@@ -17,16 +17,13 @@ Map::Map():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
 	skeletonList=NULL;
 }
 
-Map::~Map()
+ModelGroup::~ModelGroup()
 {
 	for (size_t i = 0; i <models.size(); i++)
 	SAFE_DELETE(models[i]);
 }
 
-void Map::CreateFBX(wstring file)
-{
-}
-void Map::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
+void ModelGroup::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
 	if (Mouse::Get()->Down(0)&&OnModel==true)
 	{
@@ -43,7 +40,7 @@ void Map::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 	if (Keyboard::Get()->Down(VK_ESCAPE))another = NULL;
 
 }
-void Map::Update()
+void ModelGroup::Update()
 {
 
 	for (size_t i = 0; i <models.size(); i++)
@@ -65,7 +62,7 @@ void Map::Update()
 		another->Update();
 	}
 }
-void Map::PostRender(bool& isUse)
+void ModelGroup::PostRender(bool& isUse)
 {
 		static Model* model=NULL;
 		if (another != NULL)
@@ -134,13 +131,19 @@ void Map::PostRender(bool& isUse)
 
 			ImGui::PopItemWidth();
 
-			ImGui::InputText("", (char*)SaveFile.c_str(), IM_ARRAYSIZE(SaveFile.c_str()));ImGui::SameLine();
-			if (ImGui::Button("Save", ImVec2(40, 20)))
-			{	
-			if(SaveFile!="")
-				MoLoader::WriteBinary("..\\_Contents\\BinModels\\"+SaveFile, model);
+			if (ImGui::Button("Delete", ImVec2(50, 20)))
+			{
+				for(size_t i=0; i<models.size();i++)
+				if(attitude==models[i])
+				{
+					Model* back=models[i];
+					models.erase(models.begin()+i);
+					SAFE_DELETE(back);
+					attitude=NULL;
+				}
 			}
-			if (ImGui::Button("Enter", ImVec2(40, 20)))
+
+			if (ImGui::Button("Enter", ImVec2(50, 20)))
 			{
 				model->SetPosition(D3DXVECTOR3(c_temp1));
 				model->SetRotate(D3DXVECTOR3(c_temp2));
@@ -238,32 +241,31 @@ void Map::PostRender(bool& isUse)
 
 			if (model != NULL&&another == NULL)
 			{
-				if(model->GetAnimationController()!=NULL)
+				if(model->GetAnimationController()->GetAnimationCount()>0)
 				{
 					if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName,speed,root);ImGui::SameLine();
 					if (ImGui::Button("AniPlay "))model->GetAnimationController()->Play();ImGui::SameLine();
 					if (ImGui::Button("AniStop "))model->GetAnimationController()->Stop();ImGui::SameLine();
 					if (ImGui::Button("AniPause "))model->GetAnimationController()->Pause();
-					//
-					//static int aniCount = 0;
-					//int curCount=model->GetAnimationController()->GetAnimationCount();
-					//ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
-					//ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
-					//if (ImGui::Button("AniChange "))model->AniChage(aniCount);
-					//static int lines = 0, size=0;
-					////size=model->GetAnimationController()->GetCurrentAnimationCount();
-					//lines=model->GetAnimationController()->GetCurrentKeyFrame();
-					//ImGui::SliderInt("Number of lines", &lines, 0, size);
-					//model->GetAnimationController()->SetCurrentKeyFrame(lines);
+					
+					static int aniCount = 0;
+					int curCount=model->GetAnimationController()->GetAnimationCount();
+					ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
+					ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
+					if (ImGui::Button("AniChange "))model->AniChage(aniCount);
+					static int lines = 0, size=0;
+					size=model->GetAnimationController()->GetCurrentAnimationCount();
+					lines=model->GetAnimationController()->GetCurrentKeyFrame();
+					ImGui::SliderInt("Number of lines", &lines, 0, size);
+					model->GetAnimationController()->SetCurrentKeyFrame(lines);
 				}
 			}
 	}
 
 	ImGui::End();
 }
-void Map::Render()
+void ModelGroup::Render()
 {
-
 	for (size_t i = 0; i <models.size(); i++)
 	{
 		models[i]->Render();
@@ -278,7 +280,16 @@ void Map::Render()
 	if (another != NULL)another->Render();
 }
 
-void Map::SetModel(Model* another)
+void ModelGroup::SetModel(string file)
+{
+	Model* model = NULL;
+	MoLoader::LoadBinary(file, &model);
+	model->Reset();
+
+	models.push_back(model);
+}
+
+void ModelGroup::SetModel(Model* another)
 {
 	Model* model = NULL;
 	MoLoader::LoadBinary(another->GetFile(), &model);
@@ -295,7 +306,7 @@ void Map::SetModel(Model* another)
 	models.push_back(model);
 }
 
-void Map::SetModel()
+void ModelGroup::SetModel()
 {
 	Model* model = NULL;
 	MoLoader::LoadBinary(attitude->GetFile(), &model);
@@ -312,27 +323,27 @@ void Map::SetModel()
 	models.push_back(model);
 }
 
-Model * Map::GetModel() 
+Model * ModelGroup::GetModel() 
 { 
 	return models[models.size() - 1]; 
 }
 
-void Map::AddWeaponVector(Model * model, string weaponName, Model * weaponFile)
+void ModelGroup::AddWeaponVector(Model * model, string weaponName, Model * weaponFile)
 {	
 	weapons[model].push_back(Weapon(weaponName,weaponFile));
 }
 
-void Map::SetAttitude(Model * model)
+void ModelGroup::SetAttitude(Model * model)
 {
 	attitude=model;
 }
 
-Model * Map::GetAttitude()
+Model * ModelGroup::GetAttitude()
 {
 	return attitude;
 }
 
-void Map::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
+void ModelGroup::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
 	for (size_t i = 0; i <models.size(); i++)
 	{
