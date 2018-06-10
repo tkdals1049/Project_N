@@ -10,7 +10,7 @@
 #include "../Utilities/Path.h"
 
 ExeModel::ExeModel(ExecuteValues* values)
-	: Execute(values),isEnviroment(false),isModel(false)
+	: Execute(values),isEnviroment(false),isModel(false), loadThread(NULL), isLoaded(false)
 {
 	D3DDesc desc;
 	D3D::GetDesc(&desc);
@@ -23,6 +23,12 @@ ExeModel::ExeModel(ExecuteValues* values)
 	plane = new Plane();
 	group=new ModelGroup();
 	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
+
+	D3D11_RASTERIZER_DESC rdesc;
+	States::GetRasterizerDesc(&rdesc);
+
+	rdesc.CullMode = D3D11_CULL_NONE;
+	States::CreateRasterizer(&rdesc, &setRasterizer);
 }
 
 ExeModel::~ExeModel()
@@ -33,6 +39,7 @@ ExeModel::~ExeModel()
 
 void ExeModel::Update()
 {
+
 	D3DXVECTOR3 origin, direction;
 	GetRay(&origin,&direction);
 
@@ -42,6 +49,15 @@ void ExeModel::Update()
 	group->SetDot(plane->GetDot());
 	group->PreUpdate(origin,direction);
 	group->Update();
+
+	if (isLoaded == true)
+	{
+		if (loadThread != NULL)
+		{
+			loadThread->join();
+			SAFE_DELETE(loadThread);
+		}
+	}	
 }
 
 void ExeModel::PreRender()
@@ -53,7 +69,13 @@ void ExeModel::Render()
 {
 	sky->Render();
 	plane->Render();
-	group->Render();
+
+	D3D::GetDC()->RSGetState(&getRasterizer);
+	D3D::GetDC()->RSSetState(setRasterizer);
+	{
+		group->Render();
+	}
+	D3D::GetDC()->RSSetState(getRasterizer);
 }
 
 void ExeModel::PostRender()
@@ -191,7 +213,12 @@ void ExeModel::OpenModelDialog(wstring file)
 	}
 	else
 	{
-		group->SetModel(String::WStringToString(file));
+		loadThread = new thread([&](wstring fileName)
+		{
+			isLoaded = false;
+			group->SetModel(String::WStringToString(fileName));
+			isLoaded = true;
+		}, file);
 	}
 }
 

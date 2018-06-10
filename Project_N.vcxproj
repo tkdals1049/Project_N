@@ -38,6 +38,7 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Meshes\Brush.cpp" />
     <ClCompile Include="Meshes\Plane.cpp" />
+    <ClCompile Include="Model\Boss.cpp" />
     <ClCompile Include="Model\ModelGruop.cpp" />
     <ClCompile Include="Model\Model.cpp" />
     <ClCompile Include="Model\ModelAnimation.cpp" />
@@ -48,6 +49,8 @@
     <ClCompile Include="Model\ModelMesh.cpp" />
     <ClCompile Include="Model\ModelSkeleton.cpp" />
     <ClCompile Include="Model\ModelSkeletonBone.cpp" />
+    <ClCompile Include="Model\Actor.cpp" />
+    <ClCompile Include="Model\Monster.cpp" />
     <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Renders\RenderTarget.cpp">
@@ -98,6 +101,7 @@
     <None Include="Meshes\BrushBuffer.h" />
     <ClInclude Include="Meshes\Plane.h" />
     <None Include="Model\BoneBuffer.h" />
+    <ClInclude Include="Model\Boss.h" />
     <ClInclude Include="Model\ModelGroup.h" />
     <ClInclude Include="Model\Model.h" />
     <ClInclude Include="Model\ModelAnimation.h" />
@@ -109,6 +113,8 @@
     <ClInclude Include="Model\ModelMesh.h" />
     <ClInclude Include="Model\ModelSkeleton.h" />
     <ClInclude Include="Model\ModelSkeletonBone.h" />
+    <ClInclude Include="Model\Actor.h" />
+    <ClInclude Include="Model\Monster.h" />
     <ClInclude Include="Model\Player.h" />
     <ClInclude Include="Program.h" />
     <None Include="Renders\GlobalBuffers.h" />

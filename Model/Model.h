@@ -36,10 +36,11 @@ public:
 	void Render();
 
 	void AnotherUpdate();
-	void AddAni(string file, string mode="", float speed=1.0f, int root=0);
-	void AniChage(int num);
+	void AddAni(string file, string mode="");
+	void AniChange(int num);
+	void AniChange(string mode);
 	void UpdateAnimation();
-	void ProcessAnimations();
+	void ProcessAnimations(string mode);
 	void ProcessAnimation(FbxNode * node, string takeName, float frameRate, float start, float stop);
 
 	bool Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
@@ -56,25 +57,13 @@ public:
 	D3DXVECTOR3 GetRotate();
 	void SetScale(D3DXVECTOR3& scale);
 	D3DXVECTOR3 GetScale();
+	void SetAdjust(D3DXVECTOR3& adjust);
+	D3DXVECTOR3 GetAdjust();
+	void SetAniPlay(int root,int range,float speed);
 
 	D3DXMATRIX GetAbsoluteTransformFromCurrentTake(FbxNode * node, FbxTime time);
 
 private:
-	struct Ani
-	{
-		string mode;
-		UINT num;
-		float speed;
-		UINT root;
-
-		Ani()
-		{
-			mode="";
-			num=0;
-			speed=1.0f;
-			root=0;
-		}
-	};
 	friend class MoModel;
 
 	FbxManager* manager;
@@ -87,7 +76,7 @@ private:
 	D3DXMATRIX weaponWorld;
 	string file;
 
-	D3DXVECTOR3 minp,maxp,origin;
+	D3DXVECTOR3 minp,maxp,origin,adjust;
 	D3DXVECTOR3 position, rotate, scale;
 	Camera* camera;
 
@@ -97,9 +86,11 @@ private:
 	map<string, ModelAnimationKeyFrames*> animationKeyFrames;
 	map<string, ModelAnimation*> animations;
 	
-	vector<Ani> ani;
 	ModelAnimationController* animationController;
 
 	BoneBuffer* boneBuffer;
 
+	UINT root;
+	UINT range;
+	float speed;
 };

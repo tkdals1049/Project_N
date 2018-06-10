@@ -174,8 +174,6 @@ void ModelAnimationController::Update(float speed)
 
 		frameTimer -= invFrameRate;
 	}
-	//if(currentKeyFrame == currentAnimation->GetKeyFrames()-2) mode=1;
-	//else mode=0;
 	keyFrameFactor = frameTimer / invFrameRate;
 }
 

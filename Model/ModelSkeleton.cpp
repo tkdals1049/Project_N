@@ -112,7 +112,7 @@ void ModelSkeleton::AddAnimationFromOtherSkeleton(string srcAnimName, string dst
 	}
 }
 
-void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationController, string animationName,UINT root)
+void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationController, string animationName,UINT root,int range)
 {
 
 	if (skinTransforms == NULL)
@@ -121,7 +121,7 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 	if (boneAnimationTransforms == NULL)
 		boneAnimationTransforms = new D3DXMATRIX[boneCount];
 
-
+		
 	int keyFrame = animationController->GetCurrentKeyFrame();
 	int nextKeyFrame = animationController->GetNextKeyFrame();
 	float keyframeFactor = animationController->GetKeyFrameFactor();
@@ -178,12 +178,12 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 
 		int parentBoneIndex = bone->GetParentBoneIndex();
 
-		if (parentBoneIndex < 0)
+		if (parentBoneIndex < range)
 		{
 			D3DXMatrixIdentity(&matParentAnimation);
-			//if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
-			matAnimation = bone->GetBindPoseTransform();
-			//matAnimation=animationkeyFrames->GetKeyFrameTransform(0);
+			if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
+			//matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
+			//matAnimation = bone->GetBindPoseTransform();
 		}
 		else
 		{
@@ -196,7 +196,7 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 	}
 }
 
-void ModelSkeleton::UpdateAnimation(ModelAnimationController * animationController,UINT root)
+void ModelSkeleton::UpdateAnimation(ModelAnimationController * animationController,UINT root,int range)
 {
 	ModelAnimation* currentAnimation = animationController->GetCurrentAnimation();
 	int keyFrame = animationController->GetCurrentKeyFrame();
@@ -204,7 +204,7 @@ void ModelSkeleton::UpdateAnimation(ModelAnimationController * animationControll
 	if (currentAnimation == NULL)
 		return;
 
-	BuildBoneTransforms(animationController, currentAnimation->GetName(),root);
+	BuildBoneTransforms(animationController, currentAnimation->GetName(),root,range);
 }
 
 ////////////////////////////////////////////////////////////////////////

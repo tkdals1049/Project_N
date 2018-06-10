@@ -12,10 +12,11 @@
 #include "../FbxModel/MoModelUtility.h"
 
 Model::Model()
-: position(D3DXVECTOR3(0,0,0)), rotate(D3DXVECTOR3(0, 0, 0)), scale(D3DXVECTOR3(1,1,1)),
+: position(D3DXVECTOR3(0,0,0)), rotate(D3DXVECTOR3(0, 0, 0)), scale(D3DXVECTOR3(1,1,1)), adjust(D3DXVECTOR3(0, 0, 0)),
 minp(D3DXVECTOR3(0, 0, 0)), maxp(D3DXVECTOR3(0, 0, 0)), origin(D3DXVECTOR3(0, 0, 0)),skeleton(NULL),animationController(NULL)
 {
-
+	root=range=0;
+	speed =1.0f;
 	D3DXMatrixIdentity(&matGeometricOffset);
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixIdentity(&weaponWorld);
@@ -43,10 +44,8 @@ Model::~Model()
 
 void Model::Update()
 {
-	AnotherUpdate();
-	
+	AnotherUpdate();	
 	SetWorld();
-
 
 	for (ModelMesh* mesh : meshes)
 		mesh->Update();
@@ -63,16 +62,6 @@ void Model::Render()
 void Model::AnotherUpdate()
 {
 	UINT isAnimated = 0;
-	UINT root=0;
-	float speed=1.0f;
-	for(size_t i=0;i<ani.size();i++)
-	{
-		if(ani[i].num==animationController->GetAnimationNum())
-		{
-			root = ani[i].root;
-			speed = ani[i].speed;
-		}
-	}
 
 	if (animationController != NULL)
 	{
@@ -85,7 +74,7 @@ void Model::AnotherUpdate()
 
 			if (skeleton != NULL)
 			{
-				skeleton->UpdateAnimation(animationController,root);
+				skeleton->UpdateAnimation(animationController,root,range);
 			}
 			//UpdateAnimation();
 		}
@@ -105,7 +94,7 @@ void Model::AnotherUpdate()
 
 }
 
-void Model::AddAni(string file,string mode, float speed, int root)
+void Model::AddAni(string file,string mode)
 {
 	//SDK의 버전을 얻어온다.
 	int sdkMajor, sdkMinor, sdkRevision;
@@ -123,29 +112,26 @@ void Model::AddAni(string file,string mode, float speed, int root)
 	status = importer->Import(scene);
 	assert(status == true);
 
-	ProcessAnimations();
+	ProcessAnimations(mode);
 
 	importer->Destroy();
 
-	Ani ani;
-	ani.speed=speed;
-	ani.root=root;
-	ani.mode=mode;
-	ani.num= animationController->GetAnimationCount() - 1;	
-	this->ani.push_back(ani);
-
-
 	animationController->SetCurrentAnimation(animationController->GetAnimationCount() - 1);
 	animationController->Play();
-
 }
-void Model::AniChage(int num)
+
+void Model::AniChange(int num)
 {
-	if(num>0&&num<= animationController->GetAnimationCount())
+	if(num>0&&num<= (int)animationController->GetAnimationCount())
 	{
 		animationController->SetCurrentAnimation(num-1);
 		animationController->Play();
 	}
+}
+void Model::AniChange(string mode)
+{
+	animationController->SetCurrentAnimation(mode);
+	animationController->Play();
 }
 
 void Model::UpdateAnimation()
@@ -182,7 +168,7 @@ void Model::UpdateAnimation()
 	D3DXMatrixIdentity(&matAnimationTransform);
 }
 
-void Model::ProcessAnimations()
+void Model::ProcessAnimations(string mode="")
 {
 	FbxNode* rootNode = scene->GetRootNode();
 	if (rootNode == NULL) return;
@@ -198,7 +184,7 @@ void Model::ProcessAnimations()
 		FbxTakeInfo* takeInfo = importer->GetTakeInfo(i);
 		string takeName = (takeInfo->mName.Buffer());
 		takeName += to_string(animationController->GetAnimationCount());
-
+		if(mode!="")takeName=mode;
 		FbxTime start = FbxTime(FbxLongLong(0x7fffffffffffffff));
 		FbxTime stop = FbxTime(FbxLongLong(-0x7fffffffffffffff));
 
@@ -319,26 +305,20 @@ void Model::SetWorld()
 {
 		D3DXVECTOR3 size = maxp - minp;
 		D3DXVECTOR3 center = minp+size/2;
-		D3DXMATRIX matS, matISC, matSC;
-		D3DXMatrixTranslation(&matSC, center.x, center.y, center.z);
-		D3DXMatrixInverse(&matISC, NULL, &matSC);
+		D3DXMATRIX matS;
 		D3DXMatrixScaling(&matS, scale.x, scale.y, scale.z);
-		matS = matISC * matS*matSC;
 
-		D3DXMATRIX matR, matIRC, matRC, matX, matY, matZ;
-		D3DXMatrixTranslation(&matRC, center.x, center.y, center.z);
-		D3DXMatrixInverse(&matIRC, NULL, &matRC);
+		D3DXMATRIX matR, matX, matY, matZ;
 		D3DXMatrixRotationX(&matX, rotate.x*(float)D3DX_PI/180);
 		D3DXMatrixRotationY(&matY, rotate.y*(float)D3DX_PI/180);
 		D3DXMatrixRotationZ(&matZ, rotate.z*(float)D3DX_PI/180);
-		matR = matIRC * matX*matY*matZ*matRC;
+		matR = matX*matY*matZ;
 
 		D3DXMATRIX matT, matRT;
-		D3DXMatrixTranslation(&matRT, center.x, center.y, center.z);
-		D3DXMatrixInverse(&matRT, NULL, &matRT);
+		D3DXMatrixTranslation(&matRT, center.x*adjust.x, center.y*adjust.y, center.z*adjust.z);
+		//D3DXMatrixInverse(&matRT, NULL, &matRT);
 		D3DXMatrixTranslation(&matT, position.x, position.y, position.z);
-		matT = matRT * matT;
-		matGeometricOffset = matS*matR*matT;
+		matGeometricOffset = matS*matR*matT*matRT;
 }
 
 ModelMaterial * Model::GetMatchMaterial(UINT number)
@@ -377,7 +357,7 @@ void Model::ClearMaterial()
 
 D3DXMATRIX Model::GetWeaponWorld(string weapon)
 {
-	return matGeometricOffset * skeleton->GetWeapon(weapon);
+	return skeleton->GetWeapon(weapon)*matGeometricOffset;
 }
 
 void Model::SetWorld(D3DXMATRIX& world)
@@ -422,6 +402,23 @@ void Model::SetScale(D3DXVECTOR3 & scale)
 D3DXVECTOR3 Model::GetScale()
 {
 	return scale;
+}
+
+void Model::SetAdjust(D3DXVECTOR3 & adjust)
+{
+	this->adjust = adjust;
+}
+
+D3DXVECTOR3 Model::GetAdjust()
+{
+	return adjust;
+}
+
+void Model::SetAniPlay(int root, int range,float speed)
+{
+	this->root=(UINT)root;
+	this->range = (UINT)range;
+	this->speed=speed;
 }
 
 D3DXMATRIX Model::GetAbsoluteTransformFromCurrentTake(FbxNode * node, FbxTime time)

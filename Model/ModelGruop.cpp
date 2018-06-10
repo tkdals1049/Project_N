@@ -5,6 +5,7 @@
 #include "ModelSkeletonBone.h"
 #include "ModelAnimationController.h"
 #include "Model.h"
+#include "Player.h"
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
@@ -14,7 +15,10 @@ ModelGroup::ModelGroup():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
 	SaveFile="";
 	attitude=NULL;
 	another=NULL;
+	model=NULL;
 	skeletonList=NULL;
+
+	player= new Player();
 }
 
 ModelGroup::~ModelGroup()
@@ -37,13 +41,20 @@ void ModelGroup::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 			}
 		}
 	}
-	if (Keyboard::Get()->Down(VK_ESCAPE))another = NULL;
+	if (Keyboard::Get()->Down(VK_ESCAPE))
+	{
+		SAFE_DELETE(another);
+		another = NULL;
+		model=NULL;
+	}
 
+	player->PreUpdate(origin,direction);
 }
-void ModelGroup::Update()
+void ModelGroup::Update(int thread)
+
 {
 
-	for (size_t i = 0; i <models.size(); i++)
+	for (size_t i = 0; i <models.size()-thread; i++)
 	{
 		models[i]->Update();
 
@@ -61,10 +72,11 @@ void ModelGroup::Update()
 		another->SetPosition(D3DXVECTOR3(dot.x, 0, dot.y));
 		another->Update();
 	}
+
+	player->Update();
 }
 void ModelGroup::PostRender(bool& isUse)
 {
-		static Model* model=NULL;
 		if (another != NULL)
 		{	
 			if(model!=another)
@@ -137,19 +149,59 @@ void ModelGroup::PostRender(bool& isUse)
 				if(attitude==models[i])
 				{
 					Model* back=models[i];
+					for each(Weapon temp in weapons[models[i]])	SAFE_DELETE(temp.second);
+					weapons[models[i]].clear();
+					weapons.erase(weapons.find(models[i]));
 					models.erase(models.begin()+i);
+
 					SAFE_DELETE(back);
 					attitude=NULL;
+					model=NULL;
 				}
-			}
-
+			}ImGui::SameLine();
 			if (ImGui::Button("Enter", ImVec2(50, 20)))
 			{
 				model->SetPosition(D3DXVECTOR3(c_temp1));
 				model->SetRotate(D3DXVECTOR3(c_temp2));
 				model->SetScale(D3DXVECTOR3(c_temp3));
 			}
-			ImGui::InputFloat("input float", &a);
+
+			static D3DXVECTOR3 temp(0, 0.78f, 0);
+			static D3DXVECTOR3 temp2(1,0, 1.5f);
+			ImGui::InputFloat3("adjust", temp, 1);
+			ImGui::InputFloat3("aniset", temp2, 1);
+			if (ImGui::Button("SetPlayer", ImVec2(80, 20)))
+			{
+				for (size_t i = 0; i<models.size();i++)
+					if (attitude == models[i])
+					{
+						Model* back = models[i];
+						player->SetModel(back);
+						player->SetAdjust(temp);
+						player->SetAniPlay(temp2);
+						player->AniChange("idle");
+						for each(Weapon temp in weapons[models[i]])	player->AddWeaponVector(temp.first,temp.second);
+						weapons[models[i]].clear();
+						weapons.erase(weapons.find(models[i]));
+						models.erase(models.begin() + i);
+						
+						attitude = NULL;
+						model = NULL;
+						temp=D3DXVECTOR3(0,0,0);
+						temp2 = D3DXVECTOR3(0,0, 1);
+					}
+			}
+			
+		}
+		else 
+		{
+			if (ImGui::Button("PlayerDelete", ImVec2(80, 20)))
+			{
+				Model* back = player->GetModel();
+				SAFE_DELETE(back);
+				player->SetModel((Model*)NULL);
+				player->DeleteWeapon();
+			}
 		}
 	}
 
@@ -201,7 +253,7 @@ void ModelGroup::PostRender(bool& isUse)
 	if (OnSkeleton)
 	{
 			static int curModel = 0, curSkeleton = 0;
-
+		
 			ImGui::PushItemWidth(200);
 			ImGui::ListBox("1", &curModel, BinModel::Get()->GetBinmodelList(), BinModel::Get()->GetBinmodelPathSize(), 8);ImGui::SameLine();
 			if (model != NULL&&another==NULL)if(attitude->GetSkeleton()->GetBoneCount()>=1)ImGui::ListBox("2", &curSkeleton, skeletonList, attitude->GetSkeleton()->GetBoneCount(), 8);
@@ -211,6 +263,7 @@ void ModelGroup::PostRender(bool& isUse)
 			{
 				Model* temp=NULL;
 				MoLoader::LoadBinary(BinModel::Get()->GetBinModelPath(curModel),&temp);
+				temp->Reset();
 				if (model != NULL&&another == NULL)AddWeaponVector(model,skeletonList[curSkeleton],temp);
 			}
 	}
@@ -243,7 +296,7 @@ void ModelGroup::PostRender(bool& isUse)
 			{
 				if(model->GetAnimationController()->GetAnimationCount()>0)
 				{
-					if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName,speed,root);ImGui::SameLine();
+					if (ImGui::Button("SetAni "))model->AddAni(FbxModel::Get()->GetFbxModelPath(curModel),aniName);ImGui::SameLine();
 					if (ImGui::Button("AniPlay "))model->GetAnimationController()->Play();ImGui::SameLine();
 					if (ImGui::Button("AniStop "))model->GetAnimationController()->Stop();ImGui::SameLine();
 					if (ImGui::Button("AniPause "))model->GetAnimationController()->Pause();
@@ -252,7 +305,7 @@ void ModelGroup::PostRender(bool& isUse)
 					int curCount=model->GetAnimationController()->GetAnimationCount();
 					ImGui::InputInt("AniCount", &aniCount);ImGui::SameLine();
 					ImGui::LabelText("/CurCount",(char*)to_string(curCount).c_str());
-					if (ImGui::Button("AniChange "))model->AniChage(aniCount);
+					if (ImGui::Button("AniChange "))model->AniChange(aniCount);
 					static int lines = 0, size=0;
 					size=model->GetAnimationController()->GetCurrentAnimationCount();
 					lines=model->GetAnimationController()->GetCurrentKeyFrame();
@@ -261,12 +314,11 @@ void ModelGroup::PostRender(bool& isUse)
 				}
 			}
 	}
-
 	ImGui::End();
 }
-void ModelGroup::Render()
+void ModelGroup::Render(int thread)
 {
-	for (size_t i = 0; i <models.size(); i++)
+	for (size_t i = 0; i <models.size()-thread; i++)
 	{
 		models[i]->Render();
 
@@ -278,6 +330,7 @@ void ModelGroup::Render()
 	}
 	if (attitude != NULL)attitude->Render();
 	if (another != NULL)another->Render();
+	player->Render();
 }
 
 void ModelGroup::SetModel(string file)
@@ -356,7 +409,7 @@ void ModelGroup::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 		{
 			int num=attitude->GetSkeleton()->GetBoneCount();
 			skeletonList = new const char*[num];
-			for (size_t i = 0; i < num; i++)
+			for (size_t i = 0; (int)i < num; i++)
 			{
 				ModelSkeletonBone* bone= attitude->GetSkeleton()->GetSkeletonBone(i);
 				skeletonList[i] = new char[bone->GetName().size() + 1];

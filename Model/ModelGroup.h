@@ -8,9 +8,9 @@ public:
 	~ModelGroup();
 
 	void PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
-	void Update();
+	void Update(int thread=0);
 	void PostRender(bool& isUse);
-	void Render();
+	void Render(int thread=0);
 
 	void SetModel(string file);
 
@@ -33,6 +33,7 @@ private:
 	class Camera* camera;
 	class Player* player;
 	vector<Model*> models;
+	Model* model;
 
 	typedef pair<string, Model*> Weapon;
 	map<Model*,vector<Weapon>> weapons;

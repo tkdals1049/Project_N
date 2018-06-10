@@ -139,10 +139,19 @@
     <ClCompile Include="Utilities\Path.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Player.cpp">
+    <ClCompile Include="Model\ModelGruop.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelGruop.cpp">
+    <ClCompile Include="Model\Actor.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Boss.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Monster.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Player.cpp">
       <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
@@ -293,10 +302,19 @@
     <ClInclude Include="Utilities\Path.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Player.h">
+    <ClInclude Include="Model\ModelGroup.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelGroup.h">
+    <ClInclude Include="Model\Actor.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Boss.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Monster.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player.h">
       <Filter>Model</Filter>
     </ClInclude>
   </ItemGroup>

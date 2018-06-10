@@ -17,19 +17,19 @@ void FirstPerson::Update()
 	D3DXVECTOR3 position;
 	GetPosition(&position);
 	{
-		if (Keyboard::Get()->Press('W'))
+		if (Keyboard::Get()->Press('I'))
 			position += GetForward() * moveSpeed * Time::Delta();
-		else if (Keyboard::Get()->Press('S'))
+		else if (Keyboard::Get()->Press('K'))
 			position += -GetForward() * moveSpeed * Time::Delta();
 
-		if (Keyboard::Get()->Press('A'))
+		if (Keyboard::Get()->Press('J'))
 			position += -GetRight() * moveSpeed * Time::Delta();
-		else if (Keyboard::Get()->Press('D'))
+		else if (Keyboard::Get()->Press('L'))
 			position += GetRight() * moveSpeed * Time::Delta();
 
-		if (Keyboard::Get()->Press('E'))
+		if (Keyboard::Get()->Press('U'))
 			position += GetUp() * moveSpeed * Time::Delta();
-		else if (Keyboard::Get()->Press('Q'))
+		else if (Keyboard::Get()->Press('O'))
 			position += -GetUp() * moveSpeed * Time::Delta();
 	}
 	SetPosition(position);

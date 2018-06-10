@@ -26,7 +26,7 @@ public:
 
 	void AddAnimationFromOtherSkeleton(string srcAnimName, string dstAnimName, ModelSkeleton& srcSkeleton);
 
-	void UpdateAnimation(ModelAnimationController* animationController, UINT root=0);
+	void UpdateAnimation(ModelAnimationController* animationController, UINT root=0, int range = 0);
 
 	static void Write(BinaryWriter * w, ModelSkeleton * skeleton);
 	static void Read(BinaryReader * r, ModelSkeleton * skeleton);
@@ -34,7 +34,7 @@ public:
 private:
 	friend class MoSkeleton;
 
-	void BuildBoneTransforms(ModelAnimationController* animationController, string animationName, UINT root=0);
+	void BuildBoneTransforms(ModelAnimationController* animationController, string animationName, UINT root=0, int range=0);
 
 
 	int boneCount;
