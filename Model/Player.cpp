@@ -75,7 +75,7 @@ void Player::Update()
 			else 
 			{
 
-				if (mode != Premode)
+				if (mode != Premode||Premode=="")
 				{
 				temp.second->SetRotate(D3DXVECTOR3(-90,90,0));
 				temp.second->SetAdjust(D3DXVECTOR3(-0.4f, 0, -1));

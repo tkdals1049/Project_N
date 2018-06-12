@@ -1,46 +1,29 @@
 #pragma once
+#include "Actor.h"
 
-class Model;
-class Monster
+class Monster :public Actor
 {
 public:
 	Monster();
+	Monster(string file);
 	~Monster();
 
 	void PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
+
 	void Update();
-	void PostRender(bool& isUse);
 	void Render();
+	void Input(string mode);
+	void SetMonster();
 
-	void SetModel(string file);
-
-	void SetDot(D3DXVECTOR2 dot) { this->dot = dot; }
-	void SetModel(Model * model);
-	Model* GetModel();
-
-	bool GetDifferent() { return different; }
-	void SetDifferent(bool different) { this->different = different; }
-	void AddWeaponVector(Model* model, string weaponName, Model* weaponFile);
-
-
-	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
+	float SetHeight();
 private:
-	bool different;
-	class Camera* camera;
-	
-	Model* model;
-	typedef pair<string, Model*> Weapon;
-	vector<Weapon> weapon;
+	void Control();
+	void Notify();
 
-	D3DXVECTOR2 dot;
-	bool OnModel;
-	float a;
-	string SaveFile;
-	float c_temp1[3];
-	float c_temp2[3];
-	float c_temp3[3];
-
-	const char** skeletonList;
+	int dir, degree, degree_goal, weaponNum;
+	float speed;
+	bool isControl, isEquip, isHeight;
+	string mode, Premode;
+	D3DXVECTOR3 way;
 
 };
-
