@@ -47,6 +47,11 @@ D3DXMATRIX ModelSkeleton::GetWeapon(string name)
 	//return boneAnimationTransforms[FindBoneIndex(name)];
 }
 
+string ModelSkeleton::GetWeaponName(int num)
+{
+	return skeletonBones[num].first;
+}
+
 void ModelSkeleton::AddSkeletonBone(ModelSkeletonBone * skeletonBone)
 {
 	skeletonBones.push_back(Pair(skeletonBone->GetName(), skeletonBone));
@@ -178,10 +183,10 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 
 		int parentBoneIndex = bone->GetParentBoneIndex();
 
-		if (parentBoneIndex < range)
+		if (parentBoneIndex < 0)
 		{
 			D3DXMatrixIdentity(&matParentAnimation);
-			if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
+			if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(range);
 			//matAnimation = animatiokeyFrames->GetKeyFrameTransform(0);
 			//matAnimation = bone->GetBindPoseTransform();
 		}

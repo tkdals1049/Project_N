@@ -365,6 +365,11 @@ void Model::SetWorld(D3DXMATRIX& world)
 	this->world=world;
 }
 
+void Model::SetGeometricOffset(D3DXMATRIX & world)
+{
+	matGeometricOffset=world;
+}
+
 void Model::AddAnimationKeyFrames(ModelAnimationKeyFrames * animationKeyFrames)
 {
 	this->animationKeyFrames.insert(make_pair(animationKeyFrames->GetAnimationName(), animationKeyFrames));

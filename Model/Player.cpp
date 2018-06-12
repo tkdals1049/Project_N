@@ -1,16 +1,17 @@
 #include "../stdafx.h"
 #include "Player.h"
 #include "Model.h"
+#include "ModelSkeleton.h"
 #include "ModelAnimation.h"
 #include "ModelAnimationController.h"
 
 Player::Player():dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"),Premode(""),isControl(true),isEquip(false),way(D3DXVECTOR3(0,0,0)),weaponNum(-1),equipName("AL-03"), unequipName("NK-00")
+mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false),way(D3DXVECTOR3(0,0,0)),weaponNum(-1),equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00")
 {
 }
 
 Player::Player(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"), Premode(""), isControl(true), isEquip(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), equipName("AL-03"), unequipName("NK-00")
+mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), equipName("AL-03"), unequipName("NK-00")
 {
 		MoLoader::LoadBinary(file, &model);
 
@@ -48,9 +49,39 @@ void Player::Update()
 		for each(Weapon temp in weapons)
 		{
 			temp.second->Update();
+			//무기 장착시와 아닐시 고정 위치 변 
+			if(isEquip)
+			{
 
-			if(isEquip)temp.second->SetWorld(temp.second->GetGeometricOffset()*model->GetWeaponWorld(temp.first));
-			else temp.second->SetWorld(temp.second->GetGeometricOffset()*model->GetWeaponWorld(unequipName));
+				if (mode == "w1_equip"|| mode == "w1_equip_end" || mode == "w1_equip_walk_end")
+				{
+					if(mode!=Premode)
+					{
+					temp.second->SetRotate(D3DXVECTOR3(90,0,0));
+					temp.second->SetAdjust(D3DXVECTOR3(0, 0, 0));
+					}
+					temp.second->SetWorld(model->GetWeaponWorld(equipName2)*model->GetWorld());
+				}
+				else
+				{
+					if (mode != Premode)
+					{
+					temp.second->SetRotate(D3DXVECTOR3(-90, 0, 0));
+					temp.second->SetAdjust(D3DXVECTOR3(0.8f, -1, 0));
+					}
+					temp.second->SetWorld(model->GetWeaponWorld(temp.first)*model->GetWorld());
+				}
+			}
+			else 
+			{
+
+				if (mode != Premode)
+				{
+				temp.second->SetRotate(D3DXVECTOR3(-90,90,0));
+				temp.second->SetAdjust(D3DXVECTOR3(-0.4f, 0, -1));
+				}
+				temp.second->SetWorld(model->GetWeaponWorld(unequipName)*model->GetWorld());
+			}
 		}
 	}
 }
@@ -83,23 +114,8 @@ void Player::Control()
 	D3DXVECTOR3 move = model->GetPosition();
 	D3DXVECTOR3 rotate = model->GetRotate();
 
+	//이동 및 조작
 
-	if (Keyboard::Get()->Down('D'))
-	{
-		isEquip=!isEquip;
-		Input("w1_equip");
-	}
-	if (Keyboard::Get()->Down(VK_SPACE))
-	{
-		model->SetAniPlay(1,0,3.0f);
-		if(mode=="rush")
-		{
-			Input("rush_jump");
-			speed = 35.0f;
-		}
-		else {Input("jump");speed = 30.0f;}
-		isControl=false;
-	}
 	if(isControl==true)
 	{
 		way = D3DXVECTOR3(0, 0, 0);
@@ -133,27 +149,102 @@ void Player::Control()
 			{
 				if (degree_goal < degree)     degree += abs(degree_goal - degree) / 20 + 1;
 				else if (degree_goal > degree)degree -= abs(degree_goal - degree) / 20 + 1;
+			}			
+		}
+
+		//default 애니메이션
+
+		if(isEquip)
+		{
+			if (way == D3DXVECTOR3(0, 0, 0)) { Input("w1_idle");speed = 0.0f; }
+			else
+			{
+				{ Input("w1_walk");speed = 20.0f; }
 			}
 		}
-		
-		if (way == D3DXVECTOR3(0, 0, 0)){Input("idle");speed=0.0f;}
-		else
-		{
-			if (Keyboard::Get()->Press(VK_SHIFT)){Input("rush");speed=30.0f;}
-			else {Input("run");speed = 20.0f;}
+		else 
+		{ 
+			if (way == D3DXVECTOR3(0, 0, 0)){Input("idle");speed=0.0f;}
+			else
+			{
+				if (Keyboard::Get()->Press(VK_SHIFT)){Input("rush");speed=30.0f;}
+				else {Input("run");speed = 20.0f;}
+			}
 		}
+		//장비
+
+		if (Keyboard::Get()->Down('D'))
+		{
+			if (isEquip)
+			{
+				if (mode == "w1_idle")Input("w1_equip_end");
+				else Input("w1_equip_walk_end");
+				isHeight = false;
+			}
+			else
+			{
+				isEquip=true;
+				isHeight=true;
+				Input("w1_equip");
+			}
+			isControl = false;
+		}
+
+		//점프
+
+		if (Keyboard::Get()->Down(VK_SPACE))
+		{
+			model->SetAniPlay(1, 0, 3.0f);
+			if (mode == "rush")
+			{
+				Input("rush_jump");
+				speed = 35.0f;
+			}
+			else { Input("jump");speed = 30.0f; }
+			isControl = false;
+			isHeight = true;
+		}
+
+		//공격
+
+		if (Keyboard::Get()->Down('Z')&&isEquip)
+		{
+			Input("w1_attack1_set");
+			isControl = false;
+		}
+	}
+	else
+	{
+
+		way=D3DXVECTOR3(0,0,0);
 	}
 
 	model->SetPosition(move + speed * (way.z*forward + way.x*right)*Time::Get()->Delta());
 	model->SetRotate(D3DXVECTOR3(rotate.x, (float)degree+ (float)dir-90, rotate.z));
 
+	//애니메이션 높이 조정
+	D3DXMATRIX world;
+	if(isHeight)
+	{
+		D3DXMatrixTranslation(&world,0,SetHeight(),0);
+		model->SetWorld(world);
+		model->SetAdjust(D3DXVECTOR3(0,0.1f,0));
+	}
+	else
+	{
+		D3DXMatrixTranslation(&world, 0, 0, 0);
+		model->SetWorld(world);
+		model->SetAdjust(D3DXVECTOR3(0, 0.78f, 0));
+
+	}
 }
 
 void Player::Notify()
-{
+{ 
 	ModelAnimationController* ani= model->GetAnimationController();
 	int current = ani->GetCurrentKeyFrame();
 	int end = ani->GetCurrentAnimation()->GetKeyFrames();
+
 	if (mode == "run")
 	{
 		if (current >= end - 1|| Premode == "rush") ani->SetCurrentKeyFrame(27);
@@ -166,6 +257,7 @@ void Player::Notify()
 		isControl=true;
 		speed = 0.0f;
 		model->SetAniPlay(1, 0, 1.5f);
+		isHeight = false;
 		}
 	}
 	else if (mode == "rush_jump")
@@ -178,7 +270,20 @@ void Player::Notify()
 	}
 	else if (mode == "w1_equip")
 	{
-		if (current >= end - 1) { Input("w1_idle"); }
+		if (current >= end - 1) { Input("w1_idle"); isControl=true;}
+	}
+	else if (mode == "w1_equip_end"|| mode == "w1_equip_walk_end")
+	{
+		if (current >= end - 10) { Input("idle"); isControl = true; isEquip=false;}
+	}
+
+	else if (mode == "w1_attack1_set")
+	{
+		if (current >= end - 1) { Input("w1_attack1"); }
+	}
+	else if (mode == "w1_attack1")
+	{
+		if (current >= end - 5) { isControl = true;}
 	}
 
 }
@@ -202,7 +307,6 @@ void Player::SetPlayer()
 	weapon->SetAdjust(D3DXVECTOR3(0.5f, -0.5f, 0));
 	AddWeaponVector(equipName,weapon);
 	model->Reset();
-	model->SetAdjust(D3DXVECTOR3(0, 0.78f, 0));
 	model->SetAniPlay(1, 0, 1.5f);
 	model->AniChange("idle");
 
@@ -227,4 +331,18 @@ void Player::DeleteWeapon()
 void Player::AddWeaponVector(string weaponName, Model * weaponFile)
 {
 	weapons.push_back(Weapon(weaponName,weaponFile));
+}
+
+float Player::SetHeight()
+{
+	ModelSkeleton* sk= model->GetSkeleton();
+	float min=0,origin=0;
+	for(int i = 0;i< sk->GetBoneCount();i++)
+	{
+		D3DXVECTOR3 temp(0,0,0);
+		D3DXVec3TransformCoord(&temp,&temp,&model->GetWeaponWorld(sk->GetWeaponName(i)));
+		if(i==0) {origin=min=temp.y;}
+		else if(min>temp.y)min=temp.y;
+	}
+	return origin-min;
 }

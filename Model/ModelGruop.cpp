@@ -29,6 +29,7 @@ ModelGroup::~ModelGroup()
 
 void ModelGroup::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
+	//모델 위치 및 생성
 	if (Mouse::Get()->Down(0)&&OnModel==true)
 	{
 		if (another == NULL) 
@@ -41,6 +42,8 @@ void ModelGroup::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 			}
 		}
 	}
+
+	//현재 모델삭제
 	if (Keyboard::Get()->Down(VK_ESCAPE))
 	{
 		SAFE_DELETE(another);
@@ -77,6 +80,7 @@ void ModelGroup::Update(int thread)
 }
 void ModelGroup::PostRender(bool& isUse)
 {
+	//모델 위치 저장
 		if (another != NULL)
 		{	
 			if(model!=another)
@@ -104,7 +108,7 @@ void ModelGroup::PostRender(bool& isUse)
 				c_temp3[0] = temp3.x;c_temp3[1] = temp3.y;c_temp3[2] = temp3.z;
 			}
 		}
-
+	//모델 관련 설정
 	ImGui::Begin("Model",&isUse);
 	OnModel = ImGui::CollapsingHeader("Model");
 	if (OnModel)
@@ -205,6 +209,7 @@ void ModelGroup::PostRender(bool& isUse)
 		}
 	}
 
+	//모델에 집어넣을 마테리얼
 	static bool OnMaterial=false;
 	OnMaterial = ImGui::CollapsingHeader("Material");
 	if (OnMaterial)
@@ -248,6 +253,7 @@ void ModelGroup::PostRender(bool& isUse)
 		}
 	}
 
+	//모델 장비
 	static bool OnSkeleton = false;
 	OnSkeleton = ImGui::CollapsingHeader("Skeleton");
 	if (OnSkeleton)
@@ -268,7 +274,7 @@ void ModelGroup::PostRender(bool& isUse)
 			}
 	}
 
-
+	//모델 애니메이션
 	static bool OnAni = false;
 	OnAni = ImGui::CollapsingHeader("Animation");
 	if (OnAni)

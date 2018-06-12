@@ -10,6 +10,7 @@ public:
 	~ModelSkeleton();
 
 	D3DXMATRIX GetWeapon(string name);
+	string GetWeaponName(int num);
 
 	void AddSkeletonBone(ModelSkeletonBone* skeletonBone);
 	ModelSkeletonBone* FindBone(string boneName);

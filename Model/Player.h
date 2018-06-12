@@ -17,6 +17,8 @@ public:
 	void ClearWeapon();
 	void DeleteWeapon();
 	void AddWeaponVector(string weaponName, Model * weaponFile);
+
+	float SetHeight();
 private:
 	void Control();
 	void Notify();
@@ -26,8 +28,8 @@ private:
 
 	int dir,degree,degree_goal,weaponNum;
 	float speed;
-	bool isControl,isEquip;
-	string mode,Premode,equipName, unequipName;
+	bool isControl,isEquip,isHeight;
+	string mode,Premode,equipName, equipName2, unequipName;
 	D3DXVECTOR3 way;
 
 };

@@ -47,6 +47,7 @@ public:
 	void Reset();
 	void SetWorld();
 	void SetWorld(D3DXMATRIX & world);
+	void SetGeometricOffset(D3DXMATRIX& world);
 	void AddAnimationKeyFrames(ModelAnimationKeyFrames * animationKeyFrames);
 	void GetFileName(string file);
 	string GetFile() { return file; }
