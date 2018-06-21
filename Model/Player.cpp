@@ -1,5 +1,6 @@
 #include "../stdafx.h"
 #include "Player.h"
+#include "Actor.h"
 #include "Model.h"
 #include "ModelSkeleton.h"
 #include "ModelAnimation.h"
@@ -33,6 +34,12 @@ void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 	{
 		SetPlayer();
 	}
+
+	if (Keyboard::Get()->Down('F'))
+	{
+		if(weaponNum<weapons.size()) weaponNum++;
+		else weaponNum=0;
+	}
 	if (model != NULL)
 	{
 		Control();
@@ -41,47 +48,66 @@ void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 
 void Player::Update()
 {
+
 	if(model!=NULL)
 	{	
 		Notify();
 		Actor::Update();
-		
-		for each(Weapon temp in weapons)
+
+		if (weaponNum >= 0 && weaponNum<weapons.size())
 		{
-			temp.second->Update();
+			D3DXMATRIX world,scale,rotate;
+			string worldName;
+			
+			weapons[weaponNum].second->Update();
 			//무기 장착시와 아닐시 고정 위치 변 
 			if(isEquip)
 			{
-
 				if (mode == "w1_equip"|| mode == "w1_equip_end" || mode == "w1_equip_walk_end")
 				{
 					if(mode!=Premode)
 					{
-					temp.second->SetRotate(D3DXVECTOR3(90,0,0));
-					temp.second->SetAdjust(D3DXVECTOR3(0, 0, 0));
+					weapons[weaponNum].second->SetRotate(D3DXVECTOR3(90,0,0));
+					weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0, 0, 0));
 					}
-					temp.second->SetWorld(model->GetWeaponWorld(equipName2)*model->GetWorld());
+					worldName = equipName2;
 				}
 				else
 				{
 					if (mode != Premode)
 					{
-					temp.second->SetRotate(D3DXVECTOR3(-90, 0, 0));
-					temp.second->SetAdjust(D3DXVECTOR3(0.8f, -1, 0));
+					weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 0, 0));
+					weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0.4f, 1.0f, 0));
 					}
-					temp.second->SetWorld(model->GetWeaponWorld(temp.first)*model->GetWorld());
+					worldName = equipName;
 				}
 			}
 			else 
 			{
-
-				if (mode != Premode||Premode=="")
+				if (mode != Premode|| mode=="idle")
 				{
-				temp.second->SetRotate(D3DXVECTOR3(-90,90,0));
-				temp.second->SetAdjust(D3DXVECTOR3(-0.4f, 0, -1));
+				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90,90,0));
+				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(-0.12f, 0,1.5f));
 				}
-				temp.second->SetWorld(model->GetWeaponWorld(unequipName)*model->GetWorld());
+				worldName = unequipName;
 			}
+
+
+			D3DXVECTOR3 max= weapons[weaponNum].second->GetMaxP(),min = weapons[weaponNum].second->GetMinP();
+			D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
+			D3DXVECTOR3 center = max-min, position=(max+min);
+
+			D3DXMatrixScaling(&scale, center.x/size.x , center.y / size.y , center.z / size.z );
+			D3DXMatrixTranslation(&world, position.x, 0, 0);
+			size.x *= another.x;
+			size.y *= another.y;
+			size.z *= another.z;
+
+			weapons[weaponNum].second->SetWorld(model->GetWeaponWorld(worldName)*model->GetWorld());
+			weaponWorld = world* weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld();
+			ST_OBB* test = new ST_OBB();
+			CalMatrix(test, max,min, size, weaponWorld);
+			weaponWorld = scale * weaponWorld;
 		}
 	}
 }
@@ -92,10 +118,12 @@ void Player::Render()
 	{
 		Actor::Render();
 
-		for each(Weapon temp in weapons)
-		{
-			temp.second->Render();
-		}
+		if(weaponNum>=0&&weaponNum<weapons.size())
+		weapons[weaponNum].second->Render();
+		
+
+		//Cube::Get()->Update(weaponWorld);
+		//Cube::Get()->Render();
 	}
 }
 
@@ -129,27 +157,34 @@ void Player::Control()
 		else if (Keyboard::Get()->Press('S')) dir++;
 		
 		if(way.z != 0 || way.x != 0)
-		{	
-			if (way.z != 0 && way.x != 0)
-			{
-				if(way.z==1&&way.x==-1)degree_sum+=360;
-				degree_sum/=2;
-			}
+		{
+			if(degree<0)degree=360;
+			else if(degree>360)degree=0;
+
+			if (way.z == 1 && way.x == -1)degree_sum += 360;
+			if (way.z != 0 && way.x != 0)degree_sum/=2;
 			degree_goal=degree_sum;
 
-			if(degree<0)degree+=360;
-			else if(degree>=360)degree-=360;
-
-			if (abs(degree_goal-degree)<=180)
+			int size= abs(degree_goal - (degree)) / 20 + 1;
+			
+			if (180 <  degree)
 			{
-				if (degree_goal < degree)      degree-=abs(degree_goal - degree) / 20 + 1;		
-				else if (degree_goal > degree) degree+=abs(degree_goal - degree) / 20 + 1;
+				if (degree_goal<degree&&degree_goal >= degree - 180) degree -= size;
+				else
+				{
+					if (degree_goal<180) degree += abs(degree_goal + 360 - degree) / 20 + 1;
+					else degree += size;
+				}
 			}
-			else 
+			else
 			{
-				if (degree_goal < degree)     degree += abs(degree_goal - degree) / 20 + 1;
-				else if (degree_goal > degree)degree -= abs(degree_goal - degree) / 20 + 1;
-			}			
+				if (degree_goal >= degree && degree_goal<degree + 180)	degree += size;
+				else
+				{
+					if (degree_goal>180) degree -= abs(degree_goal - (degree + 360)) / 20 + 1;
+					else degree -= size;
+				}
+			}
 		}
 
 		//default 애니메이션
@@ -228,13 +263,13 @@ void Player::Control()
 	{
 		D3DXMatrixTranslation(&world,0,SetHeight(),0);
 		model->SetWorld(world);
-		model->SetAdjust(D3DXVECTOR3(0,0.1f,0));
+		model->SetAdjust(D3DXVECTOR3(0,0.05f,0));
 	}
 	else
 	{
 		D3DXMatrixTranslation(&world, 0, 0, 0);
 		model->SetWorld(world);
-		model->SetAdjust(D3DXVECTOR3(0, 0.78f, 0));
+		model->SetAdjust(D3DXVECTOR3(0, 0.42f, 0));
 
 	}
 }
@@ -242,16 +277,16 @@ void Player::Control()
 void Player::Notify()
 { 
 	ModelAnimationController* ani= model->GetAnimationController();
-	int current = ani->GetCurrentKeyFrame();
+	int degree = ani->GetCurrentKeyFrame();
 	int end = ani->GetCurrentAnimation()->GetKeyFrames();
 
 	if (mode == "run")
 	{
-		if (current >= end - 1|| Premode == "rush") ani->SetCurrentKeyFrame(27);
+		if (degree >= end - 1|| Premode == "rush") ani->SetCurrentKeyFrame(27);
 	}
 	else if (mode == "jump"||mode == "rush_jump_end")
 	{
-		if (current >= end - 1) 
+		if (degree >= end - 1) 
 		{
 		Input("idle");
 		isControl=true;
@@ -262,28 +297,28 @@ void Player::Notify()
 	}
 	else if (mode == "rush_jump")
 	{
-		if (current >= end - 1) { Input("rush_jump_dive");}
+		if (degree >= end - 1) { Input("rush_jump_dive");}
 	}
 	else if (mode == "rush_jump_dive")
 	{
-		if (current >= end - 1) { Input("rush_jump_end"); }
+		if (degree >= end - 1) { Input("rush_jump_end"); }
 	}
 	else if (mode == "w1_equip")
 	{
-		if (current >= end - 1) { Input("w1_idle"); isControl=true;}
+		if (degree >= end - 1) { Input("w1_idle"); isControl=true;}
 	}
 	else if (mode == "w1_equip_end"|| mode == "w1_equip_walk_end")
 	{
-		if (current >= end - 10) { Input("idle"); isControl = true; isEquip=false;}
+		if (degree >= end - 10) { Input("idle"); isControl = true; isEquip=false;}
 	}
 
 	else if (mode == "w1_attack1_set")
 	{
-		if (current >= end - 1) { Input("w1_attack1"); }
+		if (degree >= end - 1) { Input("w1_attack1"); }
 	}
 	else if (mode == "w1_attack1")
 	{
-		if (current >= end - 5) { isControl = true;}
+		if (degree >= end - 5) { isControl = true;}
 	}
 
 }
@@ -300,12 +335,7 @@ void Player::Input(string mode)
 void Player::SetPlayer()
 {
 	if(model!=NULL) return;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
-	Model* weapon;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &weapon);
-	weapon->Reset();
-	weapon->SetAdjust(D3DXVECTOR3(0.5f, -0.5f, 0));
-	AddWeaponVector(equipName,weapon);
+	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Boss4.model", &model);
 	model->Reset();
 	model->SetAniPlay(1, 0, 1.5f);
 	model->AniChange("idle");

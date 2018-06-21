@@ -25,7 +25,7 @@ private:
 
 	typedef pair<string, Model*> Weapon;
 	vector<Weapon> weapons;
-
+	D3DXMATRIX weaponWorld;
 	int dir,degree,degree_goal,weaponNum;
 	float speed;
 	bool isControl,isEquip,isHeight;

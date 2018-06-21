@@ -1,4 +1,32 @@
 #pragma once
+struct ST_OBB // OBB구조체
+{
+	D3DXVECTOR3 vCenterPos; // 상자 중앙의 좌표
+	D3DXVECTOR3 vAxisDir[3]; //상자에 평행한 세 축의 단위벡터
+	float  fAxisLen[3]; // 상자의 평행한 세 축의 길이 fAxisLen[n]은 vAxisDir[n]에 각각 대응한다.
+	ST_OBB()
+	{
+		vCenterPos = D3DXVECTOR3(0, 0, 0);
+		vAxisDir[0] = D3DXVECTOR3(0, 0, 0);
+		vAxisDir[1] = D3DXVECTOR3(0, 0, 0);
+		vAxisDir[2] = D3DXVECTOR3(0, 0, 0);
+		fAxisLen[0] = 0.0f;
+		fAxisLen[1] = 0.0f;
+		fAxisLen[2] = 0.0f;
+	}
+
+	ST_OBB(D3DXVECTOR3 vCenterPos, D3DXVECTOR3 vAxisDir[3], float  fAxisLen[3])
+	{
+		this->vCenterPos = vCenterPos;
+		this->vAxisDir[0] = vAxisDir[0];
+		this->vAxisDir[1] = vAxisDir[1];
+		this->vAxisDir[2] = vAxisDir[2];
+		this->fAxisLen[0] = fAxisLen[0];
+		this->fAxisLen[1] = fAxisLen[1];
+		this->fAxisLen[2] = fAxisLen[2];
+
+	}
+};
 
 class ModelSkeleton;
 class ModelMaterial;
@@ -16,6 +44,8 @@ public:
 
 	D3DXMATRIX GetGeometricOffset() { return matGeometricOffset; }
 	D3DXMATRIX GetWorld() { return world; }
+	D3DXMATRIX GetWeaponWorld() { return weaponWorld;}
+	D3DXMATRIX GetWeaponWorld(string weapon);
 	
 	ModelSkeleton* GetSkeleton(){return skeleton;}
 	ModelAnimationController* GetAnimationController() { return animationController; }
@@ -30,7 +60,6 @@ public:
 	UINT GetMaterialCount() { return materials.size(); }
 	void SetMaterial(ModelMaterial* material);
 	void ClearMaterial();
-	D3DXMATRIX GetWeaponWorld(string weapon);
 
 	void Update();
 	void Render();
@@ -42,6 +71,8 @@ public:
 	void UpdateAnimation();
 	void ProcessAnimations(string mode);
 	void ProcessAnimation(FbxNode * node, string takeName, float frameRate, float start, float stop);
+
+	void CubeRender();
 
 	bool Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Reset();
@@ -61,6 +92,9 @@ public:
 	void SetAdjust(D3DXVECTOR3& adjust);
 	D3DXVECTOR3 GetAdjust();
 	void SetAniPlay(int root,int range,float speed);
+
+	D3DXVECTOR3 GetMaxP() { return maxp; }
+	D3DXVECTOR3 GetMinP() { return minp; }
 
 	D3DXMATRIX GetAbsoluteTransformFromCurrentTake(FbxNode * node, FbxTime time);
 

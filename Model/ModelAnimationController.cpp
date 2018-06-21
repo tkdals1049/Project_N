@@ -170,7 +170,7 @@ void ModelAnimationController::Update(float speed)
 	{
 
 		currentKeyFrame = (currentKeyFrame + 1) % currentAnimation->GetKeyFrames();
-		nextKeyFrame = (currentKeyFrame + 1) % currentAnimation->GetKeyFrames();
+		nextKeyFrame =    (currentKeyFrame + 1) % currentAnimation->GetKeyFrames();
 
 		frameTimer -= invFrameRate;
 	}

@@ -130,7 +130,6 @@ void MoLoader::ProcessNode(FbxNode * node, FbxNodeAttribute::EType type)
 
 void MoLoader::ProcessSkeleton(FbxNode * node)
 {
-
 	FbxSkeleton* fbxSkeleton = node->GetSkeleton();
 	if (fbxSkeleton == NULL)return;
 
@@ -145,9 +144,7 @@ void MoLoader::ProcessSkeleton(FbxNode * node)
 	}
 
 	MoSkeletonBone* skeletonBone = new MoSkeletonBone(node->GetName(), parentBoneIndex);
-	model->skeleton->AddSkeletonBone(skeletonBone);
-
-	
+	model->skeleton->AddSkeletonBone(skeletonBone);	
 }
 
 void MoLoader::ProcessMesh(FbxNode * node)

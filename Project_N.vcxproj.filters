@@ -61,9 +61,6 @@
     <ClCompile Include="FbxModel\MoBoneWeights.cpp">
       <Filter>Model\FbxModel</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Model.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
     <ClCompile Include="FbxModel\MoKeyFrame.cpp">
       <Filter>Model\FbxModel</Filter>
     </ClCompile>
@@ -154,6 +151,15 @@
     <ClCompile Include="Model\Player.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="Model\Domain.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Cube.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Model.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h" />
@@ -219,9 +225,6 @@
       <Filter>Model\FbxModel</Filter>
     </ClInclude>
     <ClInclude Include="FbxModel\MoBoneWeights.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Model.h">
       <Filter>Model\FbxModel</Filter>
     </ClInclude>
     <ClInclude Include="FbxModel\MokeyFrame.h">
@@ -316,6 +319,15 @@
     </ClInclude>
     <ClInclude Include="Model\Player.h">
       <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Domain.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Cube.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Model.h">
+      <Filter>Model\BinModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

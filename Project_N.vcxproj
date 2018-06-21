@@ -39,8 +39,10 @@
     <ClCompile Include="Meshes\Brush.cpp" />
     <ClCompile Include="Meshes\Plane.cpp" />
     <ClCompile Include="Model\Boss.cpp" />
-    <ClCompile Include="Model\ModelGruop.cpp" />
+    <ClCompile Include="Model\Cube.cpp" />
+    <ClCompile Include="Model\Domain.cpp" />
     <ClCompile Include="Model\Model.cpp" />
+    <ClCompile Include="Model\ModelGruop.cpp" />
     <ClCompile Include="Model\ModelAnimation.cpp" />
     <ClCompile Include="Model\ModelAnimationController.cpp" />
     <ClCompile Include="Model\ModelAnimationKeyFrames.cpp" />
@@ -102,8 +104,10 @@
     <ClInclude Include="Meshes\Plane.h" />
     <None Include="Model\BoneBuffer.h" />
     <ClInclude Include="Model\Boss.h" />
-    <ClInclude Include="Model\ModelGroup.h" />
+    <ClInclude Include="Model\Cube.h" />
+    <ClInclude Include="Model\Domain.h" />
     <ClInclude Include="Model\Model.h" />
+    <ClInclude Include="Model\ModelGroup.h" />
     <ClInclude Include="Model\ModelAnimation.h" />
     <ClInclude Include="Model\ModelAnimationController.h" />
     <ClInclude Include="Model\ModelAnimationKeyFrames.h" />

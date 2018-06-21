@@ -17,8 +17,6 @@ private:
 	friend class MoModel;
 	friend class MoModelMesh;
 	friend class Model;
-
-
 	typedef VertexTextureNormalTangentBlend VertexType;
 
 	ModelMesh(Model* model);
@@ -28,8 +26,6 @@ private:
 	void Render();
 
 	void CreateBuffer();
-
-
 
 	Model* model;
 	ModelMaterial* material;

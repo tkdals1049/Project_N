@@ -42,7 +42,6 @@ ModelSkeleton::~ModelSkeleton()
 
 D3DXMATRIX ModelSkeleton::GetWeapon(string name)
 {
-	D3DXMATRIX another = boneAnimationTransforms[FindBoneIndex(name)];
 	return boneAnimationTransforms[FindBoneIndex(name)];
 	//return boneAnimationTransforms[FindBoneIndex(name)];
 }

@@ -6,6 +6,7 @@
 #include <io.h>
 #include <conio.h>
 #include <time.h>
+#include <math.h>
 #pragma comment(lib, "winmm.lib")
 
 #include <string>
@@ -75,3 +76,5 @@ const wstring Shaders = L"../_Shaders/";
 
 #include "./Model/Model.h"
 #include "./FbxModel/MoLoader.h"
+#include "./Model/Domain.h"
+#include "./Model/Cube.h"

@@ -27,12 +27,14 @@ public:
 	void SetAdjust(D3DXVECTOR3 adjust);
 	void SetAniPlay(D3DXVECTOR3 ani);
 protected:
+	BOOL CheckOBBCollision(ST_OBB * Box1, ST_OBB * Box2);
+	void CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3 size, D3DXMATRIX mat);
 	bool different;
 	class Camera* camera;
 	
 	Model* model;
 private:
-
+	D3DXMATRIX world;
 	D3DXVECTOR2 dot;
 	bool OnModel;
 	float a;
@@ -44,4 +46,3 @@ private:
 	const char** skeletonList;
 
 };
-

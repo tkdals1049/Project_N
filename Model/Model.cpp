@@ -56,7 +56,9 @@ void Model::Render()
 	boneBuffer->SetVSBuffer(2);
 
 	for (ModelMesh* mesh : meshes)
-		mesh->Render();
+ 		mesh->Render();
+
+	CubeRender();
 }
 
 void Model::AnotherUpdate()
@@ -269,6 +271,44 @@ void Model::ProcessAnimation(FbxNode * node, string takeName, float frameRate, f
 
 
 /////////////////////////////////////////////////////////////////////////
+void Model::CubeRender()
+{
+	typedef pair<string, ModelSkeletonBone *> Pair;
+	vector<Pair> skeletonBones=skeleton->GetSkeletonBones();
+	
+	if(skeletonBones.size()<1)return;
+	for (size_t i=0; i<skeletonBones.size(); i++)
+	{
+		if(skeletonBones[i].second->GetParentBoneIndex()<0) {continue;}
+		
+		D3DXMATRIX child = skeleton->GetBoneAnimationTransform(i);
+		D3DXMATRIX parent = skeleton->GetBoneAnimationTransform(skeletonBones[i].second->GetParentBoneIndex());
+
+		D3DXMATRIX scale, rotate1, rotate2, rotate3, position;
+		D3DXVECTOR3 Dot1(child._41, child._42, child._43), Dot2(parent._41, parent._42, parent._43);
+		D3DXVECTOR3 Center = (Dot1 + Dot2) / 2, Vec = Dot1 - Dot2;
+		D3DXVECTOR2 Vec2[3]{D3DXVECTOR2(Vec.z,Vec.x),D3DXVECTOR2(Vec.z,Vec.y),D3DXVECTOR2(Vec.x,Vec.y)};
+
+		for(int i=0; i<3;i++)
+		D3DXVec2Normalize(&Vec2[i],&Vec2[i]);
+
+		float size=D3DXVec3Length(&(Dot1-Dot2));
+	
+		D3DXMatrixScaling(&scale,1,size,1);
+
+		D3DXMatrixRotationX(&rotate1, D3DXVec2Dot(&Vec2[1], &D3DXVECTOR2(1,0)));
+		D3DXMatrixRotationY(&rotate2, D3DXVec2Dot(&Vec2[0], &D3DXVECTOR2(1,0)));
+		D3DXMatrixRotationZ(&rotate3, D3DXVec2Dot(&Vec2[2], &D3DXVECTOR2(1,0)));
+		D3DXMatrixTranslation(&position, Center.x,Center.y,Center.z);
+		D3DXMatrixInverse(&rotate1, NULL, &rotate1);
+		D3DXMatrixInverse(&rotate2, NULL, &rotate2);
+
+		Cube::Get()->Update(parent);
+		Cube::Get()->Render();
+		Cube::Get()->Update(scale*rotate1*rotate2*rotate3*position);
+		Cube::Get()->Render();
+	}
+}
 
 bool Model::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
@@ -304,9 +344,10 @@ void Model::Reset()
 void Model::SetWorld()
 {
 		D3DXVECTOR3 size = maxp - minp;
-		D3DXVECTOR3 center = minp+size/2;
-		D3DXMATRIX matS;
+		D3DXVECTOR3 center = size/2;
+		D3DXMATRIX matS,matS2;
 		D3DXMatrixScaling(&matS, scale.x, scale.y, scale.z);
+		D3DXMatrixScaling(&matS2, size.x, size.y, size.z);
 
 		D3DXMATRIX matR, matX, matY, matZ;
 		D3DXMatrixRotationX(&matX, rotate.x*(float)D3DX_PI/180);
@@ -314,10 +355,11 @@ void Model::SetWorld()
 		D3DXMatrixRotationZ(&matZ, rotate.z*(float)D3DX_PI/180);
 		matR = matX*matY*matZ;
 
-		D3DXMATRIX matT, matRT;
+		D3DXMATRIX matT, matRT, matRT2;
 		D3DXMatrixTranslation(&matRT, center.x*adjust.x, center.y*adjust.y, center.z*adjust.z);
 		//D3DXMatrixInverse(&matRT, NULL, &matRT);
 		D3DXMatrixTranslation(&matT, position.x, position.y, position.z);
+		D3DXMatrixTranslation(&matRT2, minp.x/2, minp.y / 2, minp.z / 2);
 		matGeometricOffset = matS*matR*matT*matRT;
 }
 

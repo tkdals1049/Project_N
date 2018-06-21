@@ -4,7 +4,6 @@
 #include "ModelSkeleton.h"
 #include "ModelSkeletonBone.h"
 #include "ModelAnimationController.h"
-#include "Model.h"
 #include "Player.h"
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
@@ -19,6 +18,7 @@ ModelGroup::ModelGroup():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
 	skeletonList=NULL;
 
 	player= new Player();
+
 }
 
 ModelGroup::~ModelGroup()
