@@ -72,8 +72,6 @@ public:
 	void ProcessAnimations(string mode);
 	void ProcessAnimation(FbxNode * node, string takeName, float frameRate, float start, float stop);
 
-	void CubeRender();
-
 	bool Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Reset();
 	void SetWorld();

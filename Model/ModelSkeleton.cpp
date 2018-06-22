@@ -182,7 +182,7 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 
 		int parentBoneIndex = bone->GetParentBoneIndex();
 
-		if (parentBoneIndex < 0)
+		if (parentBoneIndex < range)
 		{
 			D3DXMatrixIdentity(&matParentAnimation);
 			if (root != 0)matAnimation = animatiokeyFrames->GetKeyFrameTransform(range);

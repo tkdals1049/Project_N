@@ -74,6 +74,9 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Utilities/Path.h"
 #include "./Utilities/String.h"
 
+#include "./Environment/Sky.h"
+#include "./Environment/Plane.h"
+
 #include "./Model/Model.h"
 #include "./FbxModel/MoLoader.h"
 #include "./Model/Domain.h"

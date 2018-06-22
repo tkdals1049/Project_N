@@ -2,6 +2,19 @@
 #include "Sky.h"
 #include "../Utilities/Mesh.h"
 
+Sky* Sky::instance = NULL;
+Sky * Sky::Get()
+{
+	if (instance == NULL)
+		instance = new Sky();
+
+	return instance;
+}
+
+void Sky::Delete()
+{
+	SAFE_DELETE(instance);
+}
 Sky::Sky()
 	: meshFile(Contents + L"Meshes/Sphere.data")
 	, shaderFile(Shaders + L"Sky.hlsl")

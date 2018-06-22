@@ -32,6 +32,8 @@ private:
 
 	class Camera* camera;
 	class Player* player;
+	class MonsterManager* monster;
+
 	vector<Model*> models;
 	Model* model;
 

@@ -4,8 +4,6 @@
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
 #include "../Model/ModelGroup.h"
-#include "../Environment/Sky.h"
-#include "../Meshes/Plane.h"
 #include "../FbxModel/MoLoader.h"
 #include "../Utilities/Path.h"
 
@@ -19,8 +17,6 @@ ExeModel::ExeModel(ExecuteValues* values)
 	BinModel::Get();
 	FbxModel::Get();
 
-	sky = new Sky();
-	plane = new Plane();
 	group=new ModelGroup();
 	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
 
@@ -33,8 +29,6 @@ ExeModel::ExeModel(ExecuteValues* values)
 
 ExeModel::~ExeModel()
 {
-	SAFE_DELETE(plane);
-	SAFE_DELETE(sky);
 }
 
 void ExeModel::Update()
@@ -43,10 +37,10 @@ void ExeModel::Update()
 	D3DXVECTOR3 origin, direction;
 	GetRay(&origin,&direction);
 
-	sky->Update(values->MainCamera);
-	plane->UpdatePointBuffer(origin,direction);
-	plane->Update();
-	group->SetDot(plane->GetDot());
+	Sky::Get()->Update(values->MainCamera);
+	Plane::Get()->UpdatePointBuffer(origin,direction);
+	Plane::Get()->Update();
+	group->SetDot(Plane::Get()->GetDot());
 	group->PreUpdate(origin,direction);
 	group->Update();
 
@@ -67,8 +61,8 @@ void ExeModel::PreRender()
 
 void ExeModel::Render()
 {
-	sky->Render();
-	plane->Render();
+	Sky::Get()->Render();
+	Plane::Get()->Render();
 
 	D3D::GetDC()->RSGetState(&getRasterizer);
 	D3D::GetDC()->RSSetState(setRasterizer);
@@ -117,8 +111,8 @@ void ExeModel::PostRender()
 	}
 	if(isEnviroment==true)
 	{
-	sky->PostRender(isEnviroment);
-	plane->PostRender(isEnviroment);
+	Sky::Get()->PostRender(isEnviroment);
+	Plane::Get()->PostRender(isEnviroment);
 	}
 	if(isModel)
 	{

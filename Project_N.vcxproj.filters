@@ -22,12 +22,6 @@
     <ClCompile Include="Executes\ExeModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Meshes\Brush.cpp">
-      <Filter>Meshes</Filter>
-    </ClCompile>
-    <ClCompile Include="Meshes\Plane.cpp">
-      <Filter>Meshes</Filter>
-    </ClCompile>
     <ClCompile Include="Model\ModelAnimation.cpp">
       <Filter>Model\BinModel</Filter>
     </ClCompile>
@@ -139,18 +133,6 @@
     <ClCompile Include="Model\ModelGruop.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Actor.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Boss.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Monster.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Player.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Domain.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -159,6 +141,27 @@
     </ClCompile>
     <ClCompile Include="Model\Model.cpp">
       <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Brush.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Plane.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Boss.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Player.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Monster.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\MonsterManager.cpp">
+      <Filter>Model\Actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -184,12 +187,6 @@
     </ClInclude>
     <ClInclude Include="Executes\ExeModel.h">
       <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Meshes\Brush.h">
-      <Filter>Meshes</Filter>
-    </ClInclude>
-    <ClInclude Include="Meshes\Plane.h">
-      <Filter>Meshes</Filter>
     </ClInclude>
     <ClInclude Include="Model\ModelAnimation.h">
       <Filter>Model\BinModel</Filter>
@@ -308,18 +305,6 @@
     <ClInclude Include="Model\ModelGroup.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Actor.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Boss.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Monster.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Player.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Domain.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -328,6 +313,30 @@
     </ClInclude>
     <ClInclude Include="Model\Model.h">
       <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Brush.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\BrushBuffer.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Plane.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Boss.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Player.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Monster.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\MonsterManager.h">
+      <Filter>Model\Actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -339,9 +348,6 @@
     </Filter>
     <Filter Include="Executes">
       <UniqueIdentifier>{18994c52-04ad-4872-8a40-fc9377857738}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Meshes">
-      <UniqueIdentifier>{86c1d6c2-9a67-4393-98d9-be22984cfcfc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{b4799459-dde0-44ce-9921-a155df05d497}</UniqueIdentifier>
@@ -370,11 +376,11 @@
     <Filter Include="Viewer\view">
       <UniqueIdentifier>{d4b2bdd1-fe02-42ef-9111-803ac585e937}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Model\Actor">
+      <UniqueIdentifier>{1f1efae1-dc3c-4e20-b407-5c684e6763ea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Meshes\BrushBuffer.h">
-      <Filter>Meshes</Filter>
-    </None>
     <None Include="Model\BoneBuffer.h">
       <Filter>Model\BinModel</Filter>
     </None>

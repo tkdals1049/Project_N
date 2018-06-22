@@ -21,14 +21,19 @@ public:
 class Sky
 {
 public:
-	Sky();
-	~Sky();
+	static Sky* Get();
+	static void Delete();
 
 	void Update(Camera* camera);
 	void Render();
 	void PostRender(bool& isUse);
 
 private:
+	Sky();
+	~Sky();
+
+	static Sky* instance;
+
 	typedef Vertex VertexType;
 
 	wstring meshFile;

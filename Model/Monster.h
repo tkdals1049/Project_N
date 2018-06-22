@@ -15,9 +15,7 @@ public:
 	void Input(string mode);
 	void SetMonster();
 
-	float SetHeight();
 private:
-	void Control();
 	void Notify();
 
 	int dir, degree, degree_goal, weaponNum;

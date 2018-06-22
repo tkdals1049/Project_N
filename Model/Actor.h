@@ -26,6 +26,7 @@ public:
 	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void SetAdjust(D3DXVECTOR3 adjust);
 	void SetAniPlay(D3DXVECTOR3 ani);
+	void CalSkeleton();
 protected:
 	BOOL CheckOBBCollision(ST_OBB * Box1, ST_OBB * Box2);
 	void CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3 size, D3DXMATRIX mat);

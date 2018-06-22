@@ -25,8 +25,6 @@ private:
 	void OpenModelDialog(wstring file = L"");
 	void SaveModelDialog(wstring file = L"");
 
-	class Sky* sky;
-	class Plane* plane;
 	class ModelGroup* group;
 
 	ID3D11RasterizerState * getRasterizer;

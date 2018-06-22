@@ -6,13 +6,13 @@
 #include "ModelAnimation.h"
 #include "ModelAnimationController.h"
 
-Player::Player():dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false),way(D3DXVECTOR3(0,0,0)),weaponNum(-1),equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00")
+Player::Player():dir(0), degree(0), degree_goal(0), speed(20.0f),way(D3DXVECTOR3(0,0,0)), way2(D3DXVECTOR3(0, 0, 0)),
+mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false),weaponNum(-1),equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00")
 {
 }
 
-Player::Player(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), equipName("AL-03"), unequipName("NK-00")
+Player::Player(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f), way(D3DXVECTOR3(0, 0, 0)), way2(D3DXVECTOR3(0, 0, 0)),
+mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), weaponNum(-1), equipName("AL-03"), unequipName("NK-00")
 {
 		MoLoader::LoadBinary(file, &model);
 
@@ -37,7 +37,7 @@ void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 
 	if (Keyboard::Get()->Down('F'))
 	{
-		if(weaponNum<weapons.size()) weaponNum++;
+		if((unsigned int)weaponNum<weapons.size()) weaponNum++;
 		else weaponNum=0;
 	}
 	if (model != NULL)
@@ -54,62 +54,66 @@ void Player::Update()
 		Notify();
 		Actor::Update();
 
-		if (weaponNum >= 0 && weaponNum<weapons.size())
+		if (weaponNum >= 0 && (unsigned int)weaponNum<weapons.size()) WeaponUpdate();
+	}
+}
+
+void Player::WeaponUpdate()
+{
+	D3DXMATRIX world, scale, rotate;
+	string worldName;
+
+	weapons[weaponNum].second->Update();
+	//무기 장착시와 아닐시 고정 위치 변 
+	if (isEquip)
+	{
+		if (mode == "w1_equip" || mode == "w1_equip_end" || mode == "w1_equip_walk_end")
 		{
-			D3DXMATRIX world,scale,rotate;
-			string worldName;
-			
-			weapons[weaponNum].second->Update();
-			//무기 장착시와 아닐시 고정 위치 변 
-			if(isEquip)
+			if (mode != Premode)
 			{
-				if (mode == "w1_equip"|| mode == "w1_equip_end" || mode == "w1_equip_walk_end")
-				{
-					if(mode!=Premode)
-					{
-					weapons[weaponNum].second->SetRotate(D3DXVECTOR3(90,0,0));
-					weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0, 0, 0));
-					}
-					worldName = equipName2;
-				}
-				else
-				{
-					if (mode != Premode)
-					{
-					weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 0, 0));
-					weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0.4f, 1.0f, 0));
-					}
-					worldName = equipName;
-				}
+				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(90, 0, 0));
+				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0, 0, 0));
 			}
-			else 
+			worldName = equipName2;
+		}
+		else
+		{
+			if (mode != Premode)
 			{
-				if (mode != Premode|| mode=="idle")
-				{
-				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90,90,0));
-				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(-0.12f, 0,1.5f));
-				}
-				worldName = unequipName;
+				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 0, 0));
+				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0.4f, 2.0f, 0));
 			}
-
-
-			D3DXVECTOR3 max= weapons[weaponNum].second->GetMaxP(),min = weapons[weaponNum].second->GetMinP();
-			D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
-			D3DXVECTOR3 center = max-min, position=(max+min);
-
-			D3DXMatrixScaling(&scale, center.x/size.x , center.y / size.y , center.z / size.z );
-			D3DXMatrixTranslation(&world, position.x, 0, 0);
-			size.x *= another.x;
-			size.y *= another.y;
-			size.z *= another.z;
-
-			weapons[weaponNum].second->SetWorld(model->GetWeaponWorld(worldName)*model->GetWorld());
-			weaponWorld = world* weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld();
-			ST_OBB* test = new ST_OBB();
-			CalMatrix(test, max,min, size, weaponWorld);
-			weaponWorld = scale * weaponWorld;
+			worldName = equipName;
 		}
 	}
+	else
+	{
+		if (mode != Premode || mode == "idle")
+		{
+			weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 90, 0));
+			weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(-0.12f, 0, 1.5f));
+		}
+		worldName = unequipName;
+	}
+
+	//무기 영역 및 월드 계산 
+
+	D3DXVECTOR3 max = weapons[weaponNum].second->GetMaxP(), min = weapons[weaponNum].second->GetMinP();
+	D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
+	D3DXVECTOR3 center = max - min, position = (max + min);
+
+	D3DXMatrixScaling(&scale, center.x / size.x, center.y / size.y, center.z / size.z);
+	D3DXMatrixTranslation(&world, position.x, 0, 0);
+	size.x *= another.x;
+	size.y *= another.y;
+	size.z *= another.z;
+
+	weapons[weaponNum].second->SetWorld(model->GetWeaponWorld(worldName)*model->GetWorld());
+	weaponWorld = world * weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld();
+	ST_OBB* test = new ST_OBB();
+	CalMatrix(test, max, min, size, weaponWorld);
+	weaponWorld = scale * weaponWorld;
+
 }
 
 void Player::Render()
@@ -118,10 +122,8 @@ void Player::Render()
 	{
 		Actor::Render();
 
-		if(weaponNum>=0&&weaponNum<weapons.size())
+		if(weaponNum>=0&& (unsigned int)weaponNum<weapons.size())
 		weapons[weaponNum].second->Render();
-		
-
 		//Cube::Get()->Update(weaponWorld);
 		//Cube::Get()->Render();
 	}
@@ -144,7 +146,7 @@ void Player::Control()
 
 	//이동 및 조작
 
-	if(isControl==true)
+	if(isControl)
 	{
 		way = D3DXVECTOR3(0, 0, 0);
 
@@ -185,6 +187,7 @@ void Player::Control()
 					else degree -= size;
 				}
 			}
+			way2=way;
 		}
 
 		//default 애니메이션
@@ -208,7 +211,7 @@ void Player::Control()
 		}
 		//장비
 
-		if (Keyboard::Get()->Down('D'))
+		if (Keyboard::Get()->Down('D')&&(unsigned int)weaponNum<weapons.size())
 		{
 			if (isEquip)
 			{
@@ -233,27 +236,38 @@ void Player::Control()
 			if (mode == "rush")
 			{
 				Input("rush_jump");
-				speed = 35.0f;
+				speed = 50.0f;
 			}
-			else { Input("jump");speed = 30.0f; }
+			else { Input("jump");speed = 40.0f; }
+
+			if (way == D3DXVECTOR3(0, 0, 0)) way=way2;
 			isControl = false;
 			isHeight = true;
 		}
 
 		//공격
-
 		if (Keyboard::Get()->Down('Z')&&isEquip)
 		{
 			Input("w1_attack1_set");
 			isControl = false;
 		}
+		if (Keyboard::Get()->Down('X') && isEquip)
+		{
+			Input("w1_attack2");
+			isControl = false;
+		}
+		if (Keyboard::Get()->Down('C') && isEquip)
+		{
+			Input("w1_attack3");
+			isControl = false;
+		}
 	}
 	else
 	{
-
+		if(mode!="jump"&&mode != "rush_jump"&&mode != "rush_jump_dive")
 		way=D3DXVECTOR3(0,0,0);
 	}
-
+	
 	model->SetPosition(move + speed * (way.z*forward + way.x*right)*Time::Get()->Delta());
 	model->SetRotate(D3DXVECTOR3(rotate.x, (float)degree+ (float)dir-90, rotate.z));
 
@@ -270,12 +284,13 @@ void Player::Control()
 		D3DXMatrixTranslation(&world, 0, 0, 0);
 		model->SetWorld(world);
 		model->SetAdjust(D3DXVECTOR3(0, 0.42f, 0));
-
 	}
 }
 
 void Player::Notify()
 { 
+//애니메이션 노티파이
+
 	ModelAnimationController* ani= model->GetAnimationController();
 	int degree = ani->GetCurrentKeyFrame();
 	int end = ani->GetCurrentAnimation()->GetKeyFrames();
@@ -320,6 +335,14 @@ void Player::Notify()
 	{
 		if (degree >= end - 5) { isControl = true;}
 	}
+	else if (mode == "w1_attack2")
+	{
+		if (degree >= end - 5) { isControl = true; }
+	}
+	else if (mode == "w1_attack3")
+	{
+		if (degree >= end - 5) { isControl = true; }
+	}
 
 }
 void Player::Input(string mode)
@@ -335,7 +358,14 @@ void Player::Input(string mode)
 void Player::SetPlayer()
 {
 	if(model!=NULL) return;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Boss4.model", &model);
+	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
+	Model* weapon,*weapon2;
+	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &weapon);
+	weapon->Reset();
+	AddWeaponVector(equipName,weapon);
+	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &weapon2);
+	weapon2->Reset();
+	AddWeaponVector(equipName, weapon2);
 	model->Reset();
 	model->SetAniPlay(1, 0, 1.5f);
 	model->AniChange("idle");
@@ -351,13 +381,6 @@ void Player::ClearWeapon()
 	weapons.clear();
 }
 
-void Player::DeleteWeapon()
-{
-	for each(Weapon temp in weapons)	SAFE_DELETE(temp.second);
-	weapons.clear();
-}
-
-
 void Player::AddWeaponVector(string weaponName, Model * weaponFile)
 {
 	weapons.push_back(Weapon(weaponName,weaponFile));
@@ -365,6 +388,7 @@ void Player::AddWeaponVector(string weaponName, Model * weaponFile)
 
 float Player::SetHeight()
 {
+	//루트 조정으로 부족한 애니메이션 원점 조정
 	ModelSkeleton* sk= model->GetSkeleton();
 	float min=0,origin=0;
 	for(int i = 0;i< sk->GetBoneCount();i++)

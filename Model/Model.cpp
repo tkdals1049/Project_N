@@ -57,8 +57,6 @@ void Model::Render()
 
 	for (ModelMesh* mesh : meshes)
  		mesh->Render();
-
-	CubeRender();
 }
 
 void Model::AnotherUpdate()
@@ -271,45 +269,6 @@ void Model::ProcessAnimation(FbxNode * node, string takeName, float frameRate, f
 
 
 /////////////////////////////////////////////////////////////////////////
-void Model::CubeRender()
-{
-	typedef pair<string, ModelSkeletonBone *> Pair;
-	vector<Pair> skeletonBones=skeleton->GetSkeletonBones();
-	
-	if(skeletonBones.size()<1)return;
-	for (size_t i=0; i<skeletonBones.size(); i++)
-	{
-		if(skeletonBones[i].second->GetParentBoneIndex()<0) {continue;}
-		
-		D3DXMATRIX child = skeleton->GetBoneAnimationTransform(i);
-		D3DXMATRIX parent = skeleton->GetBoneAnimationTransform(skeletonBones[i].second->GetParentBoneIndex());
-
-		D3DXMATRIX scale, rotate1, rotate2, rotate3, position;
-		D3DXVECTOR3 Dot1(child._41, child._42, child._43), Dot2(parent._41, parent._42, parent._43);
-		D3DXVECTOR3 Center = (Dot1 + Dot2) / 2, Vec = Dot1 - Dot2;
-		D3DXVECTOR2 Vec2[3]{D3DXVECTOR2(Vec.z,Vec.x),D3DXVECTOR2(Vec.z,Vec.y),D3DXVECTOR2(Vec.x,Vec.y)};
-
-		for(int i=0; i<3;i++)
-		D3DXVec2Normalize(&Vec2[i],&Vec2[i]);
-
-		float size=D3DXVec3Length(&(Dot1-Dot2));
-	
-		D3DXMatrixScaling(&scale,1,size,1);
-
-		D3DXMatrixRotationX(&rotate1, D3DXVec2Dot(&Vec2[1], &D3DXVECTOR2(1,0)));
-		D3DXMatrixRotationY(&rotate2, D3DXVec2Dot(&Vec2[0], &D3DXVECTOR2(1,0)));
-		D3DXMatrixRotationZ(&rotate3, D3DXVec2Dot(&Vec2[2], &D3DXVECTOR2(1,0)));
-		D3DXMatrixTranslation(&position, Center.x,Center.y,Center.z);
-		D3DXMatrixInverse(&rotate1, NULL, &rotate1);
-		D3DXMatrixInverse(&rotate2, NULL, &rotate2);
-
-		Cube::Get()->Update(parent);
-		Cube::Get()->Render();
-		Cube::Get()->Update(scale*rotate1*rotate2*rotate3*position);
-		Cube::Get()->Render();
-	}
-}
-
 bool Model::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
 	bool check=false;

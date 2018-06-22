@@ -9,6 +9,7 @@
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
 
+
 Actor::Actor() :model(NULL),different(false), dot(D3DXVECTOR2(0, 0)), a(0.0f)
 {
 	SaveFile = "";
@@ -38,6 +39,7 @@ void Actor::Render()
 	if(model!=NULL)
 	{
 		model->Render();
+		CalSkeleton();
 	}
 }
 
@@ -93,6 +95,45 @@ void Actor::SetAdjust(D3DXVECTOR3 adjust)
 void Actor::SetAniPlay(D3DXVECTOR3 ani)
 {
 	model->SetAniPlay((int)ani.x,(int)ani.y,ani.z);
+}
+
+void Actor::CalSkeleton()
+{
+	typedef pair<string, ModelSkeletonBone *> Pair;
+	vector<Pair> skeletonBones = model->GetSkeleton()->GetSkeletonBones();
+
+	if (skeletonBones.size()<1)return;
+	for (size_t i = 0; i<skeletonBones.size(); i++)
+	{
+		if (skeletonBones[i].second->GetParentBoneIndex()<0) { continue; }
+
+		D3DXMATRIX child = model->GetSkeleton()->GetBoneAnimationTransform(i);
+		D3DXMATRIX parent = model->GetSkeleton()->GetBoneAnimationTransform(skeletonBones[i].second->GetParentBoneIndex());
+
+		D3DXMATRIX scale, rotate1, rotate2, rotate3, position;
+		D3DXVECTOR3 Dot1(child._41, child._42, child._43), Dot2(parent._41, parent._42, parent._43);
+		D3DXVECTOR3 Center = (Dot1 + Dot2) / 2, Vec = Dot1 - Dot2;
+		D3DXVECTOR2 Vec2[3]{ D3DXVECTOR2(Vec.z,Vec.x),D3DXVECTOR2(Vec.z,Vec.y),D3DXVECTOR2(Vec.x,Vec.y) };
+
+		for (int i = 0; i<3;i++)
+			D3DXVec2Normalize(&Vec2[i], &Vec2[i]);
+
+		float size = D3DXVec3Length(&(Dot1 - Dot2));
+
+		D3DXMatrixScaling(&scale, 1, size, 1);
+
+		D3DXMatrixRotationX(&rotate1, D3DXVec2Dot(&Vec2[1], &D3DXVECTOR2(1, 0)));
+		D3DXMatrixRotationY(&rotate2, D3DXVec2Dot(&Vec2[0], &D3DXVECTOR2(1, 0)));
+		D3DXMatrixRotationZ(&rotate3, D3DXVec2Dot(&Vec2[2], &D3DXVECTOR2(1, 0)));
+		D3DXMatrixTranslation(&position, Center.x, Center.y, Center.z);
+		D3DXMatrixInverse(&rotate1, NULL, &rotate1);
+		D3DXMatrixInverse(&rotate2, NULL, &rotate2);
+		(scale*rotate1*rotate2*rotate3*position*model->GetGeometricOffset()*model->GetWorld());
+
+		Cube::Get()->Update
+		(scale*rotate1*rotate2*rotate3*position*model->GetGeometricOffset()*model->GetWorld());
+		Cube::Get()->Render();
+	}
 }
 
 void Actor::CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3 size,D3DXMATRIX mat)

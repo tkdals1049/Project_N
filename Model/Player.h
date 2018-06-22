@@ -15,11 +15,11 @@ public:
 	void Input(string mode);
 	void SetPlayer();
 	void ClearWeapon();
-	void DeleteWeapon();
 	void AddWeaponVector(string weaponName, Model * weaponFile);
 
 	float SetHeight();
 private:
+	void WeaponUpdate();
 	void Control();
 	void Notify();
 
@@ -30,6 +30,6 @@ private:
 	float speed;
 	bool isControl,isEquip,isHeight;
 	string mode,Premode,equipName, equipName2, unequipName;
-	D3DXVECTOR3 way;
+	D3DXVECTOR3 way,way2;
 
 };

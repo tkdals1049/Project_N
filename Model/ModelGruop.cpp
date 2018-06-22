@@ -5,20 +5,14 @@
 #include "ModelSkeletonBone.h"
 #include "ModelAnimationController.h"
 #include "Player.h"
+#include "Boss.h"
+#include "MonsterManager.h"
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
 
 ModelGroup::ModelGroup():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
 {
-	SaveFile="";
-	attitude=NULL;
-	another=NULL;
-	model=NULL;
-	skeletonList=NULL;
-
-	player= new Player();
-
 }
 
 ModelGroup::~ModelGroup()
@@ -54,29 +48,42 @@ void ModelGroup::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 	player->PreUpdate(origin,direction);
 }
 void ModelGroup::Update(int thread)
-
 {
-
 	for (size_t i = 0; i <models.size()-thread; i++)
 	{
 		models[i]->Update();
-
 		for each(Weapon temp in weapons[models[i]])
 		{
 			temp.second->Update();
-
 			temp.second->SetWorld(models[i]->GetWeaponWorld(temp.first));
 		}
 	}
-
 	if (attitude != NULL)attitude->Update();
 	if (another != NULL)
 	{
 		another->SetPosition(D3DXVECTOR3(dot.x, 0, dot.y));
 		another->Update();
 	}
-
 	player->Update();
+	monster->Update();
+}
+
+void ModelGroup::Render(int thread)
+{
+	for (size_t i = 0; i <models.size() - thread; i++)
+	{
+		models[i]->Render();
+
+		for each(Weapon temp in weapons[models[i]])
+		{
+			temp.second->Render();
+		}
+
+	}
+	if (attitude != NULL)attitude->Render();
+	if (another != NULL)another->Render();
+	player->Render();
+	monster->Render();
 }
 void ModelGroup::PostRender(bool& isUse)
 {
@@ -204,7 +211,7 @@ void ModelGroup::PostRender(bool& isUse)
 				Model* back = player->GetModel();
 				SAFE_DELETE(back);
 				player->SetModel((Model*)NULL);
-				player->DeleteWeapon();
+				player->ClearWeapon();
 			}
 		}
 	}
@@ -321,22 +328,6 @@ void ModelGroup::PostRender(bool& isUse)
 			}
 	}
 	ImGui::End();
-}
-void ModelGroup::Render(int thread)
-{
-	for (size_t i = 0; i <models.size()-thread; i++)
-	{
-		models[i]->Render();
-
-		for each(Weapon temp in weapons[models[i]])
-		{
-			temp.second->Render();
-		}
-
-	}
-	if (attitude != NULL)attitude->Render();
-	if (another != NULL)another->Render();
-	player->Render();
 }
 
 void ModelGroup::SetModel(string file)
