@@ -7,6 +7,8 @@ public:
 	Brush(Plane* plane);
 	~Brush();
 
+	void Reset();
+
 	void Update(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Render();
 	D3DXVECTOR2 CheckMouseIndex(D3DXVECTOR3 origin, D3DXVECTOR3 direction);

@@ -15,9 +15,17 @@ Brush::Brush(Plane* plane)
 {
 }
 
-
 Brush::~Brush()
 {
+}
+
+void Brush::Reset()
+{
+	vertex=plane->vertex;
+	vertexCount=plane->vertexCount;
+	width=plane->width; 
+	height=plane->height;
+
 }
 
 void Brush::Update(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
