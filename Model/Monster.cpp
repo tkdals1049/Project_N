@@ -16,8 +16,6 @@ mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way
 	MoLoader::LoadBinary(file, &model);
 
 	model->Reset();
-	model->SetAdjust(D3DXVECTOR3(0, 0.78f, 0));
-	model->SetAniPlay(1, 0, 1.5f);
 	model->AniChange("idle");
 }
 

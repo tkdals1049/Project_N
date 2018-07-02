@@ -39,7 +39,6 @@ void ModelMesh::Render()
 	if (material == NULL) return;
 	if (material->CanRender() == false) return;
 
-	
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
 

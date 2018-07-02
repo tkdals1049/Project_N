@@ -57,6 +57,7 @@ const wstring Contents = L"../_Contents/";
 const wstring BinModels = L"../_Contents/BinModels/";
 const wstring FbxModels = L"../_Contents/FbxModels/";
 const wstring Shaders = L"../_Shaders/";
+
 #include "./Systems/D3D.h"
 #include "./Systems/Keyboard.h"
 #include "./Systems/Mouse.h"
@@ -77,6 +78,7 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Environment/Sky.h"
 #include "./Environment/Plane.h"
 
+#include "./Executes/ZFrustum.h"
 #include "./Model/Model.h"
 #include "./FbxModel/MoLoader.h"
 #include "./Model/Domain.h"

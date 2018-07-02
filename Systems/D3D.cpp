@@ -57,6 +57,8 @@ void D3D::Present()
 
 void D3D::ResizeScreen(float width, float height)
 {
+	if(width <=0||height<=0) return;
+
 	d3dDesc.Width = width;
 	d3dDesc.Height = height;
 

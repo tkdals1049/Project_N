@@ -32,7 +32,7 @@ private:
 
 	class Camera* camera;
 	class Player* player;
-	class MonsterManager* monster;
+	class EnemyManager* enemy;
 
 	vector<Model*> models;
 	Model* model;

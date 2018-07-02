@@ -39,7 +39,6 @@ void Actor::Render()
 	if(model!=NULL)
 	{
 		model->Render();
-		CalSkeleton();
 	}
 }
 
@@ -97,12 +96,12 @@ void Actor::SetAniPlay(D3DXVECTOR3 ani)
 	model->SetAniPlay((int)ani.x,(int)ani.y,ani.z);
 }
 
-void Actor::CalSkeleton()
+bool Actor::CalSkeleton(ST_OBB* Attack_box)
 {
 	typedef pair<string, ModelSkeletonBone *> Pair;
 	vector<Pair> skeletonBones = model->GetSkeleton()->GetSkeletonBones();
 
-	if (skeletonBones.size()<1)return;
+	if (skeletonBones.size()<1)return false;
 	for (size_t i = 0; i<skeletonBones.size(); i++)
 	{
 		if (skeletonBones[i].second->GetParentBoneIndex()<0) { continue; }
@@ -121,19 +120,32 @@ void Actor::CalSkeleton()
 		float size = D3DXVec3Length(&(Dot1 - Dot2));
 
 		D3DXMatrixScaling(&scale, 1, size, 1);
-
 		D3DXMatrixRotationX(&rotate1, D3DXVec2Dot(&Vec2[1], &D3DXVECTOR2(1, 0)));
 		D3DXMatrixRotationY(&rotate2, D3DXVec2Dot(&Vec2[0], &D3DXVECTOR2(1, 0)));
 		D3DXMatrixRotationZ(&rotate3, D3DXVec2Dot(&Vec2[2], &D3DXVECTOR2(1, 0)));
 		D3DXMatrixTranslation(&position, Center.x, Center.y, Center.z);
 		D3DXMatrixInverse(&rotate1, NULL, &rotate1);
 		D3DXMatrixInverse(&rotate2, NULL, &rotate2);
-		(scale*rotate1*rotate2*rotate3*position*model->GetGeometricOffset()*model->GetWorld());
 
-		Cube::Get()->Update
-		(scale*rotate1*rotate2*rotate3*position*model->GetGeometricOffset()*model->GetWorld());
-		Cube::Get()->Render();
+		D3DXMATRIX mat=(scale*rotate1*rotate2*rotate3*position*model->GetGeometricOffset()*model->GetWorld());
+		D3DXVECTOR3 root[3], one(0, 0, 0);
+
+		D3DXVec3TransformCoord(&one, &one, &mat);
+		D3DXVec3TransformCoord(&root[0], &D3DXVECTOR3(1, 0, 0), &mat);
+		D3DXVec3TransformCoord(&root[1], &D3DXVECTOR3(0, 1, 0), &mat);
+		D3DXVec3TransformCoord(&root[2], &D3DXVECTOR3(0, 0, 1), &mat);
+		root[0] -= one;
+		root[1] -= one;
+		root[2] -= one;
+		
+		D3DXVECTOR3 bulk=model->GetScale()/2;
+		float length[3]{bulk.x,bulk.y*size,bulk.z};
+
+		ST_OBB* Damage_Box=new ST_OBB(one,root,length);
+
+		if(CheckOBBCollision(Attack_box,Damage_Box))return true;
 	}
+	return false;
 }
 
 void Actor::CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3 size,D3DXMATRIX mat)
@@ -141,7 +153,9 @@ void Actor::CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3
 	D3DXVec3TransformCoord(&box->vCenterPos, &D3DXVECTOR3((max+min)/2), &mat);
 
 	D3DXVECTOR3 root[3],one(0,0,0);
+
 	D3DXVec3TransformCoord(&one, &one, &mat);
+	
 	D3DXVec3TransformCoord(&root[0], &D3DXVECTOR3(1, 0, 0), &mat);
 	D3DXVec3TransformCoord(&root[1], &D3DXVECTOR3(0, 1, 0), &mat);
 	D3DXVec3TransformCoord(&root[2], &D3DXVECTOR3(0, 0, 1), &mat);
@@ -154,9 +168,9 @@ void Actor::CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3
 	D3DXVec3Normalize(&box->vAxisDir[1], &root[1]);
 	D3DXVec3Normalize(&box->vAxisDir[2], &root[2]);
 
-	box->fAxisLen[0] = (max.x-  min.x)*size.x;
-	box->fAxisLen[1] = (max.y - min.y)*size.y;
-	box->fAxisLen[2] = (max.z - min.z)*size.z;
+	box->fAxisLen[0] = (max.x-  min.x)/2*size.x;
+	box->fAxisLen[1] = (max.y - min.y)/2*size.y;
+	box->fAxisLen[2] = (max.z - min.z)/2*size.z;
 }
 
 BOOL Actor::CheckOBBCollision(ST_OBB* Box1, ST_OBB* Box2)
@@ -172,8 +186,6 @@ BOOL Actor::CheckOBBCollision(ST_OBB* Box1, ST_OBB* Box2)
 	bool existsParallelPair = false;
 
 	D3DXVECTOR3 diff = Box1->vCenterPos - Box2->vCenterPos;
-
-
 
 	for (i = 0; i < 3; ++i)
 	{

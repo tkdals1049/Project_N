@@ -93,6 +93,7 @@ wstring Path::GetFileNameWithoutExtension(wstring path)
 const WCHAR* Path::ImageFilter = L"Image\0*.png;*.bmp;*.jpg";
 const WCHAR* Path::BinModelFilter = L"Binary Model\0*.model";
 const WCHAR* Path::FbxModelFilter = L"Fbx Model\0*.fbx;*.obj\0";
+const WCHAR* Path::BinMapFilter = L"Binary Model\0*.map";
 const WCHAR* Path::ShaderFilter = L"HLSL file\0*.hlsl";
 
 void Path::OpenFileDialog(wstring file, const WCHAR* filter, wstring folder, function<void(wstring)> func, HWND hwnd)

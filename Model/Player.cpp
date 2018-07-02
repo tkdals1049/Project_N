@@ -6,20 +6,12 @@
 #include "ModelAnimation.h"
 #include "ModelAnimationController.h"
 
-Player::Player():dir(0), degree(0), degree_goal(0), speed(20.0f),way(D3DXVECTOR3(0,0,0)), way2(D3DXVECTOR3(0, 0, 0)),
-mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false),weaponNum(-1),equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00")
+Player::Player()
+:dir(0), degree(0), degree_goal(0), speed(20.0f),way(D3DXVECTOR3(0,0,0)), way2(D3DXVECTOR3(0, 0, 1)),
+mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false), isAttack(false),weaponNum(-1),
+equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00"), attackRange(NULL),isLoaded(false),loadThread(NULL)
 {
-}
-
-Player::Player(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f), way(D3DXVECTOR3(0, 0, 0)), way2(D3DXVECTOR3(0, 0, 0)),
-mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), weaponNum(-1), equipName("AL-03"), unequipName("NK-00")
-{
-		MoLoader::LoadBinary(file, &model);
-
-		model->Reset();
-		model->SetAdjust(D3DXVECTOR3(0, 0.78f, 0));
-		model->SetAniPlay(1, 0, 1.5f);
-		model->AniChange("idle");
+	attackRange=new ST_OBB();
 }
 
 Player::~Player()
@@ -34,8 +26,7 @@ void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 	{
 		SetPlayer();
 	}
-
-	if (Keyboard::Get()->Down('F'))
+	if (Keyboard::Get()->Down('F')&&mode=="idle")
 	{
 		if((unsigned int)weaponNum<weapons.size()) weaponNum++;
 		else weaponNum=0;
@@ -48,6 +39,11 @@ void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 
 void Player::Update()
 {
+	if (loadThread != NULL&&isLoaded)
+	{
+		loadThread->join();
+		SAFE_DELETE(loadThread);
+	}
 
 	if(model!=NULL)
 	{	
@@ -97,23 +93,21 @@ void Player::WeaponUpdate()
 	}
 
 	//무기 영역 및 월드 계산 
-
-	D3DXVECTOR3 max = weapons[weaponNum].second->GetMaxP(), min = weapons[weaponNum].second->GetMinP();
-	D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
-	D3DXVECTOR3 center = max - min, position = (max + min);
-
-	D3DXMatrixScaling(&scale, center.x / size.x, center.y / size.y, center.z / size.z);
-	D3DXMatrixTranslation(&world, position.x, 0, 0);
-	size.x *= another.x;
-	size.y *= another.y;
-	size.z *= another.z;
-
 	weapons[weaponNum].second->SetWorld(model->GetWeaponWorld(worldName)*model->GetWorld());
-	weaponWorld = world * weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld();
-	ST_OBB* test = new ST_OBB();
-	CalMatrix(test, max, min, size, weaponWorld);
-	weaponWorld = scale * weaponWorld;
 
+	if(isAttack)
+	{
+		D3DXVECTOR3 max = weapons[weaponNum].second->GetMaxP(), min = weapons[weaponNum].second->GetMinP();
+		D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
+		D3DXVECTOR3 center = max - min, position = (max + min);
+
+		D3DXMatrixScaling(&scale, center.x / size.x, center.y / size.y, center.z / size.z);
+		D3DXMatrixTranslation(&world, position.x, 0, 0);
+		size.x *= another.x;
+		size.y *= another.y;
+		size.z *= another.z;
+		CalMatrix(attackRange, max, min, size, world* weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld());
+	}
 }
 
 void Player::Render()
@@ -124,8 +118,6 @@ void Player::Render()
 
 		if(weaponNum>=0&& (unsigned int)weaponNum<weapons.size())
 		weapons[weaponNum].second->Render();
-		//Cube::Get()->Update(weaponWorld);
-		//Cube::Get()->Render();
 	}
 }
 
@@ -145,7 +137,6 @@ void Player::Control()
 	D3DXVECTOR3 rotate = model->GetRotate();
 
 	//이동 및 조작
-
 	if(isControl)
 	{
 		way = D3DXVECTOR3(0, 0, 0);
@@ -255,11 +246,13 @@ void Player::Control()
 		{
 			Input("w1_attack2");
 			isControl = false;
+			isAttack = true;
 		}
 		if (Keyboard::Get()->Down('C') && isEquip)
 		{
 			Input("w1_attack3");
 			isControl = false;
+			isAttack = true;
 		}
 	}
 	else
@@ -289,6 +282,7 @@ void Player::Control()
 
 void Player::Notify()
 { 
+	if(isLoaded==false)return;
 //애니메이션 노티파이
 
 	ModelAnimationController* ani= model->GetAnimationController();
@@ -326,24 +320,31 @@ void Player::Notify()
 	{
 		if (degree >= end - 10) { Input("idle"); isControl = true; isEquip=false;}
 	}
-
 	else if (mode == "w1_attack1_set")
 	{
-		if (degree >= end - 1) { Input("w1_attack1"); }
+		if (degree >= end - 1) { Input("w1_attack1");isAttack = true;}
 	}
 	else if (mode == "w1_attack1")
 	{
-		if (degree >= end - 5) { isControl = true;}
+		if (degree >= end - 5) 
+		{ isControl = true;
+		isAttack = false;
+		}
 	}
 	else if (mode == "w1_attack2")
 	{
-		if (degree >= end - 5) { isControl = true; }
+		if (degree >= end - 5) 
+		{ isControl = true;
+		isAttack = false;
+		}
 	}
 	else if (mode == "w1_attack3")
 	{
-		if (degree >= end - 5) { isControl = true; }
+		if (degree >= end - 5) 
+		{ isControl = true;
+		isAttack = false;
+		}
 	}
-
 }
 void Player::Input(string mode)
 {
@@ -358,18 +359,26 @@ void Player::Input(string mode)
 void Player::SetPlayer()
 {
 	if(model!=NULL) return;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
-	Model* weapon,*weapon2;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &weapon);
-	weapon->Reset();
-	AddWeaponVector(equipName,weapon);
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &weapon2);
-	weapon2->Reset();
-	AddWeaponVector(equipName, weapon2);
-	model->Reset();
-	model->SetAniPlay(1, 0, 1.5f);
-	model->AniChange("idle");
 
+
+	loadThread = new thread([&]()
+	{
+		isLoaded = false;
+
+		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
+		Model* weapon,*weapon2;
+		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &weapon);
+		weapon->Reset();
+		AddWeaponVector(equipName,weapon);
+		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &weapon2);
+		weapon2->Reset();
+		AddWeaponVector(equipName, weapon2);
+		model->Reset();
+		model->SetAniPlay(1, 0, 1.5f);
+		model->AniChange("idle");
+
+		isLoaded = true;
+	});
 }
 
 void Player::ClearWeapon()

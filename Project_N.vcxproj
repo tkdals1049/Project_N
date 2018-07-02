@@ -27,6 +27,7 @@
     <ClCompile Include="Environment\Sky.cpp" />
     <ClCompile Include="Executes\ExeGui.cpp" />
     <ClCompile Include="Executes\ExeModel.cpp" />
+    <ClCompile Include="Executes\ZFrustum.cpp" />
     <ClCompile Include="FbxModel\MoAnimation.cpp" />
     <ClCompile Include="FbxModel\MoAnimationController.cpp" />
     <ClCompile Include="FbxModel\MoBoneWeights.cpp" />
@@ -53,7 +54,7 @@
     <ClCompile Include="Model\ModelSkeletonBone.cpp" />
     <ClCompile Include="Model\Actor.cpp" />
     <ClCompile Include="Model\Monster.cpp" />
-    <ClCompile Include="Model\MonsterManager.cpp" />
+    <ClCompile Include="Model\EnemyManager.cpp" />
     <ClCompile Include="Model\Player.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Renders\RenderTarget.cpp">
@@ -92,6 +93,7 @@
     <ClInclude Include="Executes\Execute.h" />
     <ClInclude Include="Executes\ExeGui.h" />
     <ClInclude Include="Executes\ExeModel.h" />
+    <ClInclude Include="Executes\ZFrustum.h" />
     <ClInclude Include="FbxModel\MoAnimation.h" />
     <ClInclude Include="FbxModel\MoAnimationController.h" />
     <ClInclude Include="FbxModel\MoBoneWeights.h" />
@@ -120,7 +122,7 @@
     <ClInclude Include="Model\ModelSkeletonBone.h" />
     <ClInclude Include="Model\Actor.h" />
     <ClInclude Include="Model\Monster.h" />
-    <ClInclude Include="Model\MonsterManager.h" />
+    <ClInclude Include="Model\EnemyManager.h" />
     <ClInclude Include="Model\Player.h" />
     <ClInclude Include="Program.h" />
     <None Include="Renders\GlobalBuffers.h" />

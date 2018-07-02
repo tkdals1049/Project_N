@@ -160,8 +160,11 @@
     <ClCompile Include="Model\Monster.cpp">
       <Filter>Model\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Model\MonsterManager.cpp">
+    <ClCompile Include="Model\EnemyManager.cpp">
       <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\ZFrustum.cpp">
+      <Filter>Executes</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -335,8 +338,11 @@
     <ClInclude Include="Model\Monster.h">
       <Filter>Model\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Model\MonsterManager.h">
+    <ClInclude Include="Model\EnemyManager.h">
       <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ZFrustum.h">
+      <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

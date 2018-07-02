@@ -26,6 +26,7 @@ public:
 	const static WCHAR* ImageFilter;
 	const static WCHAR* BinModelFilter;
 	const static WCHAR* FbxModelFilter;
+	const static WCHAR* BinMapFilter;
 	const static WCHAR* ShaderFilter;
 
 	static void OpenFileDialog(wstring file, const WCHAR* filter, wstring folder, function<void(wstring)> func, HWND hwnd = NULL);
