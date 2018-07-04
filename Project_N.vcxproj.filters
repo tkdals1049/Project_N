@@ -166,6 +166,9 @@
     <ClCompile Include="Executes\ZFrustum.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
+    <ClCompile Include="Executes\ZQuadTree.cpp">
+      <Filter>Executes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h" />
@@ -342,6 +345,9 @@
       <Filter>Model\Actor</Filter>
     </ClInclude>
     <ClInclude Include="Executes\ZFrustum.h">
+      <Filter>Executes</Filter>
+    </ClInclude>
+    <ClInclude Include="Executes\ZQuadTree.h">
       <Filter>Executes</Filter>
     </ClInclude>
   </ItemGroup>

@@ -19,9 +19,11 @@ void Plane::Delete()
 }
 
 Plane::Plane()
-:width(100),height(100),number(10),OnTextureList(false),isLoaded(false),
-position(D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2))
+:OnTextureList(false),isLoaded(false), quadTree(NULL),number(7)
 {
+	width=height=pow(2,number);
+	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
+
 	wstring file = Shaders + L"PlaneColor.hlsl";
 	shader = new Shader(file);
 
@@ -49,7 +51,6 @@ Plane::~Plane()
 
 void Plane::Update()
 {
-	if (Keyboard::Get()->Down('Y'))ChangeScale(500, 500);
 	worldBuffer->SetMatrix(world);
 
 	if (isLoaded == true)
@@ -64,7 +65,11 @@ void Plane::Update()
 
 void Plane::Render()
 {
-	if(Keyboard::Get()->Press('T')) Frustum();
+	if (Mouse::Get()->Press(1)) 
+	{
+		indexCount=(UINT)quadTree->GenerateIndex(index,vertex);
+		D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
+	}
 
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
@@ -92,9 +97,9 @@ void Plane::PostRender(bool& isUse)
 	brush->brushOn= ImGui::CollapsingHeader("Plane");
 	if (brush->brushOn)
 	{
-		static int scale[2]{40,40};
-		ImGui::InputInt2("PlaneScale",scale);
-		if (ImGui::Button("ChangeScale", ImVec2(80, 20))) ChangeScale(scale[0],scale[1]);ImGui::SameLine();
+		static int scale(8);
+		ImGui::InputInt("PlaneScale",&scale);
+		if (ImGui::Button("ChangeScale", ImVec2(80, 20))) ChangeScale(scale);ImGui::SameLine();
 		if (ImGui::Button("WriteMap", ImVec2(80, 20))) SaveMapDialog();ImGui::SameLine();
 		if (ImGui::Button("ReadMap", ImVec2(80, 20))) OpenMapDialog();
 
@@ -239,6 +244,7 @@ void Plane::CreateNormalData()
 }
 void Plane::CreateBuffer()
 {
+
 	vertexCount = (width + 1) * (height + 1);
 
 	UINT heightIndex = 0;
@@ -308,17 +314,23 @@ void Plane::CreateBuffer()
 	assert(SUCCEEDED(hr));
 
 	D3DXMatrixIdentity(&world);
+
 	for (int i = 0; i<5; i++)
 	textures[i] = new Textures();
 	sample = new Textures();
+	
 	if(brush!=NULL) SAFE_DELETE(brush);
 	brush = new Brush(this);
+
+	if(quadTree!=NULL) SAFE_DELETE(quadTree);
+	quadTree = new ZQuadTree(width, height);
+	quadTree->Build(vertex);
 }
 
-void Plane::ChangeScale(UINT width, UINT height)
+void Plane::ChangeScale(int num)
 {
-	this->width = width;
-	this->height = height;
+	number=num;
+	width = height=pow(2,num);
 	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 	CreateBuffer();
 }
@@ -437,14 +449,12 @@ void Plane::Frustum()
 {
 	UINT i[4];
 	BOOL b[4];
-
 	indexCount = 0;
 
 	for (UINT z = 0; z < height; z++)
 	{
 		for (UINT x = 0; x < width; x++)
 		{
-
 			i[0] = (width + 1) * z + x;
 			i[1] = (width + 1) * (z + 1) + x;
 			i[2] = (width + 1) * z + x + 1;

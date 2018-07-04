@@ -46,7 +46,7 @@ public:
 	void UpdatePointBuffer(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void CreateNormalData();
 	void CreateBuffer();
-	void ChangeScale(UINT width, UINT height);
+	void ChangeScale(int num);
 
 	void OpenMapDialog(wstring file = L"");
 	void SaveMapDialog(wstring file = L"");
@@ -101,4 +101,6 @@ private:
 
 	bool isLoaded;
 	thread* loadThread;
+
+	class ZQuadTree* quadTree;
 };

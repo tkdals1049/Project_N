@@ -28,6 +28,7 @@
     <ClCompile Include="Executes\ExeGui.cpp" />
     <ClCompile Include="Executes\ExeModel.cpp" />
     <ClCompile Include="Executes\ZFrustum.cpp" />
+    <ClCompile Include="Executes\ZQuadTree.cpp" />
     <ClCompile Include="FbxModel\MoAnimation.cpp" />
     <ClCompile Include="FbxModel\MoAnimationController.cpp" />
     <ClCompile Include="FbxModel\MoBoneWeights.cpp" />
@@ -94,6 +95,7 @@
     <ClInclude Include="Executes\ExeGui.h" />
     <ClInclude Include="Executes\ExeModel.h" />
     <ClInclude Include="Executes\ZFrustum.h" />
+    <ClInclude Include="Executes\ZQuadTree.h" />
     <ClInclude Include="FbxModel\MoAnimation.h" />
     <ClInclude Include="FbxModel\MoAnimationController.h" />
     <ClInclude Include="FbxModel\MoBoneWeights.h" />

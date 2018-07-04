@@ -50,6 +50,7 @@ using namespace fbxsdk;
 #define SAFE_RELEASE(p){ if(p){ (p)->Release(); (p) = NULL; } }
 #define SAFE_DELETE(p){ if(p){ delete (p); (p) = NULL; } }
 #define SAFE_DELETE_ARRAY(p){ if(p){ delete [] (p); (p) = NULL; } }
+#define IS_IN_RANGE(value,r0,r1) (( ((r0) <= (value)) && ((value) <= (r1)) ) ? 1 : 0)
 
 #define UINT unsigned int
 
@@ -79,6 +80,7 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Environment/Plane.h"
 
 #include "./Executes/ZFrustum.h"
+#include "./Executes/ZQuadTree.h"
 #include "./Model/Model.h"
 #include "./FbxModel/MoLoader.h"
 #include "./Model/Domain.h"

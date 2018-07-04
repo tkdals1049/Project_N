@@ -4,7 +4,7 @@
 class FirstPerson : public Camera
 {
 public:
-	FirstPerson(float moveSpeed = 60, float rotationSpeed = 2.5f);
+	FirstPerson(float moveSpeed = 40, float rotationSpeed = 2.5f);
 	~FirstPerson();
 
 	void Update();
