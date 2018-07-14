@@ -75,12 +75,12 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Utilities/BinaryFile.h"
 #include "./Utilities/Path.h"
 #include "./Utilities/String.h"
+#include "./Utilities/ZFrustum.h"
+#include "./Utilities/ZQuadTree.h"
 
 #include "./Environment/Sky.h"
 #include "./Environment/Plane.h"
 
-#include "./Executes/ZFrustum.h"
-#include "./Executes/ZQuadTree.h"
 #include "./Model/Model.h"
 #include "./FbxModel/MoLoader.h"
 #include "./Model/Domain.h"

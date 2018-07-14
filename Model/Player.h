@@ -12,27 +12,31 @@ public:
 	void Update();
 	void Render();
 	void Input(string mode);
+	
 	void SetPlayer();
-	void ClearWeapon();
-	void AddWeaponVector(string weaponName, Model * weaponFile);
-
 	float SetHeight();
-	bool GetisAttack(){return isAttack;}
+	
+	const bool GetisEquip() { return isEquip; }
+	const bool GetisAttack() { return isAttack; }
+	const string GetMode(){return mode;}
+	const string GetPremode() {return Premode;}
 	ST_OBB* GetAttackRange(){return attackRange;}
+
+	void AddWeapon(Model * weaponFile, D3DXVECTOR3 scale);
+	void ClearWeapon();
+	
 private:
-	void WeaponUpdate();
+	class Weapon* weapon;
+
 	void Control();
 	void Notify();
 
-	typedef pair<string, Model*> Weapon;
-	vector<Weapon> weapons;
-	D3DXMATRIX weaponWorld;
 	ST_OBB* attackRange;
 
-	int dir,degree,degree_goal,weaponNum;
+	int dir,degree,degree_goal;
 	float speed;
 	bool isControl,isEquip,isHeight, isAttack;
-	string mode,Premode,equipName, equipName2, unequipName;
+	string mode,Premode;
 	D3DXVECTOR3 way,way2;
 
 	bool isLoaded;

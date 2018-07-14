@@ -18,4 +18,7 @@ private:
 	Boss* boss;
 	vector<Monster*> monsters;
 
+	bool isLoaded;
+	thread* loadThread;
+
 };

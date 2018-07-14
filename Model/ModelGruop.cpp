@@ -197,7 +197,7 @@ void ModelGroup::PostRender(bool& isUse)
 						player->SetAdjust(temp);
 						player->SetAniPlay(temp2);
 						player->AniChange("idle");
-						for each(Weapon temp in weapons[models[i]])	player->AddWeaponVector(temp.first,temp.second);
+						for each(Weapon temp in weapons[models[i]])	player->AddWeapon(temp.second,back->GetScale());
 						weapons[models[i]].clear();
 						weapons.erase(weapons.find(models[i]));
 						models.erase(models.begin() + i);

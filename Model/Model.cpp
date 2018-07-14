@@ -358,7 +358,7 @@ void Model::ClearMaterial()
 
 D3DXMATRIX Model::GetWeaponWorld(string weapon)
 {
-	return skeleton->GetWeapon(weapon)*matGeometricOffset;
+	return skeleton->GetWeapon(weapon)*matGeometricOffset*world;
 }
 
 void Model::SetWorld(D3DXMATRIX& world)

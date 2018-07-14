@@ -27,8 +27,6 @@
     <ClCompile Include="Environment\Sky.cpp" />
     <ClCompile Include="Executes\ExeGui.cpp" />
     <ClCompile Include="Executes\ExeModel.cpp" />
-    <ClCompile Include="Executes\ZFrustum.cpp" />
-    <ClCompile Include="Executes\ZQuadTree.cpp" />
     <ClCompile Include="FbxModel\MoAnimation.cpp" />
     <ClCompile Include="FbxModel\MoAnimationController.cpp" />
     <ClCompile Include="FbxModel\MoBoneWeights.cpp" />
@@ -57,6 +55,7 @@
     <ClCompile Include="Model\Monster.cpp" />
     <ClCompile Include="Model\EnemyManager.cpp" />
     <ClCompile Include="Model\Player.cpp" />
+    <ClCompile Include="Model\Weapon.cpp" />
     <ClCompile Include="Program.cpp" />
     <ClCompile Include="Renders\RenderTarget.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -77,6 +76,8 @@
     <ClCompile Include="Utilities\Mesh.cpp" />
     <ClCompile Include="Utilities\Path.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
+    <ClCompile Include="Utilities\ZFrustum.cpp" />
+    <ClCompile Include="Utilities\ZQuadTree.cpp" />
     <ClCompile Include="Viewer\Camera.cpp" />
     <ClCompile Include="Viewer\FirstPerson.cpp" />
     <ClCompile Include="Viewer\Orthographic.cpp" />
@@ -94,8 +95,6 @@
     <ClInclude Include="Executes\Execute.h" />
     <ClInclude Include="Executes\ExeGui.h" />
     <ClInclude Include="Executes\ExeModel.h" />
-    <ClInclude Include="Executes\ZFrustum.h" />
-    <ClInclude Include="Executes\ZQuadTree.h" />
     <ClInclude Include="FbxModel\MoAnimation.h" />
     <ClInclude Include="FbxModel\MoAnimationController.h" />
     <ClInclude Include="FbxModel\MoBoneWeights.h" />
@@ -126,6 +125,7 @@
     <ClInclude Include="Model\Monster.h" />
     <ClInclude Include="Model\EnemyManager.h" />
     <ClInclude Include="Model\Player.h" />
+    <ClInclude Include="Model\Weapon.h" />
     <ClInclude Include="Program.h" />
     <None Include="Renders\GlobalBuffers.h" />
     <ClInclude Include="Renders\RenderTarget.h">
@@ -145,6 +145,8 @@
     <ClInclude Include="Utilities\Mesh.h" />
     <ClInclude Include="Utilities\Path.h" />
     <ClInclude Include="Utilities\String.h" />
+    <ClInclude Include="Utilities\ZFrustum.h" />
+    <ClInclude Include="Utilities\ZQuadTree.h" />
     <ClInclude Include="Viewer\Camera.h" />
     <ClInclude Include="Viewer\FirstPerson.h" />
     <ClInclude Include="Viewer\Orthographic.h" />

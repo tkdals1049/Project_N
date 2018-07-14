@@ -2,38 +2,31 @@
 #include "Player.h"
 #include "Actor.h"
 #include "Model.h"
+#include "Weapon.h"
 #include "ModelSkeleton.h"
 #include "ModelAnimation.h"
 #include "ModelAnimationController.h"
 
 Player::Player()
 :dir(0), degree(0), degree_goal(0), speed(20.0f),way(D3DXVECTOR3(0,0,0)), way2(D3DXVECTOR3(0, 0, 1)),
-mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false), isAttack(false),weaponNum(-1),
-equipName("AL-03"), equipName2("AR-03"), unequipName("NK-00"), attackRange(NULL),isLoaded(false),loadThread(NULL)
+mode("idle"),Premode(""),isControl(true),isEquip(false), isHeight(false), isAttack(false),
+attackRange(NULL),isLoaded(false),loadThread(NULL)
 {
+	weapon=new Weapon(this);
 	attackRange=new ST_OBB();
+	SetPlayer();
 }
 
 Player::~Player()
 {
-	for (size_t i = 0; i <weapons.size(); i++)
-		SAFE_DELETE(weapons[i].second);
 }
 
 void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
-	if (Keyboard::Get()->Down('P'))
-	{
-		SetPlayer();
-	}
-	if (Keyboard::Get()->Down('F')&&mode=="idle")
-	{
-		if((unsigned int)weaponNum<weapons.size()) weaponNum++;
-		else weaponNum=0;
-	}
-	if (model != NULL)
+	if (model != NULL && isLoaded)
 	{
 		Control();
+		weapon->PreUpdate();
 	}
 }
 
@@ -49,64 +42,7 @@ void Player::Update()
 	{	
 		Notify();
 		Actor::Update();
-
-		if (weaponNum >= 0 && (unsigned int)weaponNum<weapons.size()) WeaponUpdate();
-	}
-}
-
-void Player::WeaponUpdate()
-{
-	D3DXMATRIX world, scale, rotate;
-	string worldName;
-
-	weapons[weaponNum].second->Update();
-	//무기 장착시와 아닐시 고정 위치 변 
-	if (isEquip)
-	{
-		if (mode == "w1_equip" || mode == "w1_equip_end" || mode == "w1_equip_walk_end")
-		{
-			if (mode != Premode)
-			{
-				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(90, 0, 0));
-				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0, 0, 0));
-			}
-			worldName = equipName2;
-		}
-		else
-		{
-			if (mode != Premode)
-			{
-				weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 0, 0));
-				weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(0.4f, 2.0f, 0));
-			}
-			worldName = equipName;
-		}
-	}
-	else
-	{
-		if (mode != Premode || mode == "idle")
-		{
-			weapons[weaponNum].second->SetRotate(D3DXVECTOR3(-90, 90, 0));
-			weapons[weaponNum].second->SetAdjust(D3DXVECTOR3(-0.12f, 0, 1.5f));
-		}
-		worldName = unequipName;
-	}
-
-	//무기 영역 및 월드 계산 
-	weapons[weaponNum].second->SetWorld(model->GetWeaponWorld(worldName)*model->GetWorld());
-
-	if(isAttack)
-	{
-		D3DXVECTOR3 max = weapons[weaponNum].second->GetMaxP(), min = weapons[weaponNum].second->GetMinP();
-		D3DXVECTOR3 size = weapons[weaponNum].second->GetScale(), another = model->GetScale();
-		D3DXVECTOR3 center = max - min, position = (max + min);
-
-		D3DXMatrixScaling(&scale, center.x / size.x, center.y / size.y, center.z / size.z);
-		D3DXMatrixTranslation(&world, position.x, 0, 0);
-		size.x *= another.x;
-		size.y *= another.y;
-		size.z *= another.z;
-		CalMatrix(attackRange, max, min, size, world* weapons[weaponNum].second->GetGeometricOffset()*model->GetWeaponWorld(worldName)*model->GetWorld());
+		weapon->Update();
 	}
 }
 
@@ -115,12 +51,20 @@ void Player::Render()
 	if (model != NULL)
 	{
 		Actor::Render();
-
-		if(weaponNum>=0&& (unsigned int)weaponNum<weapons.size())
-		weapons[weaponNum].second->Render();
+		weapon->Render();
 	}
 }
 
+
+void Player::AddWeapon(Model * weaponFile, D3DXVECTOR3 scale)
+{
+	weapon->AddWeaponVector(weaponFile, scale);
+}
+
+void Player::ClearWeapon()
+{
+	weapon->ClearWeapon();
+}
 
 void Player::Control()
 {
@@ -202,7 +146,7 @@ void Player::Control()
 		}
 		//장비
 
-		if (Keyboard::Get()->Down('D')&&(unsigned int)weaponNum<weapons.size())
+		if (Keyboard::Get()->Down('D')&&weapon->isSetting())
 		{
 			if (isEquip)
 			{
@@ -257,10 +201,11 @@ void Player::Control()
 	}
 	else
 	{
-		if(mode!="jump"&&mode != "rush_jump"&&mode != "rush_jump_dive")
+		if(mode.find("jump")==-1)
 		way=D3DXVECTOR3(0,0,0);
 	}
 	
+	//이동의 결과를 모델에 입력
 	model->SetPosition(move + speed * (way.z*forward + way.x*right)*Time::Get()->Delta());
 	model->SetRotate(D3DXVECTOR3(rotate.x, (float)degree+ (float)dir-90, rotate.z));
 
@@ -280,10 +225,10 @@ void Player::Control()
 	}
 }
 
+//애니메이션 노티파이
 void Player::Notify()
 { 
 	if(isLoaded==false)return;
-//애니메이션 노티파이
 
 	ModelAnimationController* ani= model->GetAnimationController();
 	int degree = ani->GetCurrentKeyFrame();
@@ -366,13 +311,14 @@ void Player::SetPlayer()
 		isLoaded = false;
 
 		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
-		Model* weapon,*weapon2;
-		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &weapon);
-		weapon->Reset();
-		AddWeaponVector(equipName,weapon);
-		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &weapon2);
-		weapon2->Reset();
-		AddWeaponVector(equipName, weapon2);
+		Model* wp,*wp2;
+		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &wp);
+		wp->Reset();
+		weapon->AddWeaponVector(wp, model->GetScale());
+		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword2.model", &wp2);
+		wp2->Reset();
+		weapon->AddWeaponVector(wp2, model->GetScale());
+
 		model->Reset();
 		model->SetAniPlay(1, 0, 1.5f);
 		model->AniChange("idle");
@@ -381,23 +327,10 @@ void Player::SetPlayer()
 	});
 }
 
-void Player::ClearWeapon()
-{
-	for each(Weapon temp in weapons)
-	{
-		SAFE_DELETE(temp.second);
-	}
-	weapons.clear();
-}
 
-void Player::AddWeaponVector(string weaponName, Model * weaponFile)
-{
-	weapons.push_back(Weapon(weaponName,weaponFile));
-}
-
+//루트 조정으로 부족한 애니메이션 원점 조정으로 동작을 자연스럽게 함
 float Player::SetHeight()
 {
-	//루트 조정으로 부족한 애니메이션 원점 조정
 	ModelSkeleton* sk= model->GetSkeleton();
 	float min=0,origin=0;
 	for(int i = 0;i< sk->GetBoneCount();i++)
@@ -409,3 +342,4 @@ float Player::SetHeight()
 	}
 	return origin-min;
 }
+

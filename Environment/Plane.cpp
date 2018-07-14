@@ -65,7 +65,7 @@ void Plane::Update()
 
 void Plane::Render()
 {
-	if (Mouse::Get()->Press(1)) 
+	if (Keyboard::Get()->Down('R')) 
 	{
 		indexCount=(UINT)quadTree->GenerateIndex(index,vertex);
 		D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
@@ -198,14 +198,18 @@ void Plane::SetTexture(int num, wstring file)
 
 void Plane::UpdatePointBuffer(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
-	brush->Update(origin,direction);
-	dot = brush->position;
+	if (isLoaded)
+	{
+		brush->Update(origin,direction);
+		dot = brush->position;
 
-	D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x) * number / width), (float)((dot.y - position.z) * number / height), (float)brush->type, (float)brush->size);
-	D3DXVECTOR4 point = D3DXVECTOR4((dot.x - position.x), (dot.y - position.z), dot.x, dot.y);
+		D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x)*10 / width), (float)((dot.y - position.z) * 10 / height), (float)brush->type, (float)brush->size);
+		D3DXVECTOR4 point = D3DXVECTOR4((dot.x - position.x), (dot.y - position.z), dot.x, dot.y);
 
-	planeBuffer->Data.Size=size;
-	planeBuffer->Data.Point=point;
+		planeBuffer->Data.Size=size;
+		planeBuffer->Data.Point=point;
+	}
+
 }
 
 void Plane::CreateNormalData()
@@ -244,7 +248,6 @@ void Plane::CreateNormalData()
 }
 void Plane::CreateBuffer()
 {
-
 	vertexCount = (width + 1) * (height + 1);
 
 	UINT heightIndex = 0;
@@ -407,6 +410,7 @@ void Plane::ReadMap(wstring file)
 {
 	BinaryReader* r = new BinaryReader();
 	wstring temp = file;
+	SAFE_DELETE(vertex);
 
 	UINT count = 0;
 	r->Open(temp);
@@ -440,6 +444,8 @@ void Plane::ReadMap(wstring file)
 
 		D3D::GetDC()->UpdateSubresource
 		(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
+
+		CreateNormalData();
 	}
 	r->Close();
 	SAFE_DELETE(r);

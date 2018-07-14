@@ -133,12 +133,6 @@
     <ClCompile Include="Model\ModelGruop.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Domain.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Cube.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Model.cpp">
       <Filter>Model\BinModel</Filter>
     </ClCompile>
@@ -163,11 +157,20 @@
     <ClCompile Include="Model\EnemyManager.cpp">
       <Filter>Model\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="Executes\ZFrustum.cpp">
-      <Filter>Executes</Filter>
+    <ClCompile Include="Utilities\ZFrustum.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Executes\ZQuadTree.cpp">
-      <Filter>Executes</Filter>
+    <ClCompile Include="Utilities\ZQuadTree.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Cube.cpp">
+      <Filter>Model\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Domain.cpp">
+      <Filter>Model\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Weapon.cpp">
+      <Filter>Model\Etc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -311,12 +314,6 @@
     <ClInclude Include="Model\ModelGroup.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Domain.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Cube.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Model.h">
       <Filter>Model\BinModel</Filter>
     </ClInclude>
@@ -344,11 +341,20 @@
     <ClInclude Include="Model\EnemyManager.h">
       <Filter>Model\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="Executes\ZFrustum.h">
-      <Filter>Executes</Filter>
+    <ClInclude Include="Utilities\ZFrustum.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Executes\ZQuadTree.h">
-      <Filter>Executes</Filter>
+    <ClInclude Include="Utilities\ZQuadTree.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Cube.h">
+      <Filter>Model\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Domain.h">
+      <Filter>Model\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Weapon.h">
+      <Filter>Model\Etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -390,6 +396,9 @@
     </Filter>
     <Filter Include="Model\Actor">
       <UniqueIdentifier>{1f1efae1-dc3c-4e20-b407-5c684e6763ea}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Etc">
+      <UniqueIdentifier>{82e20834-f3c2-49bf-a9a3-3f4d0457cd19}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

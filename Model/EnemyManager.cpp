@@ -40,13 +40,27 @@ void EnemyManager::Render()
 
 void EnemyManager::AddMonster(string Name)
 {
-	Monster* nM=new Monster(Name);
-	monsters.push_back(nM);
+	loadThread = new thread([&]()
+	{
+		isLoaded = false;
+
+		Monster* nM=new Monster(Name);
+		monsters.push_back(nM);
+
+		isLoaded = true;
+	});
 }
 
 void EnemyManager::AddMonster()
 {
-	Monster* nM = new Monster();
-	nM->SetMonster();
-	monsters.push_back(nM);
+	loadThread = new thread([&]()
+	{
+		isLoaded = false;
+
+		Monster* nM = new Monster();
+		nM->SetMonster();
+		monsters.push_back(nM);
+
+		isLoaded = true;
+	});
 }

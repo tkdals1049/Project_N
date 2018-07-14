@@ -23,7 +23,7 @@ ExeModel::ExeModel(ExecuteValues* values)
 	D3D11_RASTERIZER_DESC rdesc;
 	States::GetRasterizerDesc(&rdesc);
 
-	rdesc.FillMode = D3D11_FILL_WIREFRAME;
+	rdesc.FillMode = D3D11_FILL_SOLID;
 	rdesc.CullMode = D3D11_CULL_NONE;
 	States::CreateRasterizer(&rdesc, &setRasterizer);
 }
@@ -41,6 +41,7 @@ void ExeModel::Update()
 	Sky::Get()->Update(values->MainCamera);
 	Plane::Get()->UpdatePointBuffer(origin,direction);
 	Plane::Get()->Update();
+
 	group->SetDot(Plane::Get()->GetDot());
 	group->PreUpdate(origin,direction);
 	group->Update();
