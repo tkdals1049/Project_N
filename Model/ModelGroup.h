@@ -13,20 +13,19 @@ public:
 	void Render(int thread=0);
 
 	void SetModel(string file);
-
-	void SetDot(D3DXVECTOR2 dot){this->dot=dot;}
 	void SetModel(Model * model);
 	void SetModel();
 	Model* GetModel();
 
+	void SetDot(D3DXVECTOR2 dot){this->dot=dot;}
 	bool GetDifferent(){return different;}
 	void SetDifferent(bool different){this->different=different;}
-	void AddWeaponVector(Model* model,string weaponName,Model* weaponFile);
 
+	void AddWeaponVector(Model* model,string weaponName,Model* weaponFile);
+	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void SetAttitude(Model * model);
 	Model* GetAttitude();
 
-	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 private:
 	bool different;
 

@@ -1,12 +1,16 @@
 #include "../stdafx.h"
 #include "ModelGroup.h"
-#include "ModelMaterial.h"
-#include "ModelSkeleton.h"
-#include "ModelSkeletonBone.h"
-#include "ModelAnimationController.h"
-#include "Player.h"
-#include "Boss.h"
-#include "EnemyManager.h"
+
+#include "./BinModel/Model.h"
+#include "./BinModel/ModelMaterial.h"
+#include "./BinModel/ModelSkeleton.h"
+#include "./BinModel/ModelSkeletonBone.h"
+#include "./BinModel/ModelAnimationController.h"
+
+#include "./Actor/Player.h"
+#include "./Actor/Boss.h"
+#include "./Actor/EnemyManager.h"
+
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
@@ -88,9 +92,11 @@ void ModelGroup::Render(int thread)
 	}
 	if (attitude != NULL)attitude->Render();
 	if (another != NULL)another->Render();
-	player->Render();
 	enemy->Render();
+	player->Render();
+
 }
+
 void ModelGroup::PostRender(bool& isUse)
 {
 	//모델 위치 저장

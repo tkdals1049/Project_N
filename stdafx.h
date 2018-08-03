@@ -51,7 +51,6 @@ using namespace fbxsdk;
 #define SAFE_DELETE(p){ if(p){ delete (p); (p) = NULL; } }
 #define SAFE_DELETE_ARRAY(p){ if(p){ delete [] (p); (p) = NULL; } }
 #define IS_IN_RANGE(value,r0,r1) (( ((r0) <= (value)) && ((value) <= (r1)) ) ? 1 : 0)
-
 #define UINT unsigned int
 
 const wstring Contents = L"../_Contents/";
@@ -71,6 +70,7 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Renders/GlobalBuffers.h"
 
 #include "./Viewer/Camera.h"
+#include "./Viewer/CameraManager.h"
 
 #include "./Utilities/BinaryFile.h"
 #include "./Utilities/Path.h"
@@ -81,7 +81,7 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Environment/Sky.h"
 #include "./Environment/Plane.h"
 
-#include "./Model/Model.h"
-#include "./FbxModel/MoLoader.h"
-#include "./Model/Domain.h"
-#include "./Model/Cube.h"
+#include "./Model/BinModel/Model.h"
+#include "./Model/FbxModel/MoLoader.h"
+#include "./Model/Etc/Domain.h"
+#include "./Model/Etc/Cube.h"

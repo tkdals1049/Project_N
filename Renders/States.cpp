@@ -5,12 +5,14 @@ D3D11_RASTERIZER_DESC States::rasterizerDesc;
 D3D11_DEPTH_STENCIL_DESC States::depthStencilDesc;
 D3D11_SAMPLER_DESC States::samplerDesc;
 ID3D11SamplerState* States::defaultState;
+D3D11_BLEND_DESC States::blendDesc;
 
 void States::Create()
 {
 	CreateRasterizerDesc();
 	CreateDepthStencilDesc();
 	CreateSamplerDesc();
+	CreateBlendDesc();
 }
 
 void States::Delete()
@@ -48,6 +50,22 @@ void States::CreateDepthStencil(D3D11_DEPTH_STENCIL_DESC * desc, ID3D11DepthSten
 	assert(SUCCEEDED(hr));
 }
 
+void States::SetBlend(ID3D11BlendState * state)
+{
+	float blendFactor[4]{0.0f,0.0f,0.0f,0.0f};
+	D3D::GetDC()->OMSetBlendState(state, blendFactor, 0xffffffff);
+}
+
+void States::GetBlendDesc(D3D11_BLEND_DESC* desc)
+{
+	memcpy(desc, &blendDesc, sizeof(D3D11_BLEND_DESC));
+}
+void States::CreateBlend(D3D11_BLEND_DESC * desc, ID3D11BlendState ** state)
+{
+	HRESULT hr = D3D::GetDevice()->CreateBlendState(desc, state);
+	assert(SUCCEEDED(hr));
+}
+
 void States::SetDepthStencil(ID3D11DepthStencilState * state)
 {
 	D3D::GetDC()->OMSetDepthStencilState(state, 1);
@@ -70,6 +88,7 @@ void States::SetSampler(UINT slot, UINT count, ID3D11SamplerState * state)
 {
 	D3D::GetDC()->PSSetSamplers(slot, count, &state);
 }
+
 
 void States::CreateRasterizerDesc()
 {
@@ -121,6 +140,23 @@ void States::CreateSamplerDesc()
 
 	HRESULT hr = D3D::GetDevice()->CreateSamplerState(&samplerDesc, &defaultState);
 	assert(SUCCEEDED(hr));
+}
+
+void States::CreateBlendDesc()
+{
+	// Clear the blend state description.
+	ZeroMemory(&blendDesc, sizeof(D3D11_BLEND_DESC));
+
+	// Create an alpha enabled blend state description.
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	//blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
 }
 
 void States::SetDefault()

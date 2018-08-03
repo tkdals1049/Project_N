@@ -22,60 +22,6 @@
     <ClCompile Include="Executes\ExeModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelAnimation.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelAnimationController.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelAnimationKeyFrames.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelBoneWeights.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelMaterial.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelMesh.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelSkeleton.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\ModelSkeletonBone.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoAnimation.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoAnimationController.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoBoneWeights.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoKeyFrame.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoLoader.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoMaterial.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoModel.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoModelMesh.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoSkeleton.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
-    <ClCompile Include="FbxModel\MoSkeletonBone.cpp">
-      <Filter>Model\FbxModel</Filter>
-    </ClCompile>
     <ClCompile Include="Renders\RenderTarget.cpp">
       <Filter>Renders</Filter>
     </ClCompile>
@@ -130,32 +76,11 @@
     <ClCompile Include="Utilities\Path.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Model\ModelGruop.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Model.cpp">
-      <Filter>Model\BinModel</Filter>
-    </ClCompile>
     <ClCompile Include="Environment\Brush.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="Environment\Plane.cpp">
       <Filter>Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Actor.cpp">
-      <Filter>Model\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Boss.cpp">
-      <Filter>Model\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Player.cpp">
-      <Filter>Model\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Monster.cpp">
-      <Filter>Model\Actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\EnemyManager.cpp">
-      <Filter>Model\Actor</Filter>
     </ClCompile>
     <ClCompile Include="Utilities\ZFrustum.cpp">
       <Filter>Utilities</Filter>
@@ -163,14 +88,95 @@
     <ClCompile Include="Utilities\ZQuadTree.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Cube.cpp">
+    <ClCompile Include="Model\ModelGruop.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoAnimation.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoAnimationController.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoBoneWeights.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoKeyFrame.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoLoader.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoMaterial.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoModel.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoModelMesh.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoSkeleton.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\FbxModel\MoSkeletonBone.cpp">
+      <Filter>Model\FbxModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor\Actor.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor\Boss.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor\EnemyManager.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor\Monster.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Actor\Player.cpp">
+      <Filter>Model\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\Model.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelAnimation.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelAnimationController.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelAnimationKeyFrames.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelBoneWeights.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelMaterial.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelMesh.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelSkeleton.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\BinModel\ModelSkeletonBone.cpp">
+      <Filter>Model\BinModel</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Etc\Blood.cpp">
       <Filter>Model\Etc</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Domain.cpp">
+    <ClCompile Include="Model\Etc\Cube.cpp">
       <Filter>Model\Etc</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Weapon.cpp">
+    <ClCompile Include="Model\Etc\Domain.cpp">
       <Filter>Model\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Etc\Weapon.cpp">
+      <Filter>Model\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Viewer\CameraManager.cpp">
+      <Filter>Viewer\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -196,66 +202,6 @@
     </ClInclude>
     <ClInclude Include="Executes\ExeModel.h">
       <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelAnimation.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelAnimationController.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelAnimationKeyFrames.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelBoneWeights.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelBuffer.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelMaterial.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelMesh.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelSkeleton.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\ModelSkeletonBone.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoAnimation.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoAnimationController.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoBoneWeights.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MokeyFrame.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoLoader.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoMaterial.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoModel.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoModelMesh.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoModelUtility.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoSkeleton.h">
-      <Filter>Model\FbxModel</Filter>
-    </ClInclude>
-    <ClInclude Include="FbxModel\MoSkeletonBone.h">
-      <Filter>Model\FbxModel</Filter>
     </ClInclude>
     <ClInclude Include="Renders\RenderTarget.h">
       <Filter>Renders</Filter>
@@ -311,12 +257,6 @@
     <ClInclude Include="Utilities\Path.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Model\ModelGroup.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Model.h">
-      <Filter>Model\BinModel</Filter>
-    </ClInclude>
     <ClInclude Include="Environment\Brush.h">
       <Filter>Environment</Filter>
     </ClInclude>
@@ -326,35 +266,110 @@
     <ClInclude Include="Environment\Plane.h">
       <Filter>Environment</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Actor.h">
-      <Filter>Model\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Boss.h">
-      <Filter>Model\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Player.h">
-      <Filter>Model\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Monster.h">
-      <Filter>Model\Actor</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\EnemyManager.h">
-      <Filter>Model\Actor</Filter>
-    </ClInclude>
     <ClInclude Include="Utilities\ZFrustum.h">
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Utilities\ZQuadTree.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Cube.h">
+    <ClInclude Include="Model\ModelGroup.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoAnimation.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoAnimationController.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoBoneWeights.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MokeyFrame.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoLoader.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoMaterial.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoModel.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoModelMesh.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoModelUtility.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoSkeleton.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\FbxModel\MoSkeletonBone.h">
+      <Filter>Model\FbxModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor\Actor.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor\Boss.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor\EnemyManager.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor\Monster.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Actor\Player.h">
+      <Filter>Model\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\BoneBuffer.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\Model.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelAnimation.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelAnimationController.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelAnimationKeyFrames.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelBoneWeights.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelBuffer.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelMaterial.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelMesh.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelSkeleton.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\BinModel\ModelSkeletonBone.h">
+      <Filter>Model\BinModel</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Etc\Blood.h">
       <Filter>Model\Etc</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Domain.h">
+    <ClInclude Include="Model\Etc\Cube.h">
       <Filter>Model\Etc</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Weapon.h">
+    <ClInclude Include="Model\Etc\Domain.h">
       <Filter>Model\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Etc\Weapon.h">
+      <Filter>Model\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Viewer\CameraManager.h">
+      <Filter>Viewer\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -402,9 +417,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Model\BoneBuffer.h">
-      <Filter>Model\BinModel</Filter>
-    </None>
     <None Include="Renders\ShaderBuffer.h">
       <Filter>Renders</Filter>
     </None>

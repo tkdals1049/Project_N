@@ -21,7 +21,7 @@ void Plane::Delete()
 Plane::Plane()
 :OnTextureList(false),isLoaded(false), quadTree(NULL),number(7)
 {
-	width=height=pow(2,number);
+	width=height=(UINT)pow(2,number);
 	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 
 	wstring file = Shaders + L"PlaneColor.hlsl";
@@ -53,7 +53,7 @@ void Plane::Update()
 {
 	worldBuffer->SetMatrix(world);
 
-	if (isLoaded == true)
+	if (isLoaded)
 	{
 		if (loadThread != NULL)
 		{
@@ -65,11 +65,8 @@ void Plane::Update()
 
 void Plane::Render()
 {
-	if (Keyboard::Get()->Down('R')) 
-	{
-		indexCount=(UINT)quadTree->GenerateIndex(index,vertex);
-		D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
-	}
+	//indexCount=(UINT)quadTree->GenerateIndex(index,vertex);
+	//D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
 
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
@@ -77,7 +74,7 @@ void Plane::Render()
 	D3D::GetDC()->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	States::SetDefault();
+
 	for (int i = 0;i < 5;i++)
 	{
 		D3D::GetDC()->PSSetShaderResources(i, 1, &(textures[i]->texture));
@@ -333,7 +330,7 @@ void Plane::CreateBuffer()
 void Plane::ChangeScale(int num)
 {
 	number=num;
-	width = height=pow(2,num);
+	width = height=(UINT)pow(2,num);
 	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 	CreateBuffer();
 }

@@ -63,7 +63,7 @@ Sky::Sky()
 	worldBuffer = new WorldBuffer();
 
 	shader = new Shader(shaderFile);
-	
+
 	D3D11_RASTERIZER_DESC rasterizerDesc;
 	States::GetRasterizerDesc(&rasterizerDesc);
 	rasterizerDesc.FrontCounterClockwise = false;
@@ -87,8 +87,6 @@ Sky::~Sky()
 {
 	SAFE_RELEASE(depthOnState);
 	SAFE_RELEASE(depthOffState);
-	SAFE_RELEASE(clockState);
-	SAFE_RELEASE(countClockState);
 
 	SAFE_DELETE(worldBuffer);
 	SAFE_DELETE(skyBuffer);
@@ -116,7 +114,6 @@ void Sky::Render()
 	worldBuffer->SetVSBuffer(1);
 	skyBuffer->SetPSBuffer(1);
 	shader->Render();
-
 
 	States::SetDepthStencil(depthOffState);
 	States::SetRasterizer(countClockState);

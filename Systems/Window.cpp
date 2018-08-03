@@ -46,7 +46,6 @@ WPARAM Window::Run()
 			program->Update();
 			ImGui::Update();
 
-
 			program->PreRender();
 			D3D::Get()->Clear();//비긴신 엔드신에서 Clear으로 바꿈 널이면 기본 렌더타겟넣으면 그걸로
 			{
@@ -62,7 +61,6 @@ WPARAM Window::Run()
 				//ImGui::Begin("Fps Window", NULL, flag);
 				//ImGui::Text("Fps %d", (int)ImGui::GetIO().Framerate);
 				//ImGui::End();
-
 
 				program->Render();
 				program->PostRender();

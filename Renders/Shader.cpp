@@ -152,6 +152,8 @@ void Shader::CreateInputLayout()
 		string temp = paramDesc.SemanticName;
 		if (temp == "POSITION")
 			elementDesc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+		if (temp == "COLOR")
+			elementDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 		inputLayoutDesc.push_back(elementDesc);
 	}

@@ -20,8 +20,8 @@ Program::Program()
 	values->Perspective = new Perspective(desc.Width, desc.Height);
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 	values->MainCamera = new FirstPerson();
-
 	values->MainCamera->SetPosition(0, 10, -20);
+	CameraManager::Get()->SetPlayerCamera(values->MainCamera);
 	
 	executes.push_back(new ExeModel(values));
 	executes.push_back(new ExeGui(values));

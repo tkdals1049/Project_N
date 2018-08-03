@@ -4,7 +4,7 @@
 #include "../Content/BinModel.h"
 #include "../Content/FbxModel.h"
 #include "../Model/ModelGroup.h"
-#include "../FbxModel/MoLoader.h"
+#include "../Model/FbxModel/MoLoader.h"
 #include "../Utilities/Path.h"
 
 ExeModel::ExeModel(ExecuteValues* values)
@@ -22,10 +22,12 @@ ExeModel::ExeModel(ExecuteValues* values)
 
 	D3D11_RASTERIZER_DESC rdesc;
 	States::GetRasterizerDesc(&rdesc);
-
 	rdesc.FillMode = D3D11_FILL_SOLID;
 	rdesc.CullMode = D3D11_CULL_NONE;
 	States::CreateRasterizer(&rdesc, &setRasterizer);
+
+	States::SetDefault();
+
 }
 
 ExeModel::~ExeModel()
@@ -65,11 +67,10 @@ void ExeModel::Render()
 {
 	Sky::Get()->Render();
 	Plane::Get()->Render();
-
 	D3D::GetDC()->RSGetState(&getRasterizer);
 	D3D::GetDC()->RSSetState(setRasterizer);
 	{
-		group->Render();
+	group->Render();
 	}
 	D3D::GetDC()->RSSetState(getRasterizer);
 }

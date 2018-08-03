@@ -189,25 +189,29 @@ void Brush::Splatting(Box * box)
 			UINT index = z * (width + 1) + x;
 			float ano = sqrt(pow(x - (position.x - plane->position.x), 2) + pow(z - (position.y - plane->position.z), 2));
 
-			D3DXCOLOR another = D3DXCOLOR(0, 0, 0, 0);
-			switch (num)
-			{
-				case 0:another = D3DXCOLOR(0, 0, 0, 0);break;
-				case 1:another = D3DXCOLOR(1, 0, 0, 0);break;
-				case 2:another = D3DXCOLOR(0, 1, 0, 0);break;
-				case 3:another = D3DXCOLOR(0, 0, 1, 0);break;
-				case 4:another = D3DXCOLOR(0, 0, 0, 1);break;
-			}
-
 			if (type == 0)
 			{
-				vertex[index].lerp = another;
+				switch (num)
+				{
+					case 0:vertex[index].lerp = D3DXCOLOR(0.1f, 0, 0, 0);break;
+					case 1:if (vertex[index].lerp.r<1)vertex[index].lerp += D3DXCOLOR(0.1f, 0, 0, 0);break;
+					case 2:if (vertex[index].lerp.g<1)vertex[index].lerp += D3DXCOLOR(0, 0.1f, 0, 0);break;
+					case 3:if (vertex[index].lerp.b<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0.1f, 0);break;
+					case 4:if (vertex[index].lerp.a<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0, 0.1f);break;
+				}
 			}
 			else
 			{
 				if (size >= ano)
 				{
-					vertex[index].lerp = another;
+					switch (num)
+					{
+						case 0:vertex[index].lerp = D3DXCOLOR(0.1f, 0, 0, 0);break;
+						case 1:if (vertex[index].lerp.r<1)vertex[index].lerp += D3DXCOLOR(0.1f, 0, 0, 0);break;
+						case 2:if (vertex[index].lerp.g<1)vertex[index].lerp += D3DXCOLOR(0, 0.1f, 0, 0);break;
+						case 3:if (vertex[index].lerp.b<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0.1f, 0);break;
+						case 4:if (vertex[index].lerp.a<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0, 0.1f);break;
+					}
 				}
 			}
 		}
