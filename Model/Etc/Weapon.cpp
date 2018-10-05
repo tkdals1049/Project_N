@@ -4,7 +4,7 @@
 #include "../BinModel/Model.h"
 
 Weapon::Weapon(Actor* actor, string equipName, string equipName2, string unequipName)
-:actor(actor),weaponNum(-1), count(20),effectCount(0),effectTime(0),
+:actor(actor),weaponNum(-1), count(10),effectCount(0),effectTime(0),
 equipName(equipName), equipName2(equipName2), unequipName(unequipName)
 {
 	shader = new Shader(Shaders + L"WeaponEffect.hlsl");
@@ -13,27 +13,11 @@ equipName(equipName), equipName2(equipName2), unequipName(unequipName)
 	D3DXMatrixIdentity(&world);
 	worldBuffer->SetMatrix(world);
 	CreateBuffer();
-
-	D3D11_BLEND_DESC desc;
-	ZeroMemory(&desc, sizeof(D3D11_BLEND_DESC));
-	States::GetBlendDesc(&desc);
-	States::CreateBlend(&desc, &linearState);
-
-	desc.RenderTarget[0].BlendEnable = FALSE;
-	States::CreateBlend(&desc, &offState);
-
-
-	D3D11_DEPTH_STENCIL_DESC dsdesc;
-	ZeroMemory(&dsdesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-	States::GetDepthStencilDesc(&dsdesc);
-	States::CreateDepthStencil(&dsdesc, &offMaskState);
-
-	dsdesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	States::CreateDepthStencil(&dsdesc, &onMaskZeroState);
 }
 
 Weapon::~Weapon()
 {
+	for (size_t i = 0; i <weapons.size(); i++)
 	for (size_t i = 0; i <weapons.size(); i++)
 		SAFE_DELETE(weapons[i].second);
 
@@ -45,8 +29,10 @@ void Weapon::PreUpdate()
 {
 	if (Keyboard::Get()->Down('F') && actor->GetMode() == "idle")
 	{
-		if ((unsigned int)weaponNum<weapons.size()) weaponNum++;
-		else weaponNum = 0;
+		weaponNum++;
+		if ((unsigned int)weaponNum >= weapons.size()) weaponNum = 0;
+
+		weapons[weaponNum].second->SetWorld(actor->GetModel()->GetWeaponWorld(unequipName));
 	}
 }
 
@@ -61,13 +47,13 @@ void Weapon::Update()
 		if (actor->GetisEquip())
 		{
 			if (actor->GetMode().find("equip") != -1)
-				worldName = WeaponSetting(D3DXVECTOR3(90, 0, 0), D3DXVECTOR3(0, 0, 0), equipName2);
+				worldName = WeaponSetting(D3DXVECTOR3(90, 0, 0), D3DXVECTOR3(0, -0.5f, 0), equipName2);
 			else
-				worldName = WeaponSetting(D3DXVECTOR3(-90, 0, 0), D3DXVECTOR3(0.4f, 2.0f, 0), equipName);
+				worldName = WeaponSetting(D3DXVECTOR3(-90, 0, 0), D3DXVECTOR3(0.3f, 1.0f, 0), equipName);
 		}
 		else
 		{
-			worldName = WeaponSetting(D3DXVECTOR3(-90, 90, 0), D3DXVECTOR3(-0.12f, 0, 1.5f), unequipName, actor->GetMode() == "idle");
+			worldName = WeaponSetting(D3DXVECTOR3(0, 60, 90), D3DXVECTOR3(-0.07f, -2.0f, 0.4f), unequipName, actor->GetMode() == "idle");
 		}
 		//무기 영역 및 월드 계산 
 		weapons[weaponNum].second->SetWorld(actor->GetModel()->GetWeaponWorld(worldName));
@@ -85,11 +71,15 @@ void Weapon::Update()
 
 void Weapon::Render()
 {
+	States::SetRasterizerNone();
+
 	if (weaponNum >= 0 && (unsigned int)weaponNum<weapons.size())
 	{
 		weapons[weaponNum].second->Render();
 		EffectRender();
 	}
+
+	States::SetRasterizerDefault();
 }
 
 void Weapon::ClearWeapon()
@@ -104,10 +94,10 @@ void Weapon::ClearWeapon()
 //무기를 추가함
 void Weapon::AddWeaponVector(Model * weaponFile, D3DXVECTOR3 scale)
 {
+	weaponFile->Reset();
 	weapons.push_back(WeaponVec(equipName, weaponFile));
 	WeaponInfo* info = new WeaponInfo(weaponFile, scale);
-	weaponsInfo.push_back(info);
-	weaponFile->Reset();
+	weaponsInfo.push_back(info); 
 }
 
 //무기의 각도와 오차를 조정하고 모델의 장착부위를 출력함
@@ -134,8 +124,8 @@ void Weapon::EffectUpdate()
 
 			D3DXVECTOR3 up, down, max = weaponsInfo[weaponNum]->maxp, min = weaponsInfo[weaponNum]->minp;
 
-			D3DXVec3TransformCoord(&down, &D3DXVECTOR3(min.x, 0, 0), &weaponWorld);
-			D3DXVec3TransformCoord(&up, &D3DXVECTOR3(max.x, 0, 0), &weaponWorld);
+			D3DXVec3TransformCoord(&down, &D3DXVECTOR3(2*min.x, 0, 0), &weaponWorld);
+			D3DXVec3TransformCoord(&up, &D3DXVECTOR3(-min.x, 0, 0), &weaponWorld);
 
 			vertex[2 * effectCount].position = down;
 			vertex[2 * effectCount].color = D3DXCOLOR(1, 1, 1, 1);
@@ -167,7 +157,7 @@ void Weapon::EffectUpdate()
 					if (vertex[i].color.a>0)
 					{
 						effectReset = true;
-						vertex[i].color.a -= 0.05f;
+						vertex[i].color.a -= 0.1f;
 					}
 
 				D3D::GetDC()->UpdateSubresource
@@ -200,13 +190,13 @@ void Weapon::EffectRender()
 
 	shader->Render();
 
-	States::SetDepthStencil(onMaskZeroState);
-	States::SetBlend(linearState);
+	States::SetDepthStencilMaskZero();
+	States::SetBlendOn();
 	{
 		dc->DrawIndexed(count*6, 0, 0);
 	}
-	States::SetBlend(offState);
-	States::SetDepthStencil(offMaskState);
+	States::SetBlendOff();
+	States::SetDepthStencilDefault();
 }
 
 void Weapon::CreateBuffer()

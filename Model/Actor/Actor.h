@@ -23,6 +23,7 @@ public:
 	void SetDifferent(bool different) { this->different = different; }
 	const bool GetisEquip() { return isEquip; }
 	const bool GetisAttack() { return isAttack; }
+	void SetoffAttack() { isAttack=false; }
 	int GetAttackRangeSize(){return attackRange.size(); }
 	ST_OBB* GetAttackRange(int num=0) {	return (attackRange.size()!=0 ? attackRange[num] : NULL);}
 	void AniChange(string mode)	{model->AniChange(mode);}

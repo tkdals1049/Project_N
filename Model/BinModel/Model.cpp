@@ -17,6 +17,7 @@ Model::Model()
 : position(D3DXVECTOR3(0,0,0)), rotate(D3DXVECTOR3(0, 0, 0)), scale(D3DXVECTOR3(1,1,1)), adjust(D3DXVECTOR3(0, 0, 0)),
 minp(D3DXVECTOR3(0, 0, 0)), maxp(D3DXVECTOR3(0, 0, 0)), origin(D3DXVECTOR3(0, 0, 0)),skeleton(NULL),animationController(NULL)
 {
+	damageColor = 0;
 	root=range=0;
 	speed =1.0f;
 	D3DXMatrixIdentity(&matGeometricOffset);
@@ -30,6 +31,7 @@ minp(D3DXVECTOR3(0, 0, 0)), maxp(D3DXVECTOR3(0, 0, 0)), origin(D3DXVECTOR3(0, 0,
 	assert(scene != NULL);
 
 	boneBuffer = new BoneBuffer();
+	colorBuffer = new ColorBuffer();
 	animationController = new ModelAnimationController();
 }
 
@@ -46,8 +48,11 @@ Model::~Model()
 
 void Model::Update()
 {
-	AnotherUpdate();	
+	if(damageColor!=0)	colorBuffer->Data.Color.r -= Time::Get()->Delta()*damageColor;
+	if (colorBuffer->Data.Color.r <= 0) damageColor =0;
+
 	SetWorld();
+	AnotherUpdate();	
 
 	for (ModelMesh* mesh : meshes)
 		mesh->Update();
@@ -55,8 +60,9 @@ void Model::Update()
 
 void Model::Render()
 {
-	boneBuffer->SetVSBuffer(2);
-
+	colorBuffer->SetPSBuffer(2);
+	boneBuffer->SetInvworld(&(matGeometricOffset*world));
+	boneBuffer->SetVSBuffer(4);
 	for (ModelMesh* mesh : meshes)
  		mesh->Render();
 }
@@ -296,17 +302,19 @@ void Model::Reset()
 		{
 			D3DXVECTOR3 minb, maxb;
 			meshes[i]->GetMinMax(minb, maxb);
-			if (minp>minb) minp = minb;
-			if (maxp<maxb) maxp = maxb;
+			if (minp.x > minb.x) minp.x = minb.x;
+			if (maxp.x < maxb.x) maxp.x = maxb.x;
+			if (minp.y > minb.y) minp.y = minb.y;
+			if (maxp.y < maxb.y) maxp.y = maxb.y;
+			if (minp.z > minb.z) minp.z = minb.z;
+			if (maxp.z < maxb.z) maxp.z = maxb.z;
 		}
 	}
 }
 
 void Model::SetWorld()
 {
-		D3DXVECTOR3 size = maxp - minp;
-		D3DXVECTOR3 center = size/2;
-		//center.x*=scale.x;center.y *= scale.y;center.z *= scale.z;
+		D3DXVECTOR3 size = (maxp - minp)/2;
 
 		D3DXMATRIX matS;
 		D3DXMatrixScaling(&matS, scale.x, scale.y, scale.z);
@@ -317,8 +325,8 @@ void Model::SetWorld()
 		D3DXMatrixRotationZ(&matZ, rotate.z*(float)D3DX_PI/180);
 		matR = matX*matY*matZ;
 
-		D3DXMATRIX matT, matRT, matRT2;
-		D3DXMatrixTranslation(&matRT, center.x*adjust.x, center.y*adjust.y, center.z*adjust.z);
+		D3DXMATRIX matT, matRT;
+		D3DXMatrixTranslation(&matRT, size.x*adjust.x, size.y*adjust.y, size.z*adjust.z);
 		D3DXMatrixTranslation(&matT, position.x, position.y, position.z);
 		matGeometricOffset = matS*matR*matRT*matT;
 }
@@ -443,4 +451,10 @@ D3DXMATRIX Model::GetAbsoluteTransformFromCurrentTake(FbxNode * node, FbxTime ti
 	FbxAMatrix matrix = node->EvaluateGlobalTransform(time);
 
 	return MoModelUtility::ToMatrix(matrix);
+}
+
+void Model::isDamage()
+{
+	if (damageColor == 0) damageColor = 1;
+	colorBuffer->Data.Color.r = 1;
 }

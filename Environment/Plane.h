@@ -29,6 +29,35 @@ public:
 	Struct Data;
 };
 
+class ClipBuffer : public ShaderBuffer
+{
+public:
+	ClipBuffer() : ShaderBuffer(&Data, sizeof(Struct))
+	{
+		Data.Clip=D3DXVECTOR4(0,1,0,1);
+		D3DXMatrixIdentity(&Data.invWorld);
+	}
+	void SetDepth(float depth)
+	{
+		Data.Clip.w=depth;
+	}
+
+	void SetReverse()
+	{
+		Data.Clip.x*=-1;
+		Data.Clip.y*=-1;
+		Data.Clip.z*=-1;
+		Data.Clip.w*=-1;
+	}
+
+	struct Struct
+	{
+		D3DXVECTOR4 Clip;
+		D3DXMATRIX invWorld;
+	};
+	Struct Data;
+};
+
 class Plane
 {
 public:
@@ -37,6 +66,7 @@ public:
 
 	void Update();
 	void Render();
+	void waterRender();
 	void PostRender(bool& isUse);
 
 	D3DXVECTOR2 GetDot() { return dot; }
@@ -44,6 +74,7 @@ public:
 	void SetTexture(int num, wstring file);
 
 	void UpdatePointBuffer(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
+	void LoadHeightMap();
 	void CreateNormalData();
 	void CreateBuffer();
 	void ChangeScale(int num);
@@ -54,6 +85,9 @@ public:
 	void ReadMap(wstring file);
 
 	void Frustum();
+	UINT GetWidth() { return width; }
+	float GetHeight(float x, float y);
+	void ReverseClip(){clipBuffer->SetReverse();}
 
 private:
 	static Plane* instance;
@@ -74,13 +108,16 @@ private:
 	};
 	friend class Brush;
 	class Brush* brush;
+	class Water* water;
 
 	typedef VertexLerpColorTextureNormal VertexType;
 	VertexType* vertex;
 	UINT* index;
+	BYTE* heightData;
 
 	Shader* shader;
 	PlaneBuffer* planeBuffer;
+	ClipBuffer* clipBuffer;
 
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
@@ -92,6 +129,7 @@ private:
 	WorldBuffer* worldBuffer;
 
 	UINT width, height, number;
+	float size;
 	D3DXVECTOR3 position;
 
 	bool OnTextureList;

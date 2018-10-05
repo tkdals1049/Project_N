@@ -38,7 +38,11 @@ public:
 	{
 		d3dDesc = desc;
 	}
-
+	
+	ID3D11DepthStencilView* GetDepthView()
+	{
+		return depthStencilView;
+	}
 	void SetRenderTarget(ID3D11RenderTargetView* rtv = NULL, ID3D11DepthStencilView* dsv = NULL);
 
 	void Clear(D3DXCOLOR color = D3DXCOLOR(0xFF555566), ID3D11RenderTargetView* rtv = NULL, ID3D11DepthStencilView* dsv = NULL);

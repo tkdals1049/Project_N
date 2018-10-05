@@ -1,6 +1,7 @@
 #include "../../stdafx.h"
 #include "Monster.h"
-
+#include "Player.h"
+#include "../Etc/Look.h"
 #include "../BinModel/Model.h"
 #include "../BinModel/ModelSkeleton.h"
 #include "../BinModel/ModelAnimation.h"
@@ -9,6 +10,7 @@
 Monster::Monster() :dir(0), degree(0), degree_goal(0), speed(20.0f),
 mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1)
 {
+	look = new Look();
 }
 
 Monster::Monster(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f),
@@ -18,6 +20,7 @@ mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way
 
 	model->Reset();
 	model->AniChange("idle");
+	look = new Look();
 }
 
 Monster::~Monster()
@@ -42,6 +45,8 @@ void Monster::Render()
 	if (model != NULL)
 	{
 		Actor::Render();
+		look->SetWorld(model->GetWeaponWorld("HD_02"));
+		//look->Render();
 	}
 }
 

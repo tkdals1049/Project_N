@@ -14,19 +14,21 @@ isLoaded(false),isRec(false),loadThread(NULL)
 {
 	weapon=new Weapon(this);
 	attackRange.push_back(new ST_OBB());
-	SetPlayer();
 }
 
 Player::~Player()
-{
+{	
+	SAFE_DELETE(weapon);
+	SAFE_DELETE(loadThread);
+
 }
 
 void Player::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
+		if (Keyboard::Get()->Down('P')) SetPlayer();
 	if (model != NULL && isLoaded)
 	{
 		if (Keyboard::Get()->Down('Q')) isRec = !isRec;
-		if (Keyboard::Get()->Down('P')) isRec = !isRec;
 
 		Control();
 		weapon->PreUpdate();
@@ -46,7 +48,6 @@ void Player::Update()
 		Notify();
 		Actor::Update();
 		weapon->Update();
-		
 		if(isRec) CameraUpdate();
 	}
 }
@@ -56,17 +57,18 @@ void Player::Render()
 	if (model != NULL)
 	{
 		Actor::Render();
+		
 		weapon->Render();
 	}
 }
 
 void Player::CameraUpdate()
 {
-	float distance=40,radian= (float)(D3DX_PI / 180);
+	float distance=30,radian= (float)(D3DX_PI / 180);
 	D3DXVECTOR3 position= model->GetPosition();
-	D3DXVECTOR2 cameraRotate(D3DXVECTOR2(30*radian, dir*radian));
+	D3DXVECTOR2 cameraRotate(D3DXVECTOR2(15*radian, dir*radian));
 	D3DXVECTOR3 cameraPosition
-	(D3DXVECTOR3(position.x - distance * cos(radian*(dir - 90)), position.y + distance, position.z + distance * sin(radian*(dir - 90))));
+	(D3DXVECTOR3(position.x - distance * cos(radian*(dir - 90)), position.y + distance/2, position.z + distance * sin(radian*(dir - 90))));
 	CameraManager::Get()->SetPosition(cameraPosition);
 	CameraManager::Get()->SetRotate(cameraRotate);
 }
@@ -183,12 +185,10 @@ void Player::Control()
 		if (Keyboard::Get()->Down(VK_SPACE))
 		{
 			model->SetAniPlay(1, 0, 3.0f);
-			if (mode == "rush")
-			{
-				Input("rush_jump");
-				speed = 40.0f;
-			}
-			else { Input("jump");speed = 30.0f; }
+			Input("jump");
+
+			if (mode == "rush")speed = 40.0f;
+			else Input("jump");speed = 30.0f;
 
 			if (way == D3DXVECTOR3(0, 0, 0)) way=way2;
 			isControl = false;
@@ -219,10 +219,19 @@ void Player::Control()
 		if(mode.find("jump")==-1)
 		way=D3DXVECTOR3(0,0,0);
 	}
+
+	//현재와 다음 지형 정보를 읽어와서 일정 높이 이상이면 이동을 못하게 함
 	
-	//이동의 결과를 모델에 입력
-	model->SetPosition(move + speed * (way.z*forward + way.x*right)*Time::Get()->Delta());
-	model->SetRotate(D3DXVECTOR3(rotate.x, (float)degree+ (float)dir-90, rotate.z));
+	D3DXVECTOR3 result= move + speed * (way.z*forward + way.x*right);
+	float y1=Plane::Get()->GetHeight(result.x,result.z),y2= Plane::Get()->GetHeight(move.x, move.z);
+	float y=abs(y2-y1);
+	
+	if(y<10|| Keyboard::Get()->Press(VK_SHIFT))
+	{
+		//이동의 결과를 모델에 입력
+		model->SetPosition(move + speed * (way.z*forward + way.x*right)*Time::Get()->Delta());
+		model->SetRotate(D3DXVECTOR3(rotate.x, (float)degree+ (float)dir-90, rotate.z));
+	}
 
 	//애니메이션 높이 조정
 	D3DXMATRIX world;
@@ -230,13 +239,13 @@ void Player::Control()
 	{
 		D3DXMatrixTranslation(&world,0,SetHeight(),0);
 		model->SetWorld(world);
-		model->SetAdjust(D3DXVECTOR3(0, 0.025f, 0));
+		model->SetAdjust(D3DXVECTOR3(0, 0.01f, 0));
 	}
 	else
 	{
-		D3DXMatrixTranslation(&world, 0,-model->GetMinP().y*model->GetScale().y*2, 0);
+		D3DXMatrixTranslation(&world, 0,-model->GetMinP().z*model->GetScale().y, 0);
 		model->SetWorld(world);
-		model->SetAdjust(D3DXVECTOR3(0, 0.075f, 0));
+		model->SetAdjust(D3DXVECTOR3(0, 0, 0));
 	}
 }
 
@@ -251,7 +260,7 @@ void Player::Notify()
 
 	if (mode == "run")
 	{
-		if (degree >= end - 1|| Premode == "rush") ani->SetCurrentKeyFrame(27);
+		if (degree >= end - 1|| Premode == "rush") ani->SetCurrentKeyFrame(28);
 	}
 	else if (mode == "jump"||mode == "rush_jump_end")
 	{
@@ -326,6 +335,10 @@ void Player::SetPlayer()
 		isLoaded = false;
 
 		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Player.model", &model);
+		model->Reset();
+		model->SetAniPlay(1, 0, 1.5f);
+		model->AniChange("idle");
+
 		Model* wp,*wp2;
 		MoLoader::LoadBinary("../_Contents/BinModels/Actor_Sword1.model", &wp);
 		wp->Reset();
@@ -334,9 +347,6 @@ void Player::SetPlayer()
 		wp2->Reset();
 		weapon->AddWeaponVector(wp2, model->GetScale());
 
-		model->Reset();
-		model->SetAniPlay(1, 0, 1.5f);
-		model->AniChange("idle");
 
 		isLoaded = true;
 	});

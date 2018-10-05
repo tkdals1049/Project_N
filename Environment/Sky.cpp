@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Sky.h"
+#include "Cloud.h"
 #include "../Utilities/Mesh.h"
 
 Sky* Sky::instance = NULL;
@@ -63,47 +64,28 @@ Sky::Sky()
 	worldBuffer = new WorldBuffer();
 
 	shader = new Shader(shaderFile);
-
-	D3D11_RASTERIZER_DESC rasterizerDesc;
-	States::GetRasterizerDesc(&rasterizerDesc);
-	rasterizerDesc.FrontCounterClockwise = false;
-	States::CreateRasterizer(&rasterizerDesc, &clockState);
-
-	States::GetRasterizerDesc(&rasterizerDesc);
-	rasterizerDesc.FrontCounterClockwise = true;
-	States::CreateRasterizer(&rasterizerDesc, &countClockState);
-
-	D3D11_DEPTH_STENCIL_DESC depthDesc;
-	States::GetDepthStencilDesc(&depthDesc);
-	depthDesc.DepthEnable = true;
-	States::CreateDepthStencil(&depthDesc, &depthOnState);
-
-	States::GetDepthStencilDesc(&depthDesc);
-	depthDesc.DepthEnable = false;
-	States::CreateDepthStencil(&depthDesc, &depthOffState);
+	cloud = new Cloud();
 }
 
 Sky::~Sky()
 {
-	SAFE_RELEASE(depthOnState);
-	SAFE_RELEASE(depthOffState);
 
 	SAFE_DELETE(worldBuffer);
 	SAFE_DELETE(skyBuffer);
 	SAFE_DELETE(shader);
 }
 
-void Sky::Update(Camera* camera)
+void Sky::Update()
 {
-	D3DXVECTOR3 position;
-	camera->GetPosition(&position);
-
-	D3DXMatrixTranslation(&world, position.x, position.y, position.z);
-	worldBuffer->SetMatrix(world);
+	cloud->Update();
 }
 
 void Sky::Render()
 {
+	D3DXVECTOR3 position = CameraManager::Get()->GetPosition();
+	D3DXMatrixTranslation(&world, position.x, position.y, position.z);
+	worldBuffer->SetMatrix(world);
+
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
 
@@ -111,17 +93,24 @@ void Sky::Render()
 	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	worldBuffer->SetVSBuffer(1);
-	skyBuffer->SetPSBuffer(1);
-	shader->Render();
+		worldBuffer->SetVSBuffer(1);
 
-	States::SetDepthStencil(depthOffState);
-	States::SetRasterizer(countClockState);
+	if (ShaderManager::Get()->GetOther() != depth && ShaderManager::Get()->GetOther() != shadow)
 	{
-		D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
+
+		skyBuffer->SetPSBuffer(1);
+		shader->Render();
+
+		States::SetRasterizerNone();
+		States::SetDepthStencilOff();
+		{
+			D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
+			cloud->Render();
+		}
+		States::SetDepthStencilDefault();
+		States::SetRasterizerDefault();
 	}
-	States::SetRasterizer(clockState);;
-	States::SetDepthStencil(depthOnState);
+
 }
 
 void Sky::PostRender(bool& isUse)

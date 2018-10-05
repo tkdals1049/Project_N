@@ -14,8 +14,11 @@ public:
 	void Render();
 	void Input(string mode);
 	void SetMonster();
-
+	void SetPlayer(class Player* player) { this->player = player; }
 private:
+	class Look* look;
+	class Player*player;
+
 	void Notify();
 
 	int dir, degree, degree_goal, weaponNum;

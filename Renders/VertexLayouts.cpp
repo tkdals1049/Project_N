@@ -58,10 +58,10 @@ UINT VertexColorTextureNormal::count = 4;
 D3D11_INPUT_ELEMENT_DESC VertexLerpColorTextureNormal::desc[] =
 {
 	{ "POSITION", 0, VERTEX_RGB, 0, 0, VERTEX, 0 },
-	{ "COLOR", 0, VERTEX_RGBA, 0, ALIGNED_ELEMENT, VERTEX, 0 },
-	{ "LERP", 0, VERTEX_RGBA, 0, ALIGNED_ELEMENT, VERTEX, 0 },
 	{ "TEXCOORD", 0, VERTEX_RG, 0, ALIGNED_ELEMENT, VERTEX, 0 },
 	{ "NORMAL", 0, VERTEX_RGB, 0, ALIGNED_ELEMENT, VERTEX, 0 },
+	{ "COLOR", 0, VERTEX_RGBA, 0, ALIGNED_ELEMENT, VERTEX, 0 },
+	{ "LERP", 0, VERTEX_RGBA, 0, ALIGNED_ELEMENT, VERTEX, 0 },
 };
 UINT VertexLerpColorTextureNormal::count = 5;
 
@@ -171,13 +171,13 @@ VertexColorTextureNormal::VertexColorTextureNormal(D3DXVECTOR3 position, D3DXCOL
 VertexLerpColorTextureNormal::VertexLerpColorTextureNormal()
 {
 	position = D3DXVECTOR3(0, 0, 0);
-	color = D3DXCOLOR(0, 0, 0, 1);
-	lerp = D3DXCOLOR(0, 0, 0, 0);
 	uv = D3DXVECTOR2(0, 0);
 	normal = D3DXVECTOR3(0, 0, 0);
+	color = D3DXVECTOR4(0, 0, 0, 1);
+	lerp = D3DXVECTOR4(0, 0, 0, 0);
 }
 
-VertexLerpColorTextureNormal::VertexLerpColorTextureNormal(D3DXVECTOR3 position, D3DXCOLOR color, D3DXCOLOR lerp, D3DXVECTOR2 uv, D3DXVECTOR3 normal)
+VertexLerpColorTextureNormal::VertexLerpColorTextureNormal(D3DXVECTOR3 position, D3DXVECTOR2 uv, D3DXVECTOR3 normal, D3DXVECTOR4 color, D3DXVECTOR4 lerp)
 {
 	this->position = position;
 	this->color = color;

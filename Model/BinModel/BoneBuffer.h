@@ -7,6 +7,7 @@ public:
 	BoneBuffer()
 		: ShaderBuffer(&data,sizeof(Data))
 	{
+		D3DXMatrixIdentity(&data.invworld);
 		D3DXMatrixIdentity(&data.boneTrans);
 		D3DXMatrixIdentity(&data.boneScale);
 		
@@ -27,6 +28,10 @@ public:
 		for(UINT i = 0; i < count; i++)
 			D3DXMatrixTranspose(&data.boneArray[i], &data.boneArray[i]);
 	}
+	void SetInvworld(D3DXMATRIX* matrix)
+	{
+		memcpy(data.invworld, matrix, sizeof(D3DXMATRIX));
+	}
 	void SetScale(D3DXMATRIX* matrix)
 	{
 		memcpy(data.boneScale, matrix, sizeof(D3DXMATRIX));
@@ -37,6 +42,7 @@ public:
 	}
 	struct Data
 	{
+		D3DXMATRIX invworld;
 		D3DXMATRIX boneTrans;
 		D3DXMATRIX boneScale;
 		D3DXMATRIX boneArray[100];

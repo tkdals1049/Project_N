@@ -132,10 +132,9 @@ BOOL	ZQuadTree::_SubDivide()
 }
 
 // 출력할 폴리곤의 인덱스를 생성한다.
-int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
+int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, const VertexType* pHeightMap, bool isCull)
 {
-	// 컬링된 노드라면 그냥 리턴
-	if( m_bCulled )
+	if( m_bCulled &&isCull)
 	{
 		m_bCulled = FALSE;
 		return nTris;
@@ -168,7 +167,8 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 
 		// 이웃노드들이 모두다 출력가능하다면 현재노드와 이웃노드들이 같은 LOD이므로 
 		// 부분분할이 필요없다.
-		if (b[EDGE_UP] && b[EDGE_DN] && b[EDGE_LT] && b[EDGE_RT])
+
+		if ((b[EDGE_UP] && b[EDGE_DN] && b[EDGE_LT] && b[EDGE_RT]))
 		{
 			pIndex[nTris++] = m_nCorner[CORNER_BL];
 			pIndex[nTris++] = m_nCorner[CORNER_TL];
@@ -180,7 +180,7 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 		}
 
 		int		n;
-
+		
 		if (!b[EDGE_UP]) // 상단 부분분할이 필요한가?
 		{
 			n = (m_nCorner[CORNER_TL] + m_nCorner[CORNER_TR]) / 2;
@@ -191,7 +191,7 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 		{
 			pIndex[nTris++] = m_nCenter; pIndex[nTris++] = m_nCorner[CORNER_TL]; pIndex[nTris++] = m_nCorner[CORNER_TR];
 		}
-
+		
 		if (!b[EDGE_DN]) // 하단 부분분할이 필요한가?
 		{
 			n = (m_nCorner[CORNER_BL] + m_nCorner[CORNER_BR]) / 2;
@@ -202,7 +202,7 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 		{
 			pIndex[nTris++] = m_nCenter; pIndex[nTris++] = m_nCorner[CORNER_BR]; pIndex[nTris++] = m_nCorner[CORNER_BL];
 		}
-
+		
 		if (!b[EDGE_LT]) // 좌측 부분분할이 필요한가?
 		{
 			n = (m_nCorner[CORNER_TL] + m_nCorner[CORNER_BL]) / 2;
@@ -213,7 +213,7 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 		{
 			pIndex[nTris++] = m_nCenter; pIndex[nTris++] = m_nCorner[CORNER_BL]; pIndex[nTris++] = m_nCorner[CORNER_TL];
 		}
-
+		
 		if (!b[EDGE_RT]) // 우측 부분분할이 필요한가?
 		{
 			n = (m_nCorner[CORNER_TR] + m_nCorner[CORNER_BR]) / 2;
@@ -225,14 +225,15 @@ int		ZQuadTree::_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap)
 			pIndex[nTris++] = m_nCenter; pIndex[nTris++] = m_nCorner[CORNER_TR]; pIndex[nTris++] = m_nCorner[CORNER_BR];
 		}
 
+
 		return nTris;
 	}
 
 	// 자식 노드들 검색
-	if( m_pChild[CORNER_TL] ) nTris = m_pChild[CORNER_TL]->_GenTriIndex( nTris, pIndex,pHeightMap);
-	if( m_pChild[CORNER_TR] ) nTris = m_pChild[CORNER_TR]->_GenTriIndex( nTris, pIndex,pHeightMap);
-	if( m_pChild[CORNER_BL] ) nTris = m_pChild[CORNER_BL]->_GenTriIndex( nTris, pIndex,pHeightMap);
-	if( m_pChild[CORNER_BR] ) nTris = m_pChild[CORNER_BR]->_GenTriIndex( nTris, pIndex,pHeightMap);
+	if( m_pChild[CORNER_TL] ) nTris = m_pChild[CORNER_TL]->_GenTriIndex( nTris, pIndex,pHeightMap,isCull);
+	if( m_pChild[CORNER_TR] ) nTris = m_pChild[CORNER_TR]->_GenTriIndex( nTris, pIndex,pHeightMap,isCull);
+	if( m_pChild[CORNER_BL] ) nTris = m_pChild[CORNER_BL]->_GenTriIndex( nTris, pIndex,pHeightMap,isCull);
+	if( m_pChild[CORNER_BR] ) nTris = m_pChild[CORNER_BR]->_GenTriIndex( nTris, pIndex,pHeightMap,isCull);
 
 	return nTris;
 }
@@ -248,7 +249,7 @@ void	ZQuadTree::_AllInFrustum()
 	m_pChild[3]->_AllInFrustum();
 }
 
-int ZQuadTree::_IsInFrustum( VertexType* pHeightMap)
+int ZQuadTree::_IsInFrustum( const VertexType* pHeightMap)
 {
 	BOOL	b[4];
 	BOOL	bInSphere;
@@ -269,11 +270,10 @@ int ZQuadTree::_IsInFrustum( VertexType* pHeightMap)
 }
 
 // _IsInFrustum()함수의 결과에 따라 프러스텀 컬링 수행
-void	ZQuadTree::_FrustumCull( VertexType* pHeightMap )
+void	ZQuadTree::_FrustumCull( const VertexType* pHeightMap )
 {
 	int ret;
 
-	m_bCulled = FALSE;
 	ret = _IsInFrustum( pHeightMap );
 	switch( ret )
 	{
@@ -343,7 +343,7 @@ int	ZQuadTree::_GetNodeIndex(int ed, int cx, int& _0, int& _1, int& _2, int& _3)
 }
 
 // 쿼드트리를 검색해서 4개 코너값과 일치하는 노드를 찾는다.
-ZQuadTree* ZQuadTree::_FindNode(VertexType* pHeightMap, int _0, int _1, int _2, int _3)
+ZQuadTree* ZQuadTree::_FindNode(const VertexType* pHeightMap, int _0, int _1, int _2, int _3)
 {
 	ZQuadTree*	p = NULL;
 	// 일치하는 노드라면 노드값을 리턴
@@ -396,7 +396,7 @@ ZQuadTree* ZQuadTree::_FindNode(VertexType* pHeightMap, int _0, int _1, int _2, 
 }
 
 // 이웃노드를 만든다.(삼각형 찢어짐 방지용)
-void	ZQuadTree::_BuildNeighborNode(ZQuadTree* pRoot, VertexType* pHeightMap, int cx)
+void	ZQuadTree::_BuildNeighborNode(ZQuadTree* pRoot, const VertexType* pHeightMap, int cx)
 {
 	int				n;
 	int				_0, _1, _2, _3;
@@ -424,7 +424,7 @@ void	ZQuadTree::_BuildNeighborNode(ZQuadTree* pRoot, VertexType* pHeightMap, int
 }
 
 // 쿼드트리를 만든다.(Build()함수에서 불린다)
-BOOL	ZQuadTree::_BuildQuadTree(VertexType* pHeightMap)
+BOOL	ZQuadTree::_BuildQuadTree(const VertexType* pHeightMap)
 {
 	if (_SubDivide())
 	{
@@ -432,6 +432,7 @@ BOOL	ZQuadTree::_BuildQuadTree(VertexType* pHeightMap)
 		D3DXVECTOR3 v = pHeightMap[m_nCorner[CORNER_TL]].position - pHeightMap[m_nCorner[CORNER_BR]].position;
 		// v의 거리값이 이 노드를 감싸는 경계구의 지름이므로, 
 		// 2로 나누어 반지름을 구한다.
+		float a = CORNER_TL + CORNER_BR;
 		m_fRadius = D3DXVec3Length(&v) / 2.0f;
 		m_pChild[CORNER_TL]->Build(pHeightMap);
 		m_pChild[CORNER_TR]->Build(pHeightMap);
@@ -443,7 +444,7 @@ BOOL	ZQuadTree::_BuildQuadTree(VertexType* pHeightMap)
 
 
 // QuadTree를 구축한다.
-BOOL	ZQuadTree::Build(VertexType* pHeightMap)
+BOOL	ZQuadTree::Build(const VertexType* pHeightMap)
 {
 	// 쿼드트리 구축
 	_BuildQuadTree(pHeightMap);
@@ -453,8 +454,8 @@ BOOL	ZQuadTree::Build(VertexType* pHeightMap)
 }
 
 //	삼각형의 인덱스를 만들고, 출력할 삼각형의 개수를 반환한다.
-int	ZQuadTree::GenerateIndex( UINT* pIndex, VertexType* pHeightMap)
+int	ZQuadTree::GenerateIndex( UINT* pIndex,const VertexType* pHeightMap, bool isCull)
 {
-	_FrustumCull( pHeightMap);
-	return _GenTriIndex( 0, pIndex, pHeightMap);
+	if(isCull)_FrustumCull( pHeightMap);
+	return _GenTriIndex( 0, pIndex, pHeightMap,isCull);
 }

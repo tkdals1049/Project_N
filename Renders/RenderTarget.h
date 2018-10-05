@@ -6,9 +6,9 @@ public:
 	RenderTarget();
 	~RenderTarget();
 
-	ID3D11ShaderResourceView* GetResourceView()
+	ID3D11ShaderResourceView** GetResourceView()
 	{
-		return resourceView;
+		return &resourceView;
 	}
 
 	void SetTarget();

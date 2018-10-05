@@ -113,17 +113,17 @@ struct VertexLerpColorTextureNormal
 	VertexLerpColorTextureNormal
 	(
 		D3DXVECTOR3 position
-		, D3DXCOLOR color
-		, D3DXCOLOR lerp
 		, D3DXVECTOR2 uv
 		, D3DXVECTOR3 normal
+		, D3DXVECTOR4 color
+		, D3DXVECTOR4 lerp
 	);
 
 	D3DXVECTOR3 position;
-	D3DXCOLOR color;
-	D3DXCOLOR lerp;
 	D3DXVECTOR2 uv;
 	D3DXVECTOR3 normal;
+	D3DXVECTOR4 color;
+	D3DXVECTOR4 lerp;
 
 	static D3D11_INPUT_ELEMENT_DESC desc[];
 	static UINT count;

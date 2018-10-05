@@ -19,25 +19,6 @@ Blood::Blood():width(3),height(3),lookNum(0),isblood(false),time(0),position(D3D
 		, NULL
 	);
 	assert(SUCCEEDED(hr));
-
-
-	D3D11_BLEND_DESC desc;
-	ZeroMemory(&desc, sizeof(D3D11_BLEND_DESC));
-	States::GetBlendDesc(&desc);
-	States::CreateBlend(&desc, &linearState);
-
-	desc.RenderTarget[0].BlendEnable = FALSE;
-	States::CreateBlend(&desc, &offState);
-
-
-	D3D11_DEPTH_STENCIL_DESC dsdesc;
-	ZeroMemory(&dsdesc, sizeof(D3D11_DEPTH_STENCIL_DESC));
-	States::GetDepthStencilDesc(&dsdesc);
-	States::CreateDepthStencil(&dsdesc, &offMaskState);
-
-	dsdesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	States::CreateDepthStencil(&dsdesc, &onMaskZeroState);
-
 }
 
 Blood::~Blood()
@@ -52,15 +33,17 @@ void Blood::PreUpdate()
 
 void Blood::Update()
 {
-
 	if (isblood)
 	{
-		D3DXVECTOR3 cameraPos = *ZFrustum::Get()->GetPos();
-		rotate.y =  (float)D3DX_PI/2-atan2(cameraPos.z - position.z, cameraPos.x - position.x);
+		D3DXVECTOR3 cameraPos;
+
+		D3DXVec3TransformCoord(&cameraPos, &D3DXVECTOR3(0, 0, 0), &CameraManager::Get()->GetView());
+
+		rotate.y =  atan2(cameraPos.z - position.z, cameraPos.x - position.x);
 		rotate.x =  atan2(cameraPos.y - position.y,sqrt(pow(cameraPos.z - position.z, 2) + pow(cameraPos.x - position.x, 2)));
 		
 		time += Time::Get()->Delta();
-		if (time > 0.02f)
+		if (time >0.05f)
 		{
 			lookNum++;
 			time = 0;
@@ -71,6 +54,8 @@ void Blood::Update()
 		D3DXMatrixTranslation(&world,position.x,position.y,position.z);
 		D3DXMatrixScaling(&scale,(float)(lookNum+1), (float)(lookNum + 1), (float)(lookNum + 1));
 		worldBuffer->SetMatrix(rotateX*rotateY*scale*world);
+	//D3DXMATRIX world, scale, rotateX, rotateY;
+	worldBuffer->SetMatrix(rotateX*scale*world);
 	}
 	if (lookNum >= width * height) { lookNum = 0;isblood = false; }
 
@@ -78,6 +63,7 @@ void Blood::Update()
 
 void Blood::Render()
 {
+
 	ID3D11DeviceContext* dc = D3D::GetDC();
 
 	UINT stride = sizeof(VertexType);
@@ -93,11 +79,13 @@ void Blood::Render()
 
 	D3D::GetDC()->PSSetShaderResources(0, 1, &texture);
 
-	States::SetDepthStencil(onMaskZeroState);
-	States::SetBlend(linearState);
-	dc->DrawIndexed(6*isblood, 6*lookNum, 0);
-	States::SetBlend(offState);
-	States::SetDepthStencil(offMaskState);
+	States::SetDepthStencilMaskZero();
+	States::SetBlendOn();
+	{
+		dc->DrawIndexed(6*isblood, 6*lookNum, 0);
+	}
+	States::SetBlendOff();
+	States::SetDepthStencilDefault();
 
 }
 

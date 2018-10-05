@@ -22,7 +22,6 @@ public:
 	
 private:
 	class Weapon* weapon;
-
 	void Control();
 	void Notify();
 

@@ -11,7 +11,7 @@ public:
 	void Update(int thread=0);
 	void PostRender(bool& isUse);
 	void Render(int thread=0);
-
+	
 	void SetModel(string file);
 	void SetModel(Model * model);
 	void SetModel();

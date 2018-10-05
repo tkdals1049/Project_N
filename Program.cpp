@@ -2,7 +2,6 @@
 #include "Program.h"
 
 #include "./Viewer/FirstPerson.h"
-
 #include "./Executes/Execute.h"
 #include "./Executes/ExeGui.h"
 #include "./Executes/ExeModel.h"
@@ -21,7 +20,12 @@ Program::Program()
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 	values->MainCamera = new FirstPerson();
 	values->MainCamera->SetPosition(0, 10, -20);
+	
 	CameraManager::Get()->SetPlayerCamera(values->MainCamera);
+	CameraManager::Get()->SetViewProjectionBuffer(values->ViewProjection);
+	CameraManager::Get()->SetPerspective(values->Perspective);
+
+	LightManager::Get()->SetBuffer(values->GlobalLight);
 	
 	executes.push_back(new ExeModel(values));
 	executes.push_back(new ExeGui(values));
@@ -44,13 +48,26 @@ Program::~Program()
 
 void Program::Update()
 {
+	values->MainCamera->Update();
+
+	D3DXMATRIX view, projection;
+	values->MainCamera->GetMatrix(&view);
+	values->Perspective->GetMatrix(&projection);
+
+	values->ViewProjection->SetView(view);
+	values->ViewProjection->SetProjection(projection);
+	values->ViewProjection->SetVSBuffer(0);
+
+	LightManager::Get()->Update();
+	values->GlobalLight->SetVSBuffer(3);
+
 	for (Execute* exe : executes)
 		exe->Update();
 }
 
 void Program::PreRender()
 {
-	values->MainCamera->Update();
+
 
 	for (Execute* exe : executes)
 		exe->PreRender();
@@ -58,16 +75,6 @@ void Program::PreRender()
 
 void Program::Render()
 {
-	D3DXMATRIX view, projection;
-	values->MainCamera->GetMatrix(&view);
-	values->Perspective->GetMatrix(&projection);
-	ZFrustum::Get()->Make(&(view*projection));
-
-	values->ViewProjection->SetView(view);
-	values->ViewProjection->SetProjection(projection);
-	values->ViewProjection->SetVSBuffer(0);
-
-	values->GlobalLight->SetPSBuffer(0);
 
 	for (Execute* exe : executes)
 		exe->Render();

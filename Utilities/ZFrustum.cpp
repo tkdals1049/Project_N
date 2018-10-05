@@ -61,7 +61,7 @@ BOOL ZFrustum::Make( D3DXMATRIX* pmatViewProj )
 }
 
 /// 한점 v가 프러스텀안에 있으면 TRUE를 반환, 아니면 FALSE를 반환한다.
-BOOL ZFrustum::IsIn( D3DXVECTOR3* pv )
+BOOL ZFrustum::IsIn( const D3DXVECTOR3* pv )
 {
 	float		fDist;
 	for(int i = 0 ; i < 6 ; i++ )
@@ -72,7 +72,7 @@ BOOL ZFrustum::IsIn( D3DXVECTOR3* pv )
 	return TRUE;
 }
 
-BOOL ZFrustum::IsInSphere( D3DXVECTOR3* pv, float radius )
+BOOL ZFrustum::IsInSphere( const D3DXVECTOR3* pv, float radius )
 {
 	float		fDist;
 

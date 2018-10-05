@@ -7,7 +7,6 @@ struct ExecuteValues
 {
 	class GlobalLightBuffer* GlobalLight;
 	class ViewProjectionBuffer* ViewProjection;
-
 	class Perspective* Perspective;
 	class Viewport* Viewport;
 	class Camera* MainCamera;

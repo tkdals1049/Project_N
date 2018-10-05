@@ -8,7 +8,7 @@ float Time::timeElapsed = 0.0f;
 
 Time::Time(void) :
 	ticksPerSecond(0), currentTime(0), lastTime(0), lastFPSUpdate(0), fpsUpdateInterval(0),
-	frameCount(0), runningTime(0), framePerSecond(0)
+	frameCount(0), runningTime(0), framePerSecond(0), magnification(1)
 {
 	QueryPerformanceFrequency((LARGE_INTEGER *)&ticksPerSecond);
 	fpsUpdateInterval = ticksPerSecond >> 1;

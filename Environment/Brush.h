@@ -16,7 +16,7 @@ public:
 	UINT type;
 	UINT size;
 	float floor;
-	D3DXCOLOR color;
+	D3DXVECTOR4 color;
 	UINT num, tabpage;
 private:
 	struct Box
@@ -35,16 +35,17 @@ private:
 	void Coloring(Box * box);
 	void Splatting(Box* box);
 	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
 
 	typedef VertexLerpColorTextureNormal VertexType;
 	VertexType* vertex;
+	UINT* index;
 
-	UINT vertexCount;
+	UINT vertexCount,*indexCount;
 	UINT width;
 	UINT height;
 	UINT brushOn;
 
-	Camera* camera;
 	D3DXVECTOR2 position;
 	float way;
 };

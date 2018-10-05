@@ -24,7 +24,7 @@ public:
 	static Sky* Get();
 	static void Delete();
 
-	void Update(Camera* camera);
+	void Update();
 	void Render();
 	void PostRender(bool& isUse);
 
@@ -33,8 +33,8 @@ private:
 	~Sky();
 
 	static Sky* instance;
-
 	typedef Vertex VertexType;
+	class Cloud* cloud;
 
 	wstring meshFile;
 	wstring shaderFile;
@@ -50,9 +50,4 @@ private:
 	WorldBuffer* worldBuffer;
 
 	D3DXMATRIX world;
-
-	ID3D11RasterizerState* clockState;
-	ID3D11RasterizerState* countClockState;
-	ID3D11DepthStencilState* depthOnState;
-	ID3D11DepthStencilState* depthOffState;
 };

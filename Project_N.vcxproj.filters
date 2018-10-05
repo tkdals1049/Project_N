@@ -22,9 +22,6 @@
     <ClCompile Include="Executes\ExeModel.cpp">
       <Filter>Executes</Filter>
     </ClCompile>
-    <ClCompile Include="Renders\RenderTarget.cpp">
-      <Filter>Renders</Filter>
-    </ClCompile>
     <ClCompile Include="Renders\Shader.cpp">
       <Filter>Renders</Filter>
     </ClCompile>
@@ -178,6 +175,30 @@
     <ClCompile Include="Viewer\CameraManager.cpp">
       <Filter>Viewer\Camera</Filter>
     </ClCompile>
+    <ClCompile Include="Renders\RenderTarget.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Water.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Mini.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Environment\Cloud.cpp">
+      <Filter>Environment</Filter>
+    </ClCompile>
+    <ClCompile Include="Utilities\PerlinNoise.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\LightManager.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Renders\ShaderManager.cpp">
+      <Filter>Renders</Filter>
+    </ClCompile>
+    <ClCompile Include="Model\Etc\Look.cpp">
+      <Filter>Model\Etc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Program.h" />
@@ -202,9 +223,6 @@
     </ClInclude>
     <ClInclude Include="Executes\ExeModel.h">
       <Filter>Executes</Filter>
-    </ClInclude>
-    <ClInclude Include="Renders\RenderTarget.h">
-      <Filter>Renders</Filter>
     </ClInclude>
     <ClInclude Include="Renders\Shader.h">
       <Filter>Renders</Filter>
@@ -370,6 +388,33 @@
     </ClInclude>
     <ClInclude Include="Viewer\CameraManager.h">
       <Filter>Viewer\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\RenderTarget.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Water.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\WaveBuffer.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Mini.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Environment\Cloud.h">
+      <Filter>Environment</Filter>
+    </ClInclude>
+    <ClInclude Include="Utilities\PerlinNoise.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\LightManager.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Renders\ShaderManager.h">
+      <Filter>Renders</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Etc\Look.h">
+      <Filter>Model\Etc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

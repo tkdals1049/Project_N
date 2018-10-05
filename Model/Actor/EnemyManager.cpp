@@ -31,6 +31,7 @@ void EnemyManager::Render()
 		{
 			if(monster->CalSkeleton(player->GetAttackRange()))
 			{
+				player->SetoffAttack();
 			}
 		}
 	}
@@ -57,6 +58,7 @@ void EnemyManager::AddMonster()
 
 		Monster* nM = new Monster();
 		nM->SetMonster();
+		nM->SetPlayer(player);
 		monsters.push_back(nM);
 
 		isLoaded = true;

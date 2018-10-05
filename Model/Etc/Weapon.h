@@ -76,11 +76,4 @@ private:
 	WorldBuffer* worldBuffer;
 	UINT effectCount,count;
 	float effectTime;
-
-	//투명도 키기 끄기
-
-	ID3D11BlendState* linearState;
-	ID3D11BlendState* offState;
-	ID3D11DepthStencilState* offMaskState;
-	ID3D11DepthStencilState* onMaskZeroState;
 };

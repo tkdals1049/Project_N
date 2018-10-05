@@ -7,10 +7,13 @@ Brush::Brush(Plane* plane)
 	, vertexBuffer(plane->vertexBuffer)
 	, vertex(plane->vertex)
 	, vertexCount(plane->vertexCount)
+	, indexBuffer(plane->indexBuffer)
+	, index(plane->index)
+	, indexCount(&plane->indexCount)
 	, width(plane->width), height(plane->height)
 	, size(2)
 	, floor(5.0f)
-	, color(D3DXCOLOR(0, 0, 0, 0.8f))
+	, color(D3DXVECTOR4(0, 0, 0, 0.8f))
 	, mode(0), way(1), type(0), num(0),brushOn(0)
 {
 }
@@ -125,10 +128,7 @@ void Brush::AdjustHeight(Box* box)
 		}
 	}
 
-	plane->CreateNormalData();
-
-	D3D::GetDC()->UpdateSubresource
-	(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
 }
 
 void Brush::ControlHeight(Box * box)
@@ -145,10 +145,7 @@ void Brush::ControlHeight(Box * box)
 		}
 	}
 
-	plane->CreateNormalData();
-
-	D3D::GetDC()->UpdateSubresource
-	(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
 }
 
 void Brush::Coloring(Box * box)
@@ -174,10 +171,7 @@ void Brush::Coloring(Box * box)
 		}
 	}
 
-	plane->CreateNormalData();
-
-	D3D::GetDC()->UpdateSubresource
-	(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
 }
 
 void Brush::Splatting(Box * box)
@@ -193,11 +187,11 @@ void Brush::Splatting(Box * box)
 			{
 				switch (num)
 				{
-					case 0:vertex[index].lerp = D3DXCOLOR(0.1f, 0, 0, 0);break;
-					case 1:if (vertex[index].lerp.r<1)vertex[index].lerp += D3DXCOLOR(0.1f, 0, 0, 0);break;
-					case 2:if (vertex[index].lerp.g<1)vertex[index].lerp += D3DXCOLOR(0, 0.1f, 0, 0);break;
-					case 3:if (vertex[index].lerp.b<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0.1f, 0);break;
-					case 4:if (vertex[index].lerp.a<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0, 0.1f);break;
+					case 0:vertex[index].lerp = D3DXVECTOR4(0.1f, 0, 0, 0);break;
+					case 1:if (vertex[index].lerp.x<1)vertex[index].lerp += D3DXVECTOR4(0.1f, 0, 0, 0);break;
+					case 2:if (vertex[index].lerp.y<1)vertex[index].lerp += D3DXVECTOR4(0, 0.1f, 0, 0);break;
+					case 3:if (vertex[index].lerp.z<1)vertex[index].lerp += D3DXVECTOR4(0, 0, 0.1f, 0);break;
+					case 4:if (vertex[index].lerp.w<1)vertex[index].lerp += D3DXVECTOR4(0, 0, 0, 0.1f);break;
 				}
 			}
 			else
@@ -206,19 +200,16 @@ void Brush::Splatting(Box * box)
 				{
 					switch (num)
 					{
-						case 0:vertex[index].lerp = D3DXCOLOR(0.1f, 0, 0, 0);break;
-						case 1:if (vertex[index].lerp.r<1)vertex[index].lerp += D3DXCOLOR(0.1f, 0, 0, 0);break;
-						case 2:if (vertex[index].lerp.g<1)vertex[index].lerp += D3DXCOLOR(0, 0.1f, 0, 0);break;
-						case 3:if (vertex[index].lerp.b<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0.1f, 0);break;
-						case 4:if (vertex[index].lerp.a<1)vertex[index].lerp += D3DXCOLOR(0, 0, 0, 0.1f);break;
+						case 0:vertex[index].lerp = D3DXVECTOR4(0.1f, 0, 0, 0);break;
+						case 1:if (vertex[index].lerp.x<1)vertex[index].lerp += D3DXVECTOR4(0.1f, 0, 0, 0);break;
+						case 2:if (vertex[index].lerp.y<1)vertex[index].lerp += D3DXVECTOR4(0, 0.1f, 0, 0);break;
+						case 3:if (vertex[index].lerp.z<1)vertex[index].lerp += D3DXVECTOR4(0, 0, 0.1f, 0);break;
+						case 4:if (vertex[index].lerp.w<1)vertex[index].lerp += D3DXVECTOR4(0, 0, 0, 0.1f);break;
 					}
 				}
 			}
 		}
 	}
 
-	plane->CreateNormalData();
-
-	D3D::GetDC()->UpdateSubresource
-	(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
 }

@@ -38,11 +38,6 @@ private:
 	wstring fileName;
 	ID3D11ShaderResourceView* texture;
 
-	ID3D11BlendState* linearState;
-	ID3D11BlendState* offState;
-	ID3D11DepthStencilState* offMaskState;
-	ID3D11DepthStencilState* onMaskZeroState;
-
 	D3DXVECTOR3 position,rotate;
 	float time;
 	bool isblood;

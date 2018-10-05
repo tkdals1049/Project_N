@@ -34,11 +34,15 @@ void Actor::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 }
 void Actor::Update()
 {
-		if (model != NULL)
-		{
-			model->Update();
-			blood->Update();
-		}
+	if (model != NULL)
+	{
+		model->Update();
+		blood->Update();
+	}
+	
+	D3DXVECTOR3 position=model->GetPosition();
+	position.y=Plane::Get()->GetHeight(position.x, position.z);
+	model->SetPosition(position);
 }
 void Actor::PostRender(bool& isUse)
 {
@@ -53,7 +57,7 @@ void Actor::Render()
 }
 
 //조작할 모델을 설정하는 함수
-void Actor::SetModel(string file)
+void Actor::SetModel(string file) 
 {
 	if (model != NULL)SAFE_DELETE(model);
 	MoLoader::LoadBinary(file, &model);
@@ -151,6 +155,7 @@ bool Actor::CalSkeleton(ST_OBB* Attack_box)
 		if(CheckOBBCollision(Attack_box,Damage_Box))
 		{
 			blood->SetPosition(one);
+			model->isDamage();
 			return true;
 		}
 	}

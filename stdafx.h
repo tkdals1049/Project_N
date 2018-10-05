@@ -63,11 +63,14 @@ const wstring Shaders = L"../_Shaders/";
 #include "./Systems/Mouse.h"
 #include "./Systems/Time.h"
 
+#include "./Renders/RenderTarget.h"
 #include "./Renders/VertexLayouts.h"
 #include "./Renders/States.h"
 #include "./Renders/Shader.h"
 #include "./Renders/ShaderBuffer.h"
 #include "./Renders/GlobalBuffers.h"
+#include "./Renders/LightManager.h"
+#include "./Renders/ShaderManager.h"
 
 #include "./Viewer/Camera.h"
 #include "./Viewer/CameraManager.h"

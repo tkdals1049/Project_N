@@ -17,12 +17,12 @@ public:
 	BOOL	Make( D3DXMATRIX* pmatViewProj );
 
 	/// 한점 v가 프러스텀안에 있으면 TRUE를 반환, 아니면 FALSE를 반환한다.
-	BOOL	IsIn( D3DXVECTOR3* pv );
+	BOOL	IsIn( const D3DXVECTOR3* pv );
 
 	/** 중심(v)와 반지름(radius)를 갖는 경계구(bounding sphere)가 프러스텀안에 있으면
 	 *  TRUE를 반환, 아니면 FALSE를 반환한다.
 	 */
-	BOOL	IsInSphere( D3DXVECTOR3* pv, float radius );
+	BOOL	IsInSphere( const D3DXVECTOR3* pv, float radius );
 
 	/// 현재 카메라의 월드좌표를 얻어준다.
 	D3DXVECTOR3*	GetPos() { return &m_vPos; }

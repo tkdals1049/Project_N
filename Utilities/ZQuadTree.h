@@ -45,7 +45,7 @@ private:
 	BOOL		_IsVisible() { return ( m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL] <= 1 ); }
 
 	/// 출력할 폴리곤의 인덱스를 생성한다.
-	int			_GenTriIndex( int nTris, UINT* pIndex, VertexType* pHeightMap);
+	int			_GenTriIndex( int nTris, UINT* pIndex, const VertexType* pHeightMap, bool isCull=false);
 
 	/// 메모리에서 쿼드트리를 삭제한다.
 	void		_Destroy();
@@ -53,18 +53,18 @@ private:
 	void _AllInFrustum();
 
 	/// 현재노드가 프러스텀에 포함되는가?
-	int			_IsInFrustum( VertexType* pHeightMap);
+	int			_IsInFrustum(const VertexType* pHeightMap);
 
 	/// _IsInFrustum()함수의 결과에 따라 프러스텀 컬링 수행
-	void		_FrustumCull( VertexType* pHeightMap);
+	void		_FrustumCull(const VertexType* pHeightMap);
 
 	int _GetNodeIndex(int ed, int cx, int & _0, int & _1, int & _2, int & _3);
 
-	ZQuadTree * _FindNode(VertexType * pHeightMap, int _0, int _1, int _2, int _3);
+	ZQuadTree * _FindNode(const VertexType * pHeightMap, int _0, int _1, int _2, int _3);
 
-	void _BuildNeighborNode(ZQuadTree * pRoot, VertexType * pHeightMap, int cx);
+	void _BuildNeighborNode(ZQuadTree * pRoot, const VertexType * pHeightMap, int cx);
 
-	BOOL _BuildQuadTree(VertexType * pHeightMap);
+	BOOL _BuildQuadTree(const VertexType * pHeightMap);
 
 	float		_GetDistance(D3DXVECTOR3* pv1, D3DXVECTOR3* pv2)
 	{
@@ -72,14 +72,14 @@ private:
 	}
 
 	/// 카메라와 현재 노드와의 거리값을 기준으로 LOD값을 구한다.
-	int			_GetLODLevel(VertexType* pHeightMap, D3DXVECTOR3* pCamera)
+	int			_GetLODLevel(const VertexType* pHeightMap, D3DXVECTOR3* pCamera)
 	{
 		float d = _GetDistance((D3DXVECTOR3*)(pHeightMap + m_nCenter), pCamera);
-		return max((int)(d * 0.1f), 1);
+		return max((int)(d * 0.05f), 1);
 	}
 
 	/// 현재 노드가 LOD등급으로 볼때  출력이 가능한 노드인가?
-	BOOL		_IsVisible(VertexType* pHeightMap, D3DXVECTOR3* pCamera)
+	BOOL _IsVisible(const VertexType* pHeightMap, D3DXVECTOR3* pCamera)
 	{
 		return ((m_nCorner[CORNER_TR] - m_nCorner[CORNER_TL]) <= _GetLODLevel(pHeightMap, pCamera));
 	}
@@ -106,10 +106,10 @@ public:
 				~ZQuadTree();
 
 	/// QuadTree를 구축한다.
-	BOOL		Build( VertexType* pHeightMap );
+	BOOL		Build(const VertexType* pHeightMap );
 
 	///	삼각형의 인덱스를 만들고, 출력할 삼각형의 개수를 반환한다.
-	int			GenerateIndex(UINT* pIndex, VertexType* pHeightMap);
+	int			GenerateIndex(UINT* pIndex,const VertexType* pHeightMap,bool isCull=false);
 };
 
 #endif // _ZQUADTREE_H_

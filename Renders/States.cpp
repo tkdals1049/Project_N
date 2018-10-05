@@ -4,8 +4,22 @@
 D3D11_RASTERIZER_DESC States::rasterizerDesc;
 D3D11_DEPTH_STENCIL_DESC States::depthStencilDesc;
 D3D11_SAMPLER_DESC States::samplerDesc;
-ID3D11SamplerState* States::defaultState;
 D3D11_BLEND_DESC States::blendDesc;
+
+ID3D11RasterizerState* States::wireRasterizerState;
+ID3D11RasterizerState* States::defaultRasterizerState;
+ID3D11RasterizerState* States::frontRasterizerState;
+ID3D11RasterizerState* States::noneRasterizerState;
+
+ID3D11DepthStencilState* States::defaultDepthStencilState;
+ID3D11DepthStencilState* States::offDepthStencilState;
+ID3D11DepthStencilState* States::MaskZeroDepthStencilState;
+
+ID3D11BlendState* States::onBlendState;
+ID3D11BlendState* States::cloudBlendState;
+ID3D11BlendState* States::offBlendState;
+
+ID3D11SamplerState* States::defaultSamplerState;
 
 void States::Create()
 {
@@ -98,11 +112,22 @@ void States::CreateRasterizerDesc()
 	rasterizerDesc.DepthBias = 0;
 	rasterizerDesc.DepthBiasClamp = 0.0f;
 	rasterizerDesc.DepthClipEnable = true;
-	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	rasterizerDesc.FillMode = D3D11_FILL_WIREFRAME;
 	rasterizerDesc.FrontCounterClockwise = false;
 	rasterizerDesc.MultisampleEnable = false;
 	rasterizerDesc.ScissorEnable = false;
 	rasterizerDesc.SlopeScaledDepthBias = 0.0f;
+
+	CreateRasterizer(&rasterizerDesc, &wireRasterizerState);
+
+	rasterizerDesc.FillMode = D3D11_FILL_SOLID;
+	CreateRasterizer(&rasterizerDesc,&defaultRasterizerState);
+
+	rasterizerDesc.CullMode = D3D11_CULL_FRONT;
+	CreateRasterizer(&rasterizerDesc, &frontRasterizerState);
+
+	rasterizerDesc.CullMode = D3D11_CULL_NONE;
+	CreateRasterizer(&rasterizerDesc, &noneRasterizerState);
 }
 
 void States::CreateDepthStencilDesc()
@@ -124,6 +149,15 @@ void States::CreateDepthStencilDesc()
 	depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
 	depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
 	depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+	CreateDepthStencil(&depthStencilDesc, &defaultDepthStencilState);
+
+	depthStencilDesc.DepthEnable = false;
+	CreateDepthStencil(&depthStencilDesc, &offDepthStencilState);
+
+	depthStencilDesc.DepthEnable = true;
+	depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	CreateDepthStencil(&depthStencilDesc, &MaskZeroDepthStencilState);
 }
 
 void States::CreateSamplerDesc()
@@ -138,7 +172,7 @@ void States::CreateSamplerDesc()
 	samplerDesc.MinLOD = 0;
 	samplerDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
-	HRESULT hr = D3D::GetDevice()->CreateSamplerState(&samplerDesc, &defaultState);
+	HRESULT hr = D3D::GetDevice()->CreateSamplerState(&samplerDesc, &defaultSamplerState);
 	assert(SUCCEEDED(hr));
 }
 
@@ -157,9 +191,76 @@ void States::CreateBlendDesc()
 	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
 	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+	CreateBlend(&blendDesc, &onBlendState);
+
+	blendDesc.RenderTarget[0].BlendEnable = FALSE;
+	CreateBlend(&blendDesc, &offBlendState);
+
+	blendDesc.RenderTarget[0].BlendEnable = TRUE;
+	blendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	blendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	blendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	blendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+
+	CreateBlend(&blendDesc, &cloudBlendState);
+
+}
+
+void States::SetDepthStencilDefault()
+{
+	D3D::GetDC()->OMSetDepthStencilState(defaultDepthStencilState, 1);
+}
+void States::SetDepthStencilOff()
+{
+	D3D::GetDC()->OMSetDepthStencilState(offDepthStencilState, 1);
+}
+void States::SetDepthStencilMaskZero()
+{
+	D3D::GetDC()->OMSetDepthStencilState(MaskZeroDepthStencilState, 1);
+}
+
+void States::SetBlendOn()
+{
+	float blendFactor[4]{ 0.0f,0.0f,0.0f,0.0f };
+	D3D::GetDC()->OMSetBlendState(onBlendState, blendFactor, 0xffffffff);
+}
+void States::SetBlendOff()
+{
+	float blendFactor[4]{ 0.0f,0.0f,0.0f,0.0f };
+	D3D::GetDC()->OMSetBlendState(offBlendState, blendFactor, 0xffffffff);
+}
+void States::SetBlendCloud()
+{
+	float blendFactor[4]{ 0.0f,0.0f,0.0f,0.0f };
+	D3D::GetDC()->OMSetBlendState(cloudBlendState, blendFactor, 0xffffffff);
+}
+
+void States::SetRasterizerDefault()
+{
+	D3D::GetDC()->RSSetState(defaultRasterizerState);
+}
+
+void States::SetRasterizerWire()
+{
+	D3D::GetDC()->RSSetState(wireRasterizerState);
+}
+
+void States::SetRasterizerFront()
+{
+	D3D::GetDC()->RSSetState(frontRasterizerState);
+}
+
+void States::SetRasterizerNone()
+{
+	D3D::GetDC()->RSSetState(noneRasterizerState);
 }
 
 void States::SetDefault()
 {
-	D3D::GetDC()->PSSetSamplers(0, 1, &defaultState);
+	D3D::GetDC()->PSSetSamplers(0, 1, &defaultSamplerState);
 }
+

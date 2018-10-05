@@ -28,6 +28,22 @@ struct ST_OBB // OBB±¸Á¶Ã¼
 	}
 };
 
+class ColorBuffer : public ShaderBuffer
+{
+public:
+	ColorBuffer() : ShaderBuffer(&Data, sizeof(Struct))
+	{
+		Data.Color = D3DXCOLOR(0.0f, 0.0f, 0.0f, 0.0f);
+	}
+
+	struct Struct
+	{
+		D3DXCOLOR Color;
+	};
+
+	Struct Data;
+};
+
 class ModelSkeleton;
 class ModelMaterial;
 class ModelMesh;
@@ -95,6 +111,7 @@ public:
 	D3DXVECTOR3 GetMinP() { return minp; }
 
 	D3DXMATRIX GetAbsoluteTransformFromCurrentTake(FbxNode * node, FbxTime time);
+	void isDamage();
 
 private:
 	friend class MoModel;
@@ -122,6 +139,8 @@ private:
 	ModelAnimationController* animationController;
 
 	BoneBuffer* boneBuffer;
+	ColorBuffer* colorBuffer;
+	float damageColor,damageTime;
 
 	UINT root;
 	UINT range;

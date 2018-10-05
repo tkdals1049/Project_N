@@ -205,7 +205,7 @@ void ModelGroup::PostRender(bool& isUse)
 						player->AniChange("idle");
 						for each(Weapon temp in weapons[models[i]])	player->AddWeapon(temp.second,back->GetScale());
 						weapons[models[i]].clear();
-						weapons.erase(weapons.find(models[i]));
+			  			weapons.erase(weapons.find(models[i]));
 						models.erase(models.begin() + i);
 						
 						attitude = NULL;

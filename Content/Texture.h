@@ -11,6 +11,10 @@ class Texture
 	UINT GetTexturePathSize() { return textureList.size(); }
 	void Refresh();
 
+	void LoadTexture(wstring fileName, ID3D11Texture2D ** texture);
+
+	void LoadPixel(ID3D11Texture2D * texture, UINT ** colors);
+
 	private:
 	static Texture* instance;
 	 Texture();

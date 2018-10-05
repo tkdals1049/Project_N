@@ -30,6 +30,7 @@ void ModelMesh::Update()
 	matGeometricOffset = model->GetGeometricOffset();
 	world = model->GetWorld();
 	worldBuffer->SetMatrix(matGeometricOffset*world);
+	//CreateNormalData();
 }
 
 void ModelMesh::Render()
@@ -49,9 +50,59 @@ void ModelMesh::Render()
 	material->SetPSBuffer();
 	worldBuffer->SetVSBuffer(1);
 
-	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
-}
+	if (ShaderManager::Get()->GetOther() != depth && ShaderManager::Get()->GetOther() != shadow)
+	{
 
+		D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
+	}
+	else
+	{
+		D3D::GetDC()->PSSetShaderResources(0, 1, ShaderManager::Get()->GetResourceView(0));
+		ShaderManager::Get()->Render(indexCount,true);
+	}
+}
+void ModelMesh::CreateNormalData()
+{
+
+	for (UINT i = 0; i < vertexCount; i++)
+		vertexData[i].normal = D3DXVECTOR3(0, 0, 0);
+
+	for (UINT i = 0; i < (indexCount / 3); i++)
+	{
+		UINT index0 = indexData[i * 3 + 0];
+		UINT index1 = indexData[i * 3 + 1];
+		UINT index2 = indexData[i * 3 + 2];
+
+		VertexTextureNormalTangentBlend v0 = vertexData[index0];
+		VertexTextureNormalTangentBlend v1 = vertexData[index1];
+		VertexTextureNormalTangentBlend v2 = vertexData[index2];
+
+		D3DXVECTOR3 deltaPos1 = v1.position - v0.position;
+		D3DXVECTOR3 deltaPos2 = v2.position - v0.position;
+
+		D3DXVECTOR2 deltaUV1 = v1.uv - v0.uv;
+		D3DXVECTOR2 deltaUV2 = v2.uv - v0.uv;
+
+		D3DXVECTOR3 normal;
+		D3DXVec3Cross(&normal, &deltaPos1, &deltaPos2);
+
+		vertexData[index0].normal += normal;
+		vertexData[index1].normal += normal;
+		vertexData[index2].normal += normal;
+
+		float det = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV1.y * deltaUV2.x);
+		vertexData[index0].tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*det;
+		vertexData[index1].tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*det;
+		vertexData[index2].tangent = (deltaPos1 * deltaUV2.y - deltaPos2 * deltaUV1.y)*det;
+	}
+
+	for (UINT i = 0; i < vertexCount; i++)
+	{
+		D3DXVec3Normalize(&vertexData[i].normal, &vertexData[i].normal);
+		D3DXVec3Normalize(&vertexData[i].tangent, &vertexData[i].tangent);
+	}
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertexData, sizeof(VertexType)*vertexCount, 0);
+}
 void ModelMesh::CreateBuffer()
 {
 	HRESULT hr;

@@ -19,7 +19,12 @@ Camera::~Camera()
 
 void Camera::GetMatrix(D3DXMATRIX * mat)
 {
-	memcpy(mat, &matView, sizeof(D3DXMATRIX));
+	memcpy(mat, this->matView, sizeof(D3DXMATRIX));
+}
+
+void Camera::SetMatrix(D3DXMATRIX * mat)
+{
+	memcpy( this->matView, mat, sizeof(D3DXMATRIX));
 }
 
 void Camera::UpdateMove()

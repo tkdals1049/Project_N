@@ -23,8 +23,11 @@
     <ClCompile Include="Content\FbxModel.cpp" />
     <ClCompile Include="Content\Texture.cpp" />
     <ClCompile Include="Environment\Brush.cpp" />
+    <ClCompile Include="Environment\Cloud.cpp" />
+    <ClCompile Include="Environment\Mini.cpp" />
     <ClCompile Include="Environment\Plane.cpp" />
     <ClCompile Include="Environment\Sky.cpp" />
+    <ClCompile Include="Environment\Water.cpp" />
     <ClCompile Include="Executes\ExeGui.cpp" />
     <ClCompile Include="Executes\ExeModel.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -45,6 +48,7 @@
     <ClCompile Include="Model\Etc\Blood.cpp" />
     <ClCompile Include="Model\Etc\Cube.cpp" />
     <ClCompile Include="Model\Etc\Domain.cpp" />
+    <ClCompile Include="Model\Etc\Look.cpp" />
     <ClCompile Include="Model\Etc\Weapon.cpp" />
     <ClCompile Include="Model\FbxModel\MoAnimation.cpp" />
     <ClCompile Include="Model\FbxModel\MoAnimationController.cpp" />
@@ -58,10 +62,10 @@
     <ClCompile Include="Model\FbxModel\MoSkeletonBone.cpp" />
     <ClCompile Include="Model\ModelGruop.cpp" />
     <ClCompile Include="Program.cpp" />
-    <ClCompile Include="Renders\RenderTarget.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="Renders\LightManager.cpp" />
+    <ClCompile Include="Renders\RenderTarget.cpp" />
     <ClCompile Include="Renders\Shader.cpp" />
+    <ClCompile Include="Renders\ShaderManager.cpp" />
     <ClCompile Include="Renders\States.cpp" />
     <ClCompile Include="Renders\VertexLayouts.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -76,6 +80,7 @@
     <ClCompile Include="Utilities\BinaryFile.cpp" />
     <ClCompile Include="Utilities\Mesh.cpp" />
     <ClCompile Include="Utilities\Path.cpp" />
+    <ClCompile Include="Utilities\PerlinNoise.cpp" />
     <ClCompile Include="Utilities\String.cpp" />
     <ClCompile Include="Utilities\ZFrustum.cpp" />
     <ClCompile Include="Utilities\ZQuadTree.cpp" />
@@ -92,8 +97,12 @@
     <ClInclude Include="Content\Texture.h" />
     <ClInclude Include="Environment\Brush.h" />
     <ClInclude Include="Environment\BrushBuffer.h" />
+    <ClInclude Include="Environment\Cloud.h" />
+    <ClInclude Include="Environment\Mini.h" />
     <ClInclude Include="Environment\Plane.h" />
     <ClInclude Include="Environment\Sky.h" />
+    <ClInclude Include="Environment\Water.h" />
+    <ClInclude Include="Environment\WaveBuffer.h" />
     <ClInclude Include="Executes\Execute.h" />
     <ClInclude Include="Executes\ExeGui.h" />
     <ClInclude Include="Executes\ExeModel.h" />
@@ -116,6 +125,7 @@
     <ClInclude Include="Model\Etc\Blood.h" />
     <ClInclude Include="Model\Etc\Cube.h" />
     <ClInclude Include="Model\Etc\Domain.h" />
+    <ClInclude Include="Model\Etc\Look.h" />
     <ClInclude Include="Model\Etc\Weapon.h" />
     <ClInclude Include="Model\FbxModel\MoAnimation.h" />
     <ClInclude Include="Model\FbxModel\MoAnimationController.h" />
@@ -131,11 +141,11 @@
     <ClInclude Include="Model\ModelGroup.h" />
     <ClInclude Include="Program.h" />
     <None Include="Renders\GlobalBuffers.h" />
-    <ClInclude Include="Renders\RenderTarget.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="Renders\LightManager.h" />
+    <ClInclude Include="Renders\RenderTarget.h" />
     <ClInclude Include="Renders\Shader.h" />
     <None Include="Renders\ShaderBuffer.h" />
+    <ClInclude Include="Renders\ShaderManager.h" />
     <ClInclude Include="Renders\States.h" />
     <ClInclude Include="Renders\VertexLayouts.h" />
     <ClInclude Include="stdafx.h" />
@@ -147,6 +157,7 @@
     <ClInclude Include="Utilities\BinaryFile.h" />
     <ClInclude Include="Utilities\Mesh.h" />
     <ClInclude Include="Utilities\Path.h" />
+    <ClInclude Include="Utilities\PerlinNoise.h" />
     <ClInclude Include="Utilities\String.h" />
     <ClInclude Include="Utilities\ZFrustum.h" />
     <ClInclude Include="Utilities\ZQuadTree.h" />
@@ -161,7 +172,7 @@
     <ProjectGuid>{8FCA6B9F-B8BD-4503-9D2B-C1F3F4AAFE1C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>My05_ImGui</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

@@ -26,13 +26,11 @@ private:
 	void SaveModelDialog(wstring file = L"");
 
 	class ModelGroup* group;
-
-	ID3D11RasterizerState * getRasterizer;
-	ID3D11RasterizerState* setRasterizer;
+	class Mini* mini;
 
 	Model* model;
 	wstring selectedFbxFile;
 
-	bool isLoaded,isEnviroment,isModel;
+	bool isLoaded,isEnviroment,isModel, isWire;
 	thread* loadThread;
 };

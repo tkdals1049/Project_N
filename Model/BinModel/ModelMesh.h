@@ -25,6 +25,8 @@ private:
 	void Update();
 	void Render();
 
+	void CreateNormalData();
+
 	void CreateBuffer();
 
 	Model* model;

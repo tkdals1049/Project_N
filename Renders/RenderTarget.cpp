@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "../stdafx.h"
 #include "RenderTarget.h"
 
 RenderTarget::RenderTarget()
@@ -53,7 +53,7 @@ RenderTarget::~RenderTarget()
 
 void RenderTarget::SetTarget()
 {
-	D3D::GetDC()->OMSetRenderTargets(1, &renderView, BackBuffer::Get()->GetDepthView());
+	D3D::GetDC()->OMSetRenderTargets(1, &renderView, D3D::Get()->GetDepthView());
 }
 
 void RenderTarget::Clear(D3DXCOLOR color)
@@ -61,7 +61,7 @@ void RenderTarget::Clear(D3DXCOLOR color)
 	D3D::GetDC()->ClearRenderTargetView(renderView, color);
 	D3D::GetDC()->ClearDepthStencilView
 	(
-		BackBuffer::Get()->GetDepthView()
+		D3D::Get()->GetDepthView()
 		, D3D11_CLEAR_DEPTH, 1, 0
 	);
 }

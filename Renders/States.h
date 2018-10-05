@@ -24,6 +24,20 @@ public:
 
 	static void SetDefault();
 
+	static void SetRasterizerDefault();
+	static void SetRasterizerWire();
+	static void SetRasterizerFront();
+	static void SetRasterizerNone();
+
+	static void SetDepthStencilDefault();
+	static void SetDepthStencilOff();
+	static void SetDepthStencilMaskZero();
+
+	static void SetBlendOn();
+	static void SetBlendOff();
+
+	static void SetBlendCloud();
+
 private:
 	static void CreateRasterizerDesc();
 	static void CreateDepthStencilDesc();
@@ -34,5 +48,19 @@ private:
 	static D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
 	static D3D11_SAMPLER_DESC samplerDesc;
 	static D3D11_BLEND_DESC blendDesc;
-	static ID3D11SamplerState* defaultState;
+
+	static ID3D11RasterizerState* defaultRasterizerState;
+	static ID3D11RasterizerState* wireRasterizerState;
+	static ID3D11RasterizerState* frontRasterizerState;
+	static ID3D11RasterizerState* noneRasterizerState;
+
+	static ID3D11DepthStencilState* defaultDepthStencilState;
+	static ID3D11DepthStencilState* offDepthStencilState;
+	static ID3D11DepthStencilState* MaskZeroDepthStencilState;
+
+	static ID3D11BlendState* onBlendState;
+	static ID3D11BlendState* cloudBlendState;
+	static ID3D11BlendState* offBlendState;
+
+	static ID3D11SamplerState* defaultSamplerState;
 };

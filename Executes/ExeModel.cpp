@@ -6,9 +6,10 @@
 #include "../Model/ModelGroup.h"
 #include "../Model/FbxModel/MoLoader.h"
 #include "../Utilities/Path.h"
+#include "../Environment/Mini.h"
 
 ExeModel::ExeModel(ExecuteValues* values)
-	: Execute(values),isEnviroment(false),isModel(false), loadThread(NULL), isLoaded(false)
+	: Execute(values),isEnviroment(false),isModel(false), loadThread(NULL), isLoaded(false),isWire(false)
 {
 	D3DDesc desc;
 	D3D::GetDesc(&desc);
@@ -18,29 +19,32 @@ ExeModel::ExeModel(ExecuteValues* values)
 	FbxModel::Get();
 
 	group=new ModelGroup();
+	ShaderManager::Get();
+
+	mini = new Mini();
+	mini->SetScale(D3DXVECTOR2(320, 240));
 	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
 
-	D3D11_RASTERIZER_DESC rdesc;
-	States::GetRasterizerDesc(&rdesc);
-	rdesc.FillMode = D3D11_FILL_SOLID;
-	rdesc.CullMode = D3D11_CULL_NONE;
-	States::CreateRasterizer(&rdesc, &setRasterizer);
-
 	States::SetDefault();
-
 }
 
 ExeModel::~ExeModel()
 {
+	SAFE_DELETE(group);
+	SAFE_DELETE(mini);
+
+	SAFE_DELETE(model);
+	SAFE_DELETE(loadThread);
 }
 
 void ExeModel::Update()
 {
+	if(Keyboard::Get()->Down('N')) isWire=!isWire;
 
 	D3DXVECTOR3 origin, direction;
 	GetRay(&origin,&direction);
 
-	Sky::Get()->Update(values->MainCamera);
+	Sky::Get()->Update();
 	Plane::Get()->UpdatePointBuffer(origin,direction);
 	Plane::Get()->Update();
 
@@ -59,20 +63,61 @@ void ExeModel::Update()
 }
 
 void ExeModel::PreRender()
-{
+{	
 	
+	ShaderManager::Get()->PreRender(depth);
+	{
+		Plane::Get()->Render();
+		group->Render(); 
+	}
+	CameraManager::Get()->DefaultCamera();
+	
+	ShaderManager::Get()->PreRender(shadow);
+	{
+		Plane::Get()->Render();
+		group->Render();
+	}
+	
+	ShaderManager::Get()->PreRender(reflect);
+	{
+		Sky::Get()->Render();
+	
+		States::SetRasterizerNone();
+		{
+			Plane::Get()->Render();
+			group->Render();
+		}
+		States::SetRasterizerDefault();
+	}
+	CameraManager::Get()->DefaultCamera();
+	
+	ShaderManager::Get()->PreRender(reflact);
+	{
+		Sky::Get()->Render();
+		Plane::Get()->ReverseClip();
+		Plane::Get()->Render();
+		Plane::Get()->ReverseClip();
+		group->Render();
+	}
+	
+	D3D::Get()->SetRenderTarget();
+	ShaderManager::Get()->PreRender();
 }
 
 void ExeModel::Render()
 {
 	Sky::Get()->Render();
-	Plane::Get()->Render();
-	D3D::GetDC()->RSGetState(&getRasterizer);
-	D3D::GetDC()->RSSetState(setRasterizer);
+
+	if (isWire == false)States::SetRasterizerDefault();
+	else States::SetRasterizerWire();
 	{
-	group->Render();
+		Plane::Get()->Render();
+		Plane::Get()->waterRender();
+		group->Render();
 	}
-	D3D::GetDC()->RSSetState(getRasterizer);
+	static bool isMini = false;
+	if (Keyboard::Get()->Press('B')) isMini = !isMini;
+	if(isMini)	mini->Render();
 }
 
 void ExeModel::PostRender()

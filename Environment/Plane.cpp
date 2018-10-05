@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Plane.h"
 #include "Brush.h"
+#include "Water.h"
 #include "../Content/Texture.h"
 #include "../Utilities/Mesh.h"
 
@@ -19,21 +20,25 @@ void Plane::Delete()
 }
 
 Plane::Plane()
-:OnTextureList(false),isLoaded(false), quadTree(NULL),number(7)
+:OnTextureList(false),isLoaded(true), quadTree(NULL),number(5)
 {
-	width=height=(UINT)pow(2,number);
-	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
-
+	width = height = pow(2,number);
 	wstring file = Shaders + L"PlaneColor.hlsl";
 	shader = new Shader(file);
 
+	D3DXMatrixIdentity(&world);
 	worldBuffer = new WorldBuffer();
 	planeBuffer = new PlaneBuffer();
+	clipBuffer = new ClipBuffer();
 
+	loadThread=NULL;
 	vertex = NULL;
 	index = NULL;
 	brush=NULL;
+	water=NULL;
 
+	//LoadHeightMap();
+	position = D3DXVECTOR3(-(float)width*Time::Get()->GetMagn() / 2, 0, -(float)height*Time::Get()->GetMagn() / 2);
 	CreateBuffer();
 }
 
@@ -60,13 +65,20 @@ void Plane::Update()
 			loadThread->join();
 			SAFE_DELETE(loadThread);
 		}
+		
+		indexCount = (UINT)quadTree->GenerateIndex(index, vertex);
+		D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
+		CreateNormalData();
+
+		if (water != NULL) water->Update();
 	}
 }
 
 void Plane::Render()
 {
-	//indexCount=(UINT)quadTree->GenerateIndex(index,vertex);
-	//D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
+	D3DXMATRIX invWorld;
+	D3DXMatrixInverse(&invWorld, nullptr, &world);
+	D3DXMatrixTranspose(&clipBuffer->Data.invWorld, &invWorld);
 
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
@@ -75,17 +87,33 @@ void Plane::Render()
 	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	for (int i = 0;i < 5;i++)
+	worldBuffer->SetVSBuffer(1);
+
+	if (ShaderManager::Get()->GetOther() != depth&& ShaderManager::Get()->GetOther() != shadow)
 	{
-		D3D::GetDC()->PSSetShaderResources(i, 1, &(textures[i]->texture));
+		for (int i = 0; i < 5; i++)
+		{
+			D3D::GetDC()->PSSetShaderResources(i, 1, &(textures[i]->texture));
+		}
+		D3D::GetDC()->PSSetShaderResources(5, 1, ShaderManager::Get()->GetResourceView(shadow));
+
+		planeBuffer->SetPSBuffer(1);
+		clipBuffer->SetVSBuffer(2);
+
+		shader->Render();
+
+		D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
 	}
-	
-	planeBuffer->SetPSBuffer(1);
-	worldBuffer->SetVSBuffer(1);	
+	else
+	{	
+		D3D::GetDC()->PSSetShaderResources(0, 1, ShaderManager::Get()->GetResourceView(depth));
+		ShaderManager::Get()->Render(indexCount);
+	}
+}
 
-	shader->Render();
-
-	D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
+void Plane::waterRender()
+{
+	if (isLoaded && water != NULL) water->Render();
 }
 
 void Plane::PostRender(bool& isUse)
@@ -132,7 +160,7 @@ void Plane::PostRender(bool& isUse)
 			ImGui::InputInt("Texture Number", (int *)&brush->num);
 
 			ImGui::PushItemWidth(160);
-			ImGui::ListBox("", &curTexture, Texture::Get()->GetTextureList(), Texture::Get()->GetTexturePathSize(), 4);
+		 	ImGui::ListBox("", &curTexture, Texture::Get()->GetTextureList(), Texture::Get()->GetTexturePathSize(), 4);
 			ImGui::SameLine();
 			ImGui::Image(sample->texture, ImVec2(80, 80));
 			if (ImGui::Button("Refresh", ImVec2(60, 20)))
@@ -160,6 +188,7 @@ void Plane::PostRender(bool& isUse)
 	}
 	ImGui::End();
 }
+
 void Plane::SetSample(int num)
 {
 	sample->file = String::StringToWString(Texture::Get()->GetTexturePath(num));
@@ -195,59 +224,62 @@ void Plane::SetTexture(int num, wstring file)
 
 void Plane::UpdatePointBuffer(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 {
-	if (isLoaded)
-	{
+	if (!isLoaded) return;
+		
 		brush->Update(origin,direction);
 		dot = brush->position;
 
-		D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x)*10 / width), (float)((dot.y - position.z) * 10 / height), (float)brush->type, (float)brush->size);
+		D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x)*pow(2, number) / width * Time::Get()->GetMagn()), (float)((dot.y - position.z) * pow(2, number) / height * Time::Get()->GetMagn()), (float)brush->type, (float)brush->size);
 		D3DXVECTOR4 point = D3DXVECTOR4((dot.x - position.x), (dot.y - position.z), dot.x, dot.y);
-
+		
 		planeBuffer->Data.Size=size;
 		planeBuffer->Data.Point=point;
-	}
 
 }
-
-void Plane::CreateNormalData()
+void Plane::LoadHeightMap()
 {
-	for (UINT i = 0;i<vertexCount;i++)
-		vertex[i].normal = D3DXVECTOR3(0, 0, 0);
-	for (UINT i = 0; i < (indexCount / 3); i++)
+	ID3D11Texture2D* texture;
+	Texture::Get()->LoadTexture(Contents+L"./Textures/heightmap.jpg", &texture);
+
+	D3D11_TEXTURE2D_DESC desc;
+	texture->GetDesc(&desc);
+
+	UINT* colors = new UINT[desc.Width * desc.Height];
+	Texture::Get()->LoadPixel(texture, &colors);
+
+	width =  1+desc.Width;
+	height = 1+desc.Height;
+
+	heightData = new BYTE[width * height];
+	int count = 0;
+	for (UINT z = 0; z < height; z++)
 	{
-		UINT index0 = index[i * 3 + 0];
-		UINT index1 = index[i * 3 + 1];
-		UINT index2 = index[i * 3 + 2];
-
-		VertexType v0 = vertex[index0];
-		VertexType v1 = vertex[index1];
-		VertexType v2 = vertex[index2];
-
-		D3DXVECTOR3 x = v1.position - v0.position;
-		D3DXVECTOR3 y = v2.position - v0.position;
-
-		D3DXVECTOR3 normal;
-		D3DXVec3Cross(&normal, &x, &y);
-
-		vertex[index0].normal += normal;
-		vertex[index1].normal += normal;
-		vertex[index2].normal += normal;
+		for (UINT x = 0; x < width; x++)
+		{
+			BYTE r;
+			if (x == width - 1 || z == height - 1)
+			{
+				r = 0;
+			}
+			else
+			{
+				UINT color = colors[count++];
+				r = ((color & 0x00FF0000) >> 16);
+			}
+			heightData[z * width + x] = r;
+		}
 	}
 
-	for (UINT i = 0; i < vertexCount; i++)
-	{
-		D3DXVec3Normalize
-		(
-			&vertex[i].normal
-			, &vertex[i].normal
-		);
-	}
+	width--;
+	height--;
+
+	position = D3DXVECTOR3(-(float)width *Time::Get()->GetMagn() / 2, 0, -(float)height *Time::Get()->GetMagn() / 2);
 }
+
 void Plane::CreateBuffer()
 {
 	vertexCount = (width + 1) * (height + 1);
 
-	UINT heightIndex = 0;
 	vertex = new VertexType[vertexCount];
 	for (UINT z = 0; z <= height; z++)
 	{
@@ -255,16 +287,17 @@ void Plane::CreateBuffer()
 		{
 			int index = (width + 1) * z + x;
 
-			vertex[index].position.x = (float)x + position.x;
-			vertex[index].position.y = (float)0 + position.y;
-			vertex[index].position.z = (float)z + position.z;
+			vertex[index].position.x = (float)x *Time::Get()->GetMagn() + position.x;
+			//vertex[index].position.y = (float)heightData[index] * size / 7.5f-5+ position.y;
+			vertex[index].position.y = 0.1f;
+			vertex[index].position.z = (float)z*Time::Get()->GetMagn() + position.z;
 
-			vertex[index].uv.x = (x * 10) / (float)width;
-			vertex[index].uv.y = (z * 10) / (float)height;
+			vertex[index].uv.x = (float)(x);// (float)width;
+			vertex[index].uv.y = (float)(z);// (float)height;
 
 			vertex[index].normal = D3DXVECTOR3(0, 0, 0);
-			vertex[index].color = D3DXCOLOR(0, 0, 0, 0);
-			vertex[index].lerp = D3DXCOLOR(0, 0, 0, 0);
+			vertex[index].color = D3DXVECTOR4(0, 0, 0, 0);
+			vertex[index].lerp = D3DXVECTOR4(0, 0, 0, 0);
 		}//for(x)
 	}//for(z)
 
@@ -286,8 +319,6 @@ void Plane::CreateBuffer()
 			count += 6;
 		}//for(x)
 	}//for(z)
-
-	CreateNormalData();
 
 	HRESULT hr;
 
@@ -318,20 +349,65 @@ void Plane::CreateBuffer()
 	for (int i = 0; i<5; i++)
 	textures[i] = new Textures();
 	sample = new Textures();
-	
+
+	SetTexture(0, Contents + L"./Textures/Diffuse/Dirt.png");
+
 	if(brush!=NULL) SAFE_DELETE(brush);
 	brush = new Brush(this);
+
+	if (water != NULL) SAFE_DELETE(water);
+	water = new Water(width*(UINT)Time::Get()->GetMagn(),height*(UINT)Time::Get()->GetMagn());
 
 	if(quadTree!=NULL) SAFE_DELETE(quadTree);
 	quadTree = new ZQuadTree(width, height);
 	quadTree->Build(vertex);
+
+	clipBuffer->Data.Clip.w=-water->GetDepth();
 }
 
+
+void Plane::CreateNormalData()
+{
+	for (UINT i = 0; i < vertexCount; i++)
+		vertex[i].normal = D3DXVECTOR3(0, 0, 0);
+
+	for (UINT i = 0; i < (indexCount / 3); i++)
+	{
+		UINT index0 = index[i * 3 + 0];
+		UINT index1 = index[i * 3 + 1];
+		UINT index2 = index[i * 3 + 2];
+
+		VertexType v0 = vertex[index0];
+		VertexType v1 = vertex[index1];
+		VertexType v2 = vertex[index2];
+
+		D3DXVECTOR3 x = v1.position - v0.position;
+		D3DXVECTOR3 y = v2.position - v0.position;
+
+		D3DXVECTOR3 normal;
+		D3DXVec3Cross(&normal, &x, &y);
+
+		vertex[index0].normal += normal;
+		vertex[index1].normal += normal;
+		vertex[index2].normal += normal;
+	}
+
+	for (UINT i = 0; i < vertexCount; i++)
+	{
+		D3DXVec3Normalize
+		(
+			&vertex[i].normal
+			, &vertex[i].normal
+		);
+	}
+	D3D::GetDC()->UpdateSubresource(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*vertexCount, 0);
+}
 void Plane::ChangeScale(int num)
 {
+	isLoaded=true;
 	number=num;
 	width = height=(UINT)pow(2,num);
-	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
+	position=D3DXVECTOR3(-(float)width*Time::Get()->GetMagn() / 2, 0, -(float)height*Time::Get()->GetMagn() / 2);
 	CreateBuffer();
 }
 
@@ -390,8 +466,8 @@ void Plane::WriteMap(wstring file)
 			w->Vector3(vertex[i].position);
 			w->Vector2(vertex[i].uv);
 			w->Vector3(vertex[i].normal);
-			w->Color4f(vertex[i].color);
-			w->Color4f(vertex[i].lerp);
+			w->Vector4(vertex[i].color);
+			w->Vector4(vertex[i].lerp);
 		}
 		w->UInt(indexCount);
 		for (UINT i = 0;i < indexCount;i++)w->UInt(index[i]);
@@ -407,7 +483,10 @@ void Plane::ReadMap(wstring file)
 {
 	BinaryReader* r = new BinaryReader();
 	wstring temp = file;
+	SAFE_DELETE(index);
 	SAFE_DELETE(vertex);
+	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(indexBuffer);
 
 	UINT count = 0;
 	r->Open(temp);
@@ -425,11 +504,12 @@ void Plane::ReadMap(wstring file)
 			vertex[i].position=r->Vector3();
 			vertex[i].uv=r->Vector2();
 			vertex[i].normal=r->Vector3();
-			vertex[i].color=r->Color4f();
-			vertex[i].lerp=r->Color4f();
+			vertex[i].color = r->Vector4();
+			vertex[i].lerp =r->Vector4();
 		}
-		indexCount=r->UInt();
-		for (UINT i = 0;i < indexCount;i++)index[i]=r->UInt();
+		UINT dummyCount=r->UInt();
+		UINT* dummy=new UINT[dummyCount];
+		for (UINT i = 0;i < dummyCount;i++)dummy[i]=r->UInt();
 
 		for (UINT i = 0;i<5;i++)
 		{
@@ -441,8 +521,6 @@ void Plane::ReadMap(wstring file)
 
 		D3D::GetDC()->UpdateSubresource
 		(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
-
-		CreateNormalData();
 	}
 	r->Close();
 	SAFE_DELETE(r);
@@ -482,4 +560,12 @@ void Plane::Frustum()
 	}//for(z)
 
 	D3D::GetDC()->UpdateSubresource(indexBuffer, 0, NULL, index, sizeof(UINT)*indexCount, 0);
+}
+
+float Plane::GetHeight(float x, float y)
+{
+	x+=width/2;	y+=height/2;
+	int index = (width + 1) * (int)y + (int)x;
+	
+	if(index<0||(UINT)index>=vertexCount|| !isLoaded) return 0.0f;	else return vertex[index].position.y;
 }
