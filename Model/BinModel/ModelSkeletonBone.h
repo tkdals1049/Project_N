@@ -13,7 +13,6 @@ public:
 
 	void SetBindPoseTransform(const D3DXMATRIX& matBindPoseTransform);
 	void SetBoneReferenceTransform(const D3DXMATRIX& matBoneReferenceTransform);
-
 	ModelAnimationKeyFrames* GetAnimationKeyFrames(string animationName);
 
 	static void Write(BinaryWriter * w, ModelSkeletonBone * bone);

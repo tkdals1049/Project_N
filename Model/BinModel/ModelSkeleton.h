@@ -11,6 +11,7 @@ public:
 
 	D3DXMATRIX GetWeapon(string name);
 	string GetWeaponName(int num);
+	float GetMin() { return min; }
 
 	void AddSkeletonBone(ModelSkeletonBone* skeletonBone);
 	ModelSkeletonBone* FindBone(string boneName);
@@ -26,7 +27,6 @@ public:
 	int GetBoneCount() { return boneCount; }
 
 	void AddAnimationFromOtherSkeleton(string srcAnimName, string dstAnimName, ModelSkeleton& srcSkeleton);
-
 	void UpdateAnimation(ModelAnimationController* animationController, UINT root=0, int range = 0);
 
 	static void Write(BinaryWriter * w, ModelSkeleton * skeleton);
@@ -43,6 +43,7 @@ private:
 	typedef pair<string, ModelSkeletonBone *> Pair;
 	vector<Pair> skeletonBones;
 
+	float min;
 	D3DXMATRIX* skinTransforms; /// 최종적으로 Vertex에 적용될 Transform Matrix 배열
 	D3DXMATRIX* boneAnimationTransforms; /// 각 Bone의 Transform Matrix 배열
 

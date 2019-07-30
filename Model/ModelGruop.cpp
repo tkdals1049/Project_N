@@ -15,7 +15,7 @@
 #include "../Content/FbxModel.h"
 #include "../Content/Texture.h"
 
-ModelGroup::ModelGroup():different(false),dot(D3DXVECTOR2(0,0)),a(0.0f)
+ModelGroup::ModelGroup():dot(D3DXVECTOR2(0,0)),a(0.0f)
 {
 	SaveFile="";
 	attitude=NULL;
@@ -425,7 +425,6 @@ void ModelGroup::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 				strcpy_s((char*)skeletonList[i], bone->GetName().size() + 1, bone->GetName().c_str());
 			}
 		}
-		different=true;
 		}
 		return;
 		}

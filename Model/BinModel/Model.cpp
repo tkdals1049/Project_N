@@ -54,6 +54,7 @@ void Model::Update()
 	SetWorld();
 	AnotherUpdate();	
 
+
 	for (ModelMesh* mesh : meshes)
 		mesh->Update();
 }
@@ -63,6 +64,7 @@ void Model::Render()
 	colorBuffer->SetPSBuffer(2);
 	boneBuffer->SetInvworld(&(matGeometricOffset*world));
 	boneBuffer->SetVSBuffer(4);
+
 	for (ModelMesh* mesh : meshes)
  		mesh->Render();
 }
@@ -77,14 +79,13 @@ void Model::AnotherUpdate()
 		
 		if (isAnimated !=0)
 		{
-
+		
 			animationController->Update(speed);
-
+		
 			if (skeleton != NULL)
 			{
 				skeleton->UpdateAnimation(animationController,root,range);
 			}
-			//UpdateAnimation();
 		}
 	}
 
@@ -99,7 +100,7 @@ void Model::AnotherUpdate()
 		}
 	}
 	boneBuffer->SetSkinning(isAnimated==0?false:true);
-
+	
 }
 
 void Model::AddAni(string file,string mode)
@@ -142,39 +143,6 @@ void Model::AniChange(string mode)
 	animationController->Play();
 }
 
-void Model::UpdateAnimation()
-{
-	
-	D3DXMATRIX matAnimationTransform;
-	if (animationController != NULL)
-	{
-		ModelAnimation* animation = animationController->GetCurrentAnimation();
-
-		if (animation != NULL)
-		{
-			ModelAnimationKeyFrames* keyFrames = NULL;
-			map<string, ModelAnimationKeyFrames*>::iterator iter;
-			for (iter = animationKeyFrames.begin(); iter != animationKeyFrames.end(); ++iter)
-			{
-				if (iter->first == animation->GetName())
-				{
-					keyFrames = iter->second;
-
-					break;
-				}
-			}
-
-			if (keyFrames != NULL)
-			{
-				int keyFrame = animationController->GetCurrentKeyFrame();
-				matAnimationTransform = keyFrames->GetKeyFrameTransform(keyFrame);
-
-				return;
-			}
-		}
-	}
-	D3DXMatrixIdentity(&matAnimationTransform);
-}
 
 void Model::ProcessAnimations(string mode="")
 {
@@ -368,6 +336,11 @@ void Model::ClearMaterial()
 D3DXMATRIX Model::GetWeaponWorld(string weapon)
 {
 	return skeleton->GetWeapon(weapon)*matGeometricOffset*world;
+}
+
+float Model::GetMinBone()
+{
+	return skeleton->GetMin();
 }
 
 void Model::SetWorld(D3DXMATRIX& world)

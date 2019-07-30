@@ -132,12 +132,11 @@ void MoLoader::ProcessSkeleton(FbxNode * node)
 {
 	FbxSkeleton* fbxSkeleton = node->GetSkeleton();
 	if (fbxSkeleton == NULL)return;
-
-	if (model->skeleton == NULL)
-		model->skeleton = new MoSkeleton();
+	if (model->skeleton == NULL)model->skeleton = new MoSkeleton();
 
 	int parentBoneIndex = -1;
 	FbxNode* parentNode = node->GetParent();
+
 	if (parentNode != NULL)
 	{
 		parentBoneIndex = model->skeleton->FindBoneIndex(parentNode->GetName());

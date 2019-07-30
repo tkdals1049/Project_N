@@ -1,46 +1,33 @@
 #pragma once
 
-class Model;
-class Boss
+#include "Actor.h"
+class Boss :public Actor
 {
 public:
 	Boss();
 	~Boss();
 
-	void PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Update();
-	void PostRender(bool& isUse);
 	void Render();
 
-	void SetModel(string file);
-
-	void SetDot(D3DXVECTOR2 dot) { this->dot = dot; }
-	void SetModel(Model * model);
-	Model* GetModel();
-
-	bool GetDifferent() { return different; }
-	void SetDifferent(bool different) { this->different = different; }
-	void AddWeaponVector(Model* model, string weaponName, Model* weaponFile);
-
-
-	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
+	void Input(string mode);
+	void SetBoss(string Name = "../_Contents/BinModels/Actor_Boss4.model");
+	void SetPlayer(class Player* player) { this->player = player; }
 private:
-	bool different;
-	class Camera* camera;
-	
-	Model* model;
-	typedef pair<string, Model*> Weapon;
-	vector<Weapon> weapon;
+	class Look* look;
+	class Player* player;
 
-	D3DXVECTOR2 dot;
-	bool OnModel;
-	float a;
-	string SaveFile;
-	float c_temp1[3];
-	float c_temp2[3];
-	float c_temp3[3];
+	void Notify();
 
-	const char** skeletonList;
+	int dir, degree, degree_goal, weaponNum;
+	float speed;
+	bool isControl, isEquip, isHeight;
+	string mode, Premode;
+	D3DXVECTOR3 way;
+
+
+	bool isLoaded;
+	thread* loadThread;
 
 };
 

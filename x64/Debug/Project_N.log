@@ -1,0 +1,215 @@
+﻿  stdafx.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  BinModel.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.cpp(38): warning C4244: '=': 'intptr_t'에서 'long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  FbxModel.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.cpp(39): warning C4244: '=': 'intptr_t'에서 'long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Texture.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.cpp(37): warning C4244: '=': 'intptr_t'에서 'long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Brush.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Cloud.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Mini.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Plane.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\environment\plane.cpp(25): warning C4244: '=': 'double'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Sky.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Water.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ExeGui.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ExeModel.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Main.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\main.cpp(20): warning C4244: 'return': 'WPARAM'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Actor.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.cpp(85): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.cpp(116): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Boss.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\boss.cpp(88): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  EnemyManager.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Monster.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Player.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Model.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelAnimation.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelAnimationController.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationcontroller.cpp(53): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationcontroller.cpp(89): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationcontroller.cpp(105): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationcontroller.cpp(117): warning C4267: '=': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationcontroller.cpp(182): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  ModelAnimationKeyFrames.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelanimationkeyframes.cpp(52): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelBoneWeights.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelMaterial.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelMesh.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelSkeleton.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelskeleton.cpp(221): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelSkeletonBone.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\modelskeletonbone.cpp(91): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Blood.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Cube.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Domain.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Look.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\etc\look.cpp(14): warning C4305: '인수': 'double'에서 'FLOAT'(으)로 잘립니다.
+  Weapon.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoAnimation.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoAnimationController.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moanimationcontroller.cpp(45): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moanimationcontroller.cpp(55): warning C4267: '초기화 중': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moanimationcontroller.cpp(56): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoBoneWeights.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoKeyFrame.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\mokeyframe.cpp(40): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoLoader.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoMaterial.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoModel.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodel.cpp(79): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodel.cpp(83): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodel.cpp(115): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodel.cpp(119): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoModelMesh.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moboneweights.h(55): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodelmesh.cpp(45): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodelmesh.cpp(46): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodelmesh.cpp(48): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\momodelmesh.cpp(49): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  MoSkeleton.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moskeleton.cpp(72): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  MoSkeletonBone.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\fbxmodel\moskeletonbone.cpp(60): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ModelGruop.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\actor\actor.h(27): warning C4267: 'return': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\binmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\fbxmodel.h(13): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\content\texture.h(11): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\modelgruop.cpp(365): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\modelgruop.cpp(365): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\modelgruop.cpp(382): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\modelgruop.cpp(382): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\modelgruop.cpp(423): warning C4267: '인수': 'size_t'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Program.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  LightManager.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  RenderTarget.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Shader.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\renders\shader.cpp(168): warning C4267: '인수': 'size_t'에서 'UINT'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ShaderManager.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  States.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  VertexLayouts.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  D3D.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\systems\d3d.cpp(151): warning C4244: '=': 'SIZE_T'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Keyboard.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Mouse.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Time.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Window.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\systems\window.cpp(173): warning C4244: '인수': 'LPARAM'에서 'long'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\systems\window.cpp(173): warning C4244: '인수': 'WPARAM'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  BinaryFile.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\utilities\binaryfile.cpp(107): warning C4267: '인수': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\utilities\binaryfile.cpp(110): warning C4267: '인수': 'size_t'에서 'DWORD'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Mesh.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Path.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  PerlinNoise.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  String.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+c:\users\lee\documents\visual studio 2017\projects\project_n\utilities\string.cpp(210): warning C4267: '초기화 중': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  ZFrustum.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+  컴파일하고 있습니다...
+  ZQuadTree.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Camera.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  CameraManager.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  FirstPerson.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Orthographic.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Perspective.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  Viewport.cpp
+c:\users\lee\documents\visual studio 2017\projects\project_n\model\binmodel\model.h(76): warning C4267: 'return': 'size_t'에서 'unsigned int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
+  코드를 생성하고 있습니다...
+msvcprtd.lib(MSVCP140D.dll) : fatal error LNK1112: 'x86' 모듈 컴퓨터 종류가 'x64' 대상 컴퓨터 종류와 충돌합니다.

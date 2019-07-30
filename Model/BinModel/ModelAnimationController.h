@@ -19,7 +19,10 @@ public:
 	void SetCurrentAnimation(int index);
 
 	UINT GetAnimationCount();
+	int GetAnimationeKeyFrame(int index);
 	ModelAnimation* GetAnimation(int index);
+	string GetAnimationName(int index) { return animations[index].first; }
+	string GetCurrentName();
 	int GetAnimationNum();
 	ModelAnimation* GetAnimation(string animName);
 

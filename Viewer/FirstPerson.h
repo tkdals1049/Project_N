@@ -12,4 +12,5 @@ public:
 private:
 	float moveSpeed;
 	float rotationSpeed;
+	D3DXVECTOR2 quike;
 };

@@ -18,8 +18,6 @@ public:
 	Model* GetModel();
 
 	void SetDot(D3DXVECTOR2 dot){this->dot=dot;}
-	bool GetDifferent(){return different;}
-	void SetDifferent(bool different){this->different=different;}
 
 	void AddWeaponVector(Model* model,string weaponName,Model* weaponFile);
 	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
@@ -27,8 +25,6 @@ public:
 	Model* GetAttitude();
 
 private:
-	bool different;
-
 	class Camera* camera;
 	class Player* player;
 	class EnemyManager* enemy;

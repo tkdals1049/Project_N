@@ -64,13 +64,7 @@ void ModelSkeletonBone::SetBoneReferenceTransform(const D3DXMATRIX & matBoneRefe
 
 ModelAnimationKeyFrames * ModelSkeletonBone::GetAnimationKeyFrames(string animationName)
 {
-	map<string, ModelAnimationKeyFrames *>::iterator iter;
-	for (iter = animationKeyFrames.begin(); iter != animationKeyFrames.end(); ++iter)
-	{
-		if (iter->first == animationName)
-			return iter->second;
-	}
-
+	if(animationKeyFrames.size()>=0) return animationKeyFrames[animationName];
 	return NULL;
 }
 

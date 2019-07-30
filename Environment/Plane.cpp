@@ -22,7 +22,7 @@ void Plane::Delete()
 Plane::Plane()
 :OnTextureList(false),isLoaded(true), quadTree(NULL),number(5)
 {
-	width = height = pow(2,number);
+	width = height = (UINT)pow(2,number);
 	wstring file = Shaders + L"PlaneColor.hlsl";
 	shader = new Shader(file);
 

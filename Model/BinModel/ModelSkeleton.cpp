@@ -11,6 +11,7 @@ ModelSkeleton::ModelSkeleton()
 	boneAnimationTransforms = NULL;
 
 	boneCount = 0;
+	min = 0;
 }
 
 ModelSkeleton::ModelSkeleton(const ModelSkeleton & otherSkeleton)
@@ -29,6 +30,8 @@ ModelSkeleton::ModelSkeleton(const ModelSkeleton & otherSkeleton)
 
 		skeletonBones.push_back({ tempName, new ModelSkeletonBone(tempSkeletonBone) });
 	}
+	boneCount = 0;
+	min = 0;
 }
 
 ModelSkeleton::~ModelSkeleton()
@@ -42,8 +45,14 @@ ModelSkeleton::~ModelSkeleton()
 
 D3DXMATRIX ModelSkeleton::GetWeapon(string name)
 {
+	if (boneAnimationTransforms == NULL)
+	{
+		D3DXMATRIX dummy;
+		D3DXMatrixIdentity(&dummy);
+		return dummy;
+	}
 	return boneAnimationTransforms[FindBoneIndex(name)];
-	//return boneAnimationTransforms[FindBoneIndex(name)];
+
 }
 
 string ModelSkeleton::GetWeaponName(int num)
@@ -121,31 +130,33 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 
 	if (skinTransforms == NULL)
 		skinTransforms = new D3DXMATRIX[boneCount];
-
+	
 	if (boneAnimationTransforms == NULL)
 		boneAnimationTransforms = new D3DXMATRIX[boneCount];
-
+	
 		
 	int keyFrame = animationController->GetCurrentKeyFrame();
 	int nextKeyFrame = animationController->GetNextKeyFrame();
 	float keyframeFactor = animationController->GetKeyFrameFactor();
 	bool useQuaterniokeyFrames = animationController->UseQuaternionKeyFrames();
-
+	
 	int index = 0;
+	float min = 0, origin = 0;
+
 	vector<Pair>::const_iterator it = skeletonBones.begin();
 	for (; it != skeletonBones.end(); ++it)
 	{
 		ModelSkeletonBone* bone = it->second;
-
+	
 		D3DXMATRIX matInvBindPose = bone->GetInvBindPoseTransform();
 		D3DXMATRIX matBoneReference = bone->GetBoneReferenceTransform();
 		D3DXMATRIX matAnimation;
 		D3DXMATRIX matParentAnimation;
-
+	
 		D3DXMATRIX matFirstRootTransform;
-
+	
 		ModelAnimationKeyFrames* animatiokeyFrames = bone->GetAnimationKeyFrames(animationName);
-
+		
 		if (useQuaterniokeyFrames == true)
 		{
 			const ModelAnimationQuaternionKeyFrame& qKeyFrame1 = animatiokeyFrames->GetQuaternionKeyFrame(keyFrame);
@@ -153,20 +164,20 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 			const D3DXQUATERNION& q1 = qKeyFrame1.GetQuaternion();
 			const D3DXQUATERNION& q2 = qKeyFrame2.GetQuaternion();
 			const D3DXQUATERNION& minus_q2 = -q2;
-
+		
 			D3DXQUATERNION q;
-
+		
 			if (D3DXQuaternionLengthSq(&(q1 - q2)) > D3DXQuaternionLengthSq(&(q1 + q2)))
 				D3DXQuaternionSlerp(&q, &q1, &minus_q2, keyframeFactor); // Quaternion(회전축, 회전각) 선형 구면 보간
 			else
 				D3DXQuaternionSlerp(&q, &q1, &q2, keyframeFactor);
-
+		
 			D3DXMatrixRotationQuaternion(&matAnimation, &q);
-
+		
 			D3DXVECTOR3 t1 = qKeyFrame1.GetTranslation();
 			D3DXVECTOR3 t2 = qKeyFrame2.GetTranslation();
-
-
+		
+		
 			D3DXVECTOR3 vTranslation;
 			D3DXVec3Lerp(&vTranslation, &t1, &t2, keyframeFactor);
 			
@@ -178,10 +189,10 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 		{
 			matAnimation = animatiokeyFrames->GetKeyFrameTransform(keyFrame);
 		}
-
-
+		
+		
 		int parentBoneIndex = bone->GetParentBoneIndex();
-
+		
 		if (parentBoneIndex < range)
 		{
 			D3DXMatrixIdentity(&matParentAnimation);
@@ -196,8 +207,14 @@ void ModelSkeleton::BuildBoneTransforms(ModelAnimationController* animationContr
 		boneAnimationTransforms[index] = matAnimation * matParentAnimation;
 		skinTransforms[index] = matBoneReference * matInvBindPose *  boneAnimationTransforms[index];
 
+		float boneHeight = boneAnimationTransforms[index]._42;
+		if (index == 0) { origin = min = boneHeight; }
+		else if (min > boneHeight)min = boneHeight;
+
 		index++;
 	}
+	this->min = origin - min;
+
 }
 
 void ModelSkeleton::UpdateAnimation(ModelAnimationController * animationController,UINT root,int range)
@@ -254,6 +271,9 @@ void ModelSkeleton::Read(BinaryReader * r, ModelSkeleton* skeleton)
 	SAFE_DELETE_ARRAY(skeleton->boneAnimationTransforms);
 	skeleton->boneAnimationTransforms = new D3DXMATRIX[skeleton->boneCount];
 	*skeleton->boneAnimationTransforms = r->Matrix();
+	SAFE_DELETE_ARRAY(skeleton->boneAnimationTransforms);
+
+
 }
 
 ////////////////////////////////////////////////////////////////////////

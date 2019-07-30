@@ -27,16 +27,12 @@ void Camera::SetMatrix(D3DXMATRIX * mat)
 	memcpy( this->matView, mat, sizeof(D3DXMATRIX));
 }
 
-void Camera::UpdateMove()
-{
-	UpdateView();
-}
-
-void Camera::UpdateRotation()
+//카메라에 흔들림 효과를 주기 위해 지진 파라미터를 추가함
+void Camera::UpdateRotation(D3DXVECTOR2 quike)
 {
 	D3DXMATRIX x, y;
-	D3DXMatrixRotationX(&x, rotation.x);
-	D3DXMatrixRotationY(&y, rotation.y);
+	D3DXMatrixRotationX(&x, rotation.x+quike.x);
+	D3DXMatrixRotationY(&y, rotation.y+quike.y);
 
 	matRotation = x * y;
 

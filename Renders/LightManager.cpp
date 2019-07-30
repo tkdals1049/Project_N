@@ -28,8 +28,8 @@ void LightManager::GetLightDirection(D3DXVECTOR3 * out_lightDir)
 
 void LightManager::Update()
 {
-	if (Keyboard::Get()->Press('1')) speed += 0.01f;
-	else if (Keyboard::Get()->Press('2')) speed -= 0.01f;
+	if (Keyboard::Get()->Press('1')) speed +=  Time::Get()->Delta()*0.1f;
+	else if (Keyboard::Get()->Press('2')) speed -= Time::Get()->Delta()*0.1f;
 	else if (Keyboard::Get()->Press('3')) speed =0.0f;
 	
 	angley -= (float)D3DX_PI / 180 * speed;

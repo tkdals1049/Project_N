@@ -1,95 +1,80 @@
 #include "../../stdafx.h"
 #include "Boss.h"
-
+#include "Player.h"
+#include "../Etc/Look.h"
 #include "../BinModel/Model.h"
-#include "../BinModel/ModelMaterial.h"
 #include "../BinModel/ModelSkeleton.h"
-#include "../BinModel/ModelSkeletonBone.h"
+#include "../BinModel/ModelAnimation.h"
 #include "../BinModel/ModelAnimationController.h"
 
-#include "../../Content/BinModel.h"
-#include "../../Content/FbxModel.h"
-#include "../../Content/Texture.h"
-
-Boss::Boss() :different(false), dot(D3DXVECTOR2(0, 0)), a(0.0f)
+Boss::Boss() :Actor(),dir(0), degree(0), degree_goal(0), speed(20.0f),
+mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), isLoaded(false), loadThread(NULL)
 {
-	SaveFile = "";
-	skeletonList = NULL;
+	look = new Look();
 }
 
 Boss::~Boss()
 {
 		SAFE_DELETE(model);
-	for (size_t i = 0; i <weapon.size(); i++)
-		SAFE_DELETE(weapon[i].second);
 }
 
-void Boss::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
-{
-
-}
 void Boss::Update()
 {
-		model->Update();
-
-		for each(Weapon temp in weapon)
-		{
-			temp.second->Update();
-
-			temp.second->SetWorld(model->GetWeaponWorld(temp.first));
-		}
-	
-}
-void Boss::PostRender(bool& isUse)
-{
-}
-void Boss::Render()
-{
-	model->Render();
-
-	for each(Weapon temp in weapon)
+	if (loadThread != NULL && isLoaded)
 	{
-		temp.second->Render();
+		loadThread->join();
+		SAFE_DELETE(loadThread);
+	}
+
+	if (model != NULL && isLoaded)
+	{
+		Notify();
+		Actor::Update();
 	}
 }
 
-void Boss::SetModel(string file)
+void Boss::Render()
 {
-	SAFE_DELETE(model);
-	MoLoader::LoadBinary(file, &model);
-	model->Reset();
+	if (model != NULL && isLoaded)
+	{
+		Actor::Render();
+		look->SetWorld(model->GetWeaponWorld("HD_00"));
+		look->Render();
+	}
 }
 
-void Boss::SetModel(Model* another)
+void Boss::Notify()
 {
-	model=another;
+	if (!isLoaded)return;
+
+	ModelAnimationController* ani = model->GetAnimationController();
+	int current = ani->GetCurrentKeyFrame();
+	int end = ani->GetCurrentAnimation()->GetKeyFrames();
+}
+void Boss::Input(string mode)
+{
+	if (this->mode != mode)
+	{
+		model->AniChange(mode);
+	}
+	Premode = this->mode;
+	this->mode = mode;
 }
 
-Model * Boss::GetModel()
+void Boss::SetBoss(string Name)
 {
-	return model;
-}
+	if (model != NULL) return;
 
-void Boss::AddWeaponVector(Model * model, string weaponName, Model * weaponFile)
-{
-	weapon.push_back(Weapon(weaponName,weaponFile));
-}
+	loadThread = new thread([&]()
+	{
+		isLoaded = false;
 
-void Boss::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
-{
-		if (model->Check(origin, direction))
-		{
-				if (model->GetSkeleton() != NULL)
-				{
-					int num = model->GetSkeleton()->GetBoneCount();
-					skeletonList = new const char*[num];
-					for (size_t i = 0; (int)i < num; i++)
-					{
-						ModelSkeletonBone* bone = model->GetSkeleton()->GetSkeletonBone(i);
-						skeletonList[i] = new char[bone->GetName().size() + 1];
-						strcpy_s((char*)skeletonList[i], bone->GetName().size() + 1, bone->GetName().c_str());
-					}
-				}
-				different = true;
-		}
+		MoLoader::LoadBinary(Name, &model);
+		model->Reset();
+		model->SetAniPlay(1, 0, 1.5f);
+		model->AniChange("idle");
+
+		isLoaded = true;
+	});
+
 }

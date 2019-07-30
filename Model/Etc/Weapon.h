@@ -45,6 +45,7 @@ public:
 	void EffectUpdate();
 	void EffectRender();
 	void CreateBuffer();
+	void EffecetReset();
 	bool isSetting(){return (unsigned int)weaponNum<weapons.size();}
 private:
 	//무기를 사용자를 저장

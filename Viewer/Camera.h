@@ -23,7 +23,6 @@ public:
 	void SetPosition(D3DXVECTOR3 vec)
 	{ 
 		this->position = vec;
-		UpdateMove();
 	}
 
 	void GetRotation(D3DXVECTOR2* vec)
@@ -34,7 +33,6 @@ public:
 	void SetRotation(D3DXVECTOR2 vec)
 	{
 		this->rotation = vec;
-		UpdateRotation();
 	}
 
 	void GetRotationDegree(D3DXVECTOR2* vec)
@@ -52,13 +50,12 @@ public:
 	void SetMatrix(D3DXMATRIX * mat);
 
 	virtual void Update() = 0;
-	virtual void UpdateView();
 
 protected:
 	Camera();
 
-	virtual void UpdateMove();
-	virtual void UpdateRotation();
+	virtual void UpdateView();
+	virtual void UpdateRotation(D3DXVECTOR2 quike=D3DXVECTOR2(0,0));
 
 	D3DXVECTOR3 GetForward(){return forward;}
 	D3DXVECTOR3 GetRight() { return right; }

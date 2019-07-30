@@ -13,7 +13,7 @@ public:
 	void Update();
 	void Render();
 	void Input(string mode);
-	void SetMonster();
+	void SetMonster(string Name = "../_Contents/BinModels/Actor_Monster.model");
 	void SetPlayer(class Player* player) { this->player = player; }
 private:
 	class Look* look;
@@ -27,4 +27,6 @@ private:
 	string mode, Premode;
 	D3DXVECTOR3 way;
 
+	bool isLoaded;
+	thread* loadThread;
 };

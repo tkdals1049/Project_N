@@ -157,11 +157,13 @@ void ExeModel::PostRender()
 		}
 		ImGui::EndMainMenuBar();
 	}
+
 	if(isEnviroment==true)
 	{
 	Sky::Get()->PostRender(isEnviroment);
 	Plane::Get()->PostRender(isEnviroment);
 	}
+
 	if(isModel)
 	{
 	group->PostRender(isModel);

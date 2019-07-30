@@ -43,7 +43,7 @@ void Player::Update()
 		SAFE_DELETE(loadThread);
 	}
 
-	if(model!=NULL)
+	if(model!=NULL && isLoaded)
 	{	
 		Notify();
 		Actor::Update();
@@ -54,10 +54,9 @@ void Player::Update()
 
 void Player::Render()
 {
-	if (model != NULL)
+	if (model != NULL && isLoaded)
 	{
 		Actor::Render();
-		
 		weapon->Render();
 	}
 }
@@ -161,8 +160,8 @@ void Player::Control()
 				else {Input("run");speed = 15.0f;}
 			}
 		}
-		//장비
 
+		//장비
 		if (Keyboard::Get()->Down('D')&&weapon->isSetting())
 		{
 			if (isEquip)
@@ -181,7 +180,6 @@ void Player::Control()
 		}
 
 		//점프
-
 		if (Keyboard::Get()->Down(VK_SPACE))
 		{
 			model->SetAniPlay(1, 0, 3.0f);
@@ -237,13 +235,13 @@ void Player::Control()
 	D3DXMATRIX world;
 	if(isHeight)
 	{
-		D3DXMatrixTranslation(&world,0,SetHeight(),0);
+		D3DXMatrixTranslation(&world,0,model->GetMinBone()*model->GetScale().y,0);
 		model->SetWorld(world);
-		model->SetAdjust(D3DXVECTOR3(0, 0.01f, 0));
+		model->SetAdjust(D3DXVECTOR3(0, 0, 0));
 	}
 	else
 	{
-		D3DXMatrixTranslation(&world, 0,-model->GetMinP().z*model->GetScale().y, 0);
+		D3DXMatrixTranslation(&world, 0, -model->GetMinP().z*model->GetScale().y, 0);
 		model->SetWorld(world);
 		model->SetAdjust(D3DXVECTOR3(0, 0, 0));
 	}
@@ -252,7 +250,7 @@ void Player::Control()
 //애니메이션 노티파이
 void Player::Notify()
 { 
-	if(isLoaded==false)return;
+	if(!isLoaded)return;
 
 	ModelAnimationController* ani= model->GetAnimationController();
 	int degree = ani->GetCurrentKeyFrame();
@@ -351,20 +349,3 @@ void Player::SetPlayer()
 		isLoaded = true;
 	});
 }
-
-
-//루트 조정으로 부족한 애니메이션 원점 조정으로 동작을 자연스럽게 함
-float Player::SetHeight()
-{
-	ModelSkeleton* sk= model->GetSkeleton();
-	float min=0,origin=0;
-	for(int i = 0;i< sk->GetBoneCount();i++)
-	{
-		D3DXVECTOR3 temp(0,0,0);
-		D3DXVec3TransformCoord(&temp,&temp,&model->GetWeaponWorld(sk->GetWeaponName(i)));
-		if(i==0) {origin=min=temp.y;}
-		else if(min>temp.y)min=temp.y;
-	}
-	return origin-min;
-}
-

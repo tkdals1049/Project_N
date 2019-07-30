@@ -13,12 +13,10 @@ public:
 	void Render();
 	void AddMonster(string Name);
 	void AddMonster();
+	void AddBoss();
 private:
 	Player* player;
 	Boss* boss;
 	vector<Monster*> monsters;
-
-	bool isLoaded;
-	thread* loadThread;
-
+	bool isMake;
 };

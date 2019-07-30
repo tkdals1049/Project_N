@@ -16,9 +16,10 @@
 
 
 Actor::Actor() 
-:model(NULL), mode("idle"), Premode(""), different(false), dot(D3DXVECTOR2(0, 0)), a(0.0f), 
+:model(NULL), mode("idle"), Premode(""), dot(D3DXVECTOR2(0, 0)), a(0.0f), 
 attackRange(NULL), isControl(true), isEquip(false), isHeight(false), isAttack(false)
 {
+
 	SaveFile = "";
 	blood = new Blood();
 }
@@ -87,7 +88,6 @@ void Actor::Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 						strcpy_s((char*)skeletonList[i], bone->GetName().size() + 1, bone->GetName().c_str());
 					}
 				}
-				different = true;
  		}
 }
 //모델의 자세 조정값을 입력한다

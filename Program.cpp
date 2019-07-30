@@ -53,6 +53,7 @@ void Program::Update()
 	D3DXMATRIX view, projection;
 	values->MainCamera->GetMatrix(&view);
 	values->Perspective->GetMatrix(&projection);
+	ZFrustum::Get()->Make(&(view*projection));
 
 	values->ViewProjection->SetView(view);
 	values->ViewProjection->SetProjection(projection);

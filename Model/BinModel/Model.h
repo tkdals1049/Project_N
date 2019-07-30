@@ -62,6 +62,7 @@ public:
 	D3DXMATRIX GetWorld() { return world; }
 	D3DXMATRIX GetWeaponWorld() { return weaponWorld;}
 	D3DXMATRIX GetWeaponWorld(string weapon);
+	float GetMinBone();
 	
 	ModelSkeleton* GetSkeleton(){return skeleton;}
 	ModelAnimationController* GetAnimationController() { return animationController; }
@@ -134,7 +135,6 @@ private:
 	vector<ModelMesh *> meshes;
 	ModelSkeleton* skeleton;
 	map<string, ModelAnimationKeyFrames*> animationKeyFrames;
-	map<string, ModelAnimation*> animations;
 	
 	ModelAnimationController* animationController;
 

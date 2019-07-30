@@ -17,5 +17,6 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR param, int 
 	WPARAM wParam = window->Run();
 	SAFE_DELETE(window);
 
+
 	return wParam;
 }

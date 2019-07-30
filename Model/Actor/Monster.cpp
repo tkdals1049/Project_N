@@ -7,14 +7,14 @@
 #include "../BinModel/ModelAnimation.h"
 #include "../BinModel/ModelAnimationController.h"
 
-Monster::Monster() :dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1)
+Monster::Monster() :Actor(), dir(0), degree(0), degree_goal(0), speed(20.0f),
+mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), isLoaded(false), loadThread(NULL)
 {
 	look = new Look();
 }
 
-Monster::Monster(string file) : dir(0), degree(0), degree_goal(0), speed(20.0f),
-mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1)
+Monster::Monster(string file) : Actor(), dir(0), degree(0), degree_goal(0), speed(20.0f),
+mode("idle"), Premode(""), isControl(true), isEquip(false), isHeight(false), way(D3DXVECTOR3(0, 0, 0)), weaponNum(-1), isLoaded(false), loadThread(NULL)
 {
 	MoLoader::LoadBinary(file, &model);
 
@@ -33,25 +33,33 @@ void Monster::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 
 void Monster::Update()
 {
-	if (model != NULL )
+	if (loadThread != NULL && isLoaded)
+	{
+		loadThread->join();
+		SAFE_DELETE(loadThread);
+	}
+
+	if (model != NULL && isLoaded)
 	{
 		Notify();
 		Actor::Update();
+		look->SetWorld(model->GetWeaponWorld("HD_01"));
+		if(look->IsIn(&player->GetPosition()))	model->isDamage();
 	}
 }
 
 void Monster::Render()
 {
-	if (model != NULL)
+	if (model != NULL && isLoaded )
 	{
 		Actor::Render();
-		look->SetWorld(model->GetWeaponWorld("HD_02"));
-		//look->Render();
+		look->Render();
 	}
 }
 
 void Monster::Notify()
 {
+	if (model != NULL) return;
 	ModelAnimationController* ani = model->GetAnimationController();
 	int current = ani->GetCurrentKeyFrame();
 	int end = ani->GetCurrentAnimation()->GetKeyFrames();
@@ -66,12 +74,21 @@ void Monster::Input(string mode)
 	this->mode = mode;
 }
 
-void Monster::SetMonster()
+void Monster::SetMonster(string Name)
 {
+
 	if (model != NULL) return;
-	MoLoader::LoadBinary("../_Contents/BinModels/Actor_Monster.model", &model);
-	model->Reset();
-	model->SetAniPlay(1, 0, 1.5f);
-	model->AniChange("idle");
+
+	loadThread = new thread([&]()
+	{
+		isLoaded = false;
+
+		MoLoader::LoadBinary(Name, &model);
+		model->Reset();
+		model->SetAniPlay(1, 0, 1.5f);
+		model->AniChange("idle");
+
+		isLoaded = true;
+	});
 
 }

@@ -35,6 +35,8 @@ void ModelAnimationKeyFrames::SetAnimationName(string animationName)
 
 const D3DXMATRIX & ModelAnimationKeyFrames::GetKeyFrameTransform(int keyFrame) const
 {
+	float a = keyFrames[keyFrame].first._42;
+	float b = keyFrames[keyFrame].second.GetTranslation().y;
 	return keyFrames[keyFrame].first;
 }
 

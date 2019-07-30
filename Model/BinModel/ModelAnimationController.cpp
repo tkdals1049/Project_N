@@ -88,6 +88,10 @@ UINT ModelAnimationController::GetAnimationCount()
 {
 	return animations.size();
 }
+int ModelAnimationController::GetAnimationeKeyFrame(int index)
+{
+	return animations[index].second->GetKeyFrames();
+}
 
 ModelAnimation * ModelAnimationController::GetAnimation(int index)
 {
@@ -95,6 +99,11 @@ ModelAnimation * ModelAnimationController::GetAnimation(int index)
 		return NULL;
 	else
 		return animations[index].second;
+}
+
+string ModelAnimationController::GetCurrentName()
+{
+	return currentAnimation->GetName();
 }
 
 int ModelAnimationController::GetAnimationNum()

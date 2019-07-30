@@ -439,9 +439,6 @@
     <Filter Include="Renders">
       <UniqueIdentifier>{9dc38050-b25b-49c1-97e6-427272d67cf7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Systems">
-      <UniqueIdentifier>{93f6c792-926b-4d1e-a752-4dfc96f735f4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{a78e6631-51c9-469e-8a74-6ba82de2c333}</UniqueIdentifier>
     </Filter>
@@ -459,6 +456,9 @@
     </Filter>
     <Filter Include="Model\Etc">
       <UniqueIdentifier>{82e20834-f3c2-49bf-a9a3-3f4d0457cd19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Systems">
+      <UniqueIdentifier>{93f6c792-926b-4d1e-a752-4dfc96f735f4}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -120,8 +120,8 @@ void CameraManager::SetViewProjection(D3DXMATRIX view, D3DXMATRIX projection)
 
 void CameraManager::DefaultCamera() 
 { 
-	playerCamera->UpdateView();
 	isRe = false;
+
 	D3DXMATRIX view,projection;
 	playerCamera->GetMatrix(&view);
 	perspective->GetMatrix(&projection);

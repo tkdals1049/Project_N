@@ -19,14 +19,13 @@ public:
 	void SetDot(D3DXVECTOR2 dot) { this->dot = dot; }
 	const string GetMode() { return mode; }
 	const string GetPremode() { return Premode; }
-	bool GetDifferent() { return different; }
-	void SetDifferent(bool different) { this->different = different; }
 	const bool GetisEquip() { return isEquip; }
 	const bool GetisAttack() { return isAttack; }
 	void SetoffAttack() { isAttack=false; }
 	int GetAttackRangeSize(){return attackRange.size(); }
 	ST_OBB* GetAttackRange(int num=0) {	return (attackRange.size()!=0 ? attackRange[num] : NULL);}
 	void AniChange(string mode)	{model->AniChange(mode);}
+	D3DXVECTOR3 GetPosition() { if (model == NULL) return D3DXVECTOR3(0, 0, 0); return model->GetPosition(); }
 
 	void Check(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void SetAdjust(D3DXVECTOR3 adjust);
@@ -39,7 +38,6 @@ protected:
 	class Blood* blood;
 
 	BOOL CheckOBBCollision(ST_OBB * Box1, ST_OBB * Box2);
-	bool different;
 	
 	Model* model;
 	string mode, Premode;

@@ -4,7 +4,7 @@
 #include "../BinModel/Model.h"
 
 Weapon::Weapon(Actor* actor, string equipName, string equipName2, string unequipName)
-:actor(actor),weaponNum(-1), count(10),effectCount(0),effectTime(0),
+:actor(actor),weaponNum(-1), count(20),effectCount(0),effectTime(0),
 equipName(equipName), equipName2(equipName2), unequipName(unequipName)
 {
 	shader = new Shader(Shaders + L"WeaponEffect.hlsl");
@@ -43,7 +43,8 @@ void Weapon::Update()
 		D3DXMATRIX world, scale, rotate;
 		string worldName;
 		weapons[weaponNum].second->Update();
-		//무기 장착시와 아닐시 고정 위치 변 
+
+		//무기 장착시와 아닐시 고정 위치 변동
 		if (actor->GetisEquip())
 		{
 			if (actor->GetMode().find("equip") != -1)
@@ -55,6 +56,7 @@ void Weapon::Update()
 		{
 			worldName = WeaponSetting(D3DXVECTOR3(0, 60, 90), D3DXVECTOR3(-0.07f, -2.0f, 0.4f), unequipName, actor->GetMode() == "idle");
 		}
+
 		//무기 영역 및 월드 계산 
 		weapons[weaponNum].second->SetWorld(actor->GetModel()->GetWeaponWorld(worldName));
 		weaponWorld=weaponsInfo[weaponNum]->lotate* weapons[weaponNum].second->GetGeometricOffset()*actor->GetModel()->GetWeaponWorld(worldName);
@@ -114,34 +116,33 @@ string Weapon::WeaponSetting(D3DXVECTOR3 rotate, D3DXVECTOR3 adjust, string equi
 //일정시간이 지날 때마다 정점을 저장하교 궤적 이펙트를 남긴다
 void Weapon::EffectUpdate()
 {
+	static bool effectReset = false;
+	static int num[6]{ 0,2,1,1,2,3 };
+	static int num2[6]{ (int)count * 2 - 2,0,(int)count * 2 - 1,(int)count * 2 - 1,0,1 };
+
 	effectTime += Time::Get()->Delta();
-	if (effectTime>0.05f)
+	if (effectTime > 0.05f)
 	{
-		static bool effectReset = false;
 		if (actor->GetisAttack())
 		{
-			effectReset = true;
-
 			D3DXVECTOR3 up, down, max = weaponsInfo[weaponNum]->maxp, min = weaponsInfo[weaponNum]->minp;
 
-			D3DXVec3TransformCoord(&down, &D3DXVECTOR3(2*min.x, 0, 0), &weaponWorld);
+			D3DXVec3TransformCoord(&down, &D3DXVECTOR3(2 * min.x, 0, 0), &weaponWorld);
 			D3DXVec3TransformCoord(&up, &D3DXVECTOR3(-min.x, 0, 0), &weaponWorld);
 
-			vertex[2 * effectCount].position = down;
-			vertex[2 * effectCount].color = D3DXCOLOR(1, 1, 1, 1);
-			vertex[2 * effectCount + 1].position = up;
-			vertex[2 * effectCount + 1].color = D3DXCOLOR(1, 1, 1, 1);
-
-			int num[6]{ 0,2,1,1,2,3 };
-			int num2[6]{ (int)count * 2 - 2,0,(int)count * 2 - 1,(int)count * 2 - 1,0,1 };
-
-			for (int i = 0;i<6;i++)
+			vertex[2 * effectCount].position = down;vertex[2 * effectCount + 1].position = up;
+			vertex[2 * effectCount].color = vertex[2 * effectCount + 1].color =D3DXCOLOR(1, 1, 1, 1);
+			
+			//마지막 인덱스 시에는 숫자가 초기화되기에 초기화 된 값에 맞추기 위한 반복문
+			for (int i = 0; i < 6; i++)
 			{
 				if (effectCount != 0) index[(effectCount - 1) * 6 + i] = (effectCount - 1) * 2 + num[i];
 				else index[(count - 1) * 6 + i] = num2[i];
 
+				//마지막 이펙트와 처음 이펙트가 이어지지 않도록 공백을 만든다
 				index[(effectCount) * 6 + i] = (effectCount) * 6;
 			}
+
 			D3D::GetDC()->UpdateSubresource
 			(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*count * 2, 0);
 			D3D::GetDC()->UpdateSubresource
@@ -149,16 +150,10 @@ void Weapon::EffectUpdate()
 		}
 		else
 		{
+			//계속 업데이트 하면 부담되니 색이 있을 경우에만 업데이트하도록 함
 			if (effectReset)
 			{
 				effectReset = false;
-
-				for (int i = 0;i<(int)count * 2 + 1;i++)
-					if (vertex[i].color.a>0)
-					{
-						effectReset = true;
-						vertex[i].color.a -= 0.1f;
-					}
 
 				D3D::GetDC()->UpdateSubresource
 				(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*count * 2, 0);
@@ -167,10 +162,17 @@ void Weapon::EffectUpdate()
 			}
 		}
 
-		for (int i = 0;i<(int)count * 2 + 1;i++) if (vertex[i].color.a>0)vertex[i].color.a -= 0.05f;
+		for (int i = 0; i < (int)count * 2 + 1; i++)
+		{
+			if (vertex[i].color.a > 0)
+			{
+				effectReset = true; 
+				vertex[i].color.a -= 0.05f;
+			}
+		}
 
-		effectTime = 0;	effectCount++;
-		if (effectCount >= count) effectCount = 0;
+		effectTime = 0;
+		if (++effectCount >= count) effectCount = 0;
 
 	}
 }
@@ -195,7 +197,7 @@ void Weapon::EffectRender()
 	{
 		dc->DrawIndexed(count*6, 0, 0);
 	}
-	States::SetBlendOff();
+	//States::SetBlendOff();
 	States::SetDepthStencilDefault();
 }
 
@@ -213,10 +215,8 @@ void Weapon::CreateBuffer()
 	
 	for (int i = 0;i < (int)count;i++)
 	{
-		vertex[2 * effectCount].position = D3DXVECTOR3(0, 0, 0);
-		vertex[2 * effectCount].color = D3DXCOLOR(0, 0, 0, 0);
-		vertex[2 * effectCount + 1].position = D3DXVECTOR3(0, 0, 0);
-		vertex[2 * effectCount + 1].color = D3DXCOLOR(0, 0, 0, 0);
+		vertex[2 * effectCount].position = vertex[2 * effectCount + 1].position = D3DXVECTOR3(0, 0, 0);
+		vertex[2 * effectCount].color = vertex[2 * effectCount + 1].color = D3DXCOLOR(0, 0, 0, 0);
 
 		for (int j = 0;j<6;j++) index[i * 6 + j] = 0;
 	}
@@ -247,4 +247,22 @@ void Weapon::CreateBuffer()
 
 	hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &indexBuffer);
 	assert(SUCCEEDED(hr));
+}
+
+
+void Weapon::EffecetReset()
+{
+
+	for (int i = 0; i < (int)count; i++)
+	{
+		vertex[2 * effectCount].position = vertex[2 * effectCount + 1].position =D3DXVECTOR3(0, 0, 0);
+		vertex[2 * effectCount].color = vertex[2 * effectCount + 1].color = D3DXCOLOR(0, 0, 0, 0);
+
+		for (int j = 0; j < 6; j++) index[i * 6 + j] = 0;
+	}
+
+	D3D::GetDC()->UpdateSubresource
+	(vertexBuffer, 0, NULL, vertex, sizeof(VertexType)*count * 2, 0);
+	D3D::GetDC()->UpdateSubresource
+	(indexBuffer, 0, NULL, index, sizeof(UINT)*count * 6, 0);
 }
