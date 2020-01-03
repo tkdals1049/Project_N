@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Water.h"
 #include "WaveBuffer.h"
 
@@ -29,6 +29,13 @@ Water::Water(UINT width, UINT height, float depth)
 
 Water::~Water()
 {
+	SAFE_DELETE(shader);
+
+	SAFE_DELETE(worldBuffer);
+	SAFE_DELETE(waveBuffer);
+	SAFE_DELETE(reflectBuffer);
+	SAFE_RELEASE(normalMap);
+
 	SAFE_DELETE_ARRAY(vertex);
 	SAFE_DELETE_ARRAY(index);
 	
@@ -115,7 +122,7 @@ void Water::Render()
 	dc->PSSetShaderResources(2, 1, &normalMap);
 
 	worldBuffer->SetVSBuffer(1);
-	reflectBuffer->SetVSBuffer(2);
+	reflectBuffer->SetVSBuffer(3);
 	waveBuffer->SetPSBuffer(1);
 	shader->Render();
 

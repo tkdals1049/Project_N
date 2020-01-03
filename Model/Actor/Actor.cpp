@@ -1,32 +1,21 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "Actor.h"
-
-#include "../BinModel/Model.h"
-#include "../BinModel/ModelSkeleton.h"
-#include "../BinModel/ModelMaterial.h"
-#include "../BinModel/ModelSkeletonBone.h"
-#include "../BinModel/ModelAnimationController.h"
-
 #include "../Etc/Blood.h"
-
-#include "../../Content/BinModel.h"
-#include "../../Content/FbxModel.h"
-#include "../../Content/Texture.h"
-
-
+#include <memory>
 
 Actor::Actor() 
-:model(NULL), mode("idle"), Premode(""), dot(D3DXVECTOR2(0, 0)), a(0.0f), 
+:model(NULL), mode("idle"), Premode(""), dot(D3DXVECTOR2(0, 0)), hp(100),st(100), 
 attackRange(NULL), isControl(true), isEquip(false), isHeight(false), isAttack(false)
 {
-
 	SaveFile = "";
 	blood = new Blood();
 }
 
 Actor::~Actor()
 {
-		SAFE_DELETE(model);
+	SAFE_DELETE(model);
+	for (ST_OBB* temp : attackRange)
+		SAFE_DELETE(temp);
 }
 
 void Actor::PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction)

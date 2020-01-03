@@ -49,19 +49,19 @@ WPARAM Window::Run()
 			program->PreRender();
 			D3D::Get()->Clear();//비긴신 엔드신에서 Clear으로 바꿈 널이면 기본 렌더타겟넣으면 그걸로
 			{
-				ImGuiWindowFlags flag = 0;
-				flag |= ImGuiWindowFlags_NoTitleBar;
-				flag |= ImGuiWindowFlags_NoMove;
-				flag |= ImGuiWindowFlags_NoResize;
-
-				ImGui::SetNextWindowPos(ImVec2(0, 0));
-				ImGui::SetNextWindowSize(ImVec2(100, 0));
-				ImGui::SetNextWindowBgAlpha(0);
-
-				ImGui::SetNextWindowPos(ImVec2(0, 100));
-				ImGui::Begin("Fps Window", NULL, flag);
-				ImGui::Text("Fps %d", (int)ImGui::GetIO().Framerate);
-				ImGui::End();
+				//ImGuiWindowFlags flag = 0;
+				//flag |= ImGuiWindowFlags_NoTitleBar;
+				//flag |= ImGuiWindowFlags_NoMove;
+				//flag |= ImGuiWindowFlags_NoResize;
+				//
+				//ImGui::SetNextWindowPos(ImVec2(0, 0));
+				//ImGui::SetNextWindowSize(ImVec2(100, 0));
+				//ImGui::SetNextWindowBgAlpha(0);
+				//
+				//ImGui::SetNextWindowPos(ImVec2(0, 100));
+				//ImGui::Begin("Fps Window", NULL, flag);
+				//ImGui::Text("Fps %d", (int)ImGui::GetIO().Framerate);
+				//ImGui::End();
 
 				program->Render();
 				program->PostRender();

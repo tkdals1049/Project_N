@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Cloud.h"
 #include "../Utilities/PerlinNoise.h"
 #include "../Utilities/Mesh.h"
@@ -8,24 +8,26 @@ Cloud::Cloud()
 	CloudResolution = 10;
 	CloudWidth = 10.0f;
 	CloudTop = 1.0f;
-	CloudBottom = -1.0f;
+	CloudBottom = -1.5f;
 	CloudDepth = sqrt(pow(CloudWidth, 2)) /2;
 
-	cloudData.Data.scale = 0.3f;
+	cloudData.Data.scale = 0.5f;
 	cloudData.Data.translation = 0.0f;
 
-	speed = 0.0001f;
+	speed = 0.02f;
 
 	Initialize();
 }
 
 Cloud::~Cloud()
 {
-
-
+	SAFE_DELETE(perlinNoise);
+	SAFE_DELETE(shader);
 
 	SAFE_DELETE_ARRAY(vertexData);
 	SAFE_DELETE_ARRAY(indexData);
+
+	SAFE_RELEASE(diffuse);
 	SAFE_RELEASE(vertexBuffer);
 	SAFE_RELEASE(indexBuffer);
 }
@@ -40,12 +42,11 @@ void Cloud::Initialize()
 	shader = new Shader(Shaders + L"Cloud.hlsl");
 
 	wstring fileName = Contents + L"Textures/cloud001.dds";
-	HRESULT hr = D3DX11CreateShaderResourceViewFromFile(D3D::GetDevice(), fileName.c_str(), nullptr, nullptr, &diffuse, nullptr);
-
+	HRESULT hr = D3DX11CreateShaderResourceViewFromFile
+		(D3D::GetDevice(), fileName.c_str(), NULL, NULL, &diffuse, NULL);
 	assert(SUCCEEDED(hr));
 
 	MakeCloudPerlin();
-
 }
 
 void Cloud::Update()
@@ -58,7 +59,7 @@ void Cloud::Update()
 
 void Cloud::Render()
 {
-	cloudData.Data.translation += speed / 4;
+	cloudData.Data.translation += speed / 4*Time::Get()->Delta();
 	if (cloudData.Data.translation >= 1.0f) {
 		cloudData.Data.translation -= 1.0f;
 	}
@@ -70,7 +71,7 @@ void Cloud::Render()
 	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	if (ShaderManager::Get()->GetOther()==none)
+	if (ShaderManager::Get()->GetOther()==none|| ShaderManager::Get()->GetOther() == screen)
 	{
 		shader->Render();
 		cloudData.SetPSBuffer(1);
@@ -82,7 +83,6 @@ void Cloud::Render()
 		{
 			D3D::GetDC()->DrawIndexed(indexCount, 0, 0);
 		}
-
 		States::SetBlendOff();
 	}
 }
@@ -90,15 +90,12 @@ void Cloud::Render()
 void Cloud::MakeCloudPerlin()
 {
 	perlinNoise->MakePerlinNoise();
-
 	perlin = *perlinNoise->GetPerlinNoise();
-
 	D3DXMatrixIdentity(&world);
 }
 
 void Cloud::CreateVertexData()
 {
-
 	vertexCount = (CloudResolution + 1) * (CloudResolution + 1);
 
 	float positionX, positionZ;
@@ -151,7 +148,6 @@ void Cloud::CreateBuffer()
 	D3D11_BUFFER_DESC desc;
 	D3D11_SUBRESOURCE_DATA data;
 
-
 	//1. Vertex Buffer
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));
 	desc.Usage = D3D11_USAGE_DEFAULT;
@@ -163,8 +159,6 @@ void Cloud::CreateBuffer()
 
 	hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &vertexBuffer);
 	assert(SUCCEEDED(hr));
-
-
 
 	//2. Index Buffer
 	ZeroMemory(&desc, sizeof(D3D11_BUFFER_DESC));

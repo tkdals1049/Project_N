@@ -49,7 +49,6 @@ public:
 	void Present();
 
 	void ResizeScreen(float width, float height);
-
 private:
 	D3D();
 	~D3D();
@@ -60,7 +59,6 @@ private:
 	void CreateBackBuffer(float width, float height);
 	void DeleteBackBuffer();
 
-private:
 	static D3D* instance;
 
 	static D3DDesc d3dDesc;
@@ -78,4 +76,7 @@ private:
 	ID3D11Texture2D* backBuffer;
 	ID3D11DepthStencilView* depthStencilView;
 	ID3D11RenderTargetView* renderTargetView;
+
+	IDXGISurface1* g_pSurface1 = NULL;
+	HDC hdc;
 };

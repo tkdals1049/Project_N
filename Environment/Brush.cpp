@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Plane.h"
 #include "Brush.h"
 
@@ -9,7 +9,6 @@ Brush::Brush(Plane* plane)
 	, vertexCount(plane->vertexCount)
 	, indexBuffer(plane->indexBuffer)
 	, index(plane->index)
-	, indexCount(&plane->indexCount)
 	, width(plane->width), height(plane->height)
 	, size(2)
 	, floor(5.0f)

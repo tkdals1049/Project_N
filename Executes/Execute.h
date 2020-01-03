@@ -15,10 +15,6 @@ struct ExecuteValues
 class Execute
 {
 public:
-	Execute(ExecuteValues* exeValues)
-	{
-		this->values = exeValues;
-	}
 
 	virtual void Update() = 0;
 
@@ -28,6 +24,5 @@ public:
 
 	virtual void ResizeScreen() = 0;
 
-protected:
-	ExecuteValues* values;
+	virtual ~Execute() = 0 {}
 };

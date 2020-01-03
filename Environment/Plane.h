@@ -23,7 +23,8 @@ public:
 		D3DXVECTOR4 Point;
 		float Thickness;
 		float GridSpace;
-		float padding[2];
+		float isshadow;
+		float padding;
 	};
 
 	Struct Data;
@@ -109,6 +110,7 @@ private:
 	friend class Brush;
 	class Brush* brush;
 	class Water* water;
+	class ZQuadTree* quadTree;
 
 	typedef VertexLerpColorTextureNormal VertexType;
 	VertexType* vertex;
@@ -140,5 +142,4 @@ private:
 	bool isLoaded;
 	thread* loadThread;
 
-	class ZQuadTree* quadTree;
 };

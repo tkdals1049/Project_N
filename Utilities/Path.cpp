@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Path.h"
 #include <string.h>
 #include "String.h"

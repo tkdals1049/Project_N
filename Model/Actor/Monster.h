@@ -1,5 +1,4 @@
 #pragma once
-#include "Actor.h"
 
 class Monster :public Actor
 {
@@ -12,6 +11,7 @@ public:
 
 	void Update();
 	void Render();
+	void Moving(D3DXVECTOR3 playerPos);
 	void Input(string mode);
 	void SetMonster(string Name = "../_Contents/BinModels/Actor_Monster.model");
 	void SetPlayer(class Player* player) { this->player = player; }

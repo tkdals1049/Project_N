@@ -1,9 +1,9 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "Blood.h"
 
 Blood::Blood():width(3),height(3),lookNum(0),isblood(false),time(0),position(D3DXVECTOR3(0,0,0)),rotate(D3DXVECTOR3(0,0,0))
 {
-	shader = new Shader(Shaders + L"BloodEffect.hlsl");
+	shader = new Shader(Shaders + L"Texture.hlsl");
 	worldBuffer = new WorldBuffer();
 		
 	CreateBuffer();
@@ -23,8 +23,15 @@ Blood::Blood():width(3),height(3),lookNum(0),isblood(false),time(0),position(D3D
 
 Blood::~Blood()
 {
-	SAFE_DELETE(index);
-	SAFE_DELETE(vertex);
+	SAFE_DELETE(worldBuffer);
+	SAFE_DELETE(shader);
+
+	SAFE_RELEASE(texture);
+	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(indexBuffer);
+
+	SAFE_DELETE_ARRAY(index);
+	SAFE_DELETE_ARRAY(vertex);
 }
 
 void Blood::PreUpdate()

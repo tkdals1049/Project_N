@@ -1,45 +1,71 @@
 #include "stdafx.h"
 #include "ExeModel.h"
-#include "../Content/Texture.h"
-#include "../Content/BinModel.h"
-#include "../Content/FbxModel.h"
+
 #include "../Model/ModelGroup.h"
-#include "../Model/FbxModel/MoLoader.h"
 #include "../Utilities/Path.h"
-#include "../Environment/Mini.h"
 
-ExeModel::ExeModel(ExecuteValues* values)
-	: Execute(values),isEnviroment(false),isModel(false), loadThread(NULL), isLoaded(false),isWire(false)
+ExeModel::ExeModel()
+	: isEnviroment(false),isModel(false), loadThread(NULL), isLoaded(false),isWire(false)
 {
-	D3DDesc desc;
-	D3D::GetDesc(&desc);
-
-	Texture::Get();
-	BinModel::Get();
-	FbxModel::Get();
+	CreateSingleTon();
 
 	group=new ModelGroup();
 	ShaderManager::Get();
 
-	mini = new Mini();
-	mini->SetScale(D3DXVECTOR2(320, 240));
-	ImGui::SetNextWindowPos(ImVec2(800, 500)); 
+	music = new MusicPlayer();
+	music2 = new MusicPlayer();
+
+	music->SetSong(Sounds+"BGM.ogg");
+	music2->SetSong(Sounds + "BGM2.ogg");
 
 	States::SetDefault();
 }
-
+void ExeModel::CreateSingleTon()
+{
+	Texture::Get();
+	BinModel::Get();
+	FbxModel::Get();
+	Sky::Get();
+	Plane::Get();
+	Ui::Get();
+	ShaderManager::Get();
+}
 ExeModel::~ExeModel()
 {
+	SAFE_DELETE(music);
+	SAFE_DELETE(music2);
 	SAFE_DELETE(group);
-	SAFE_DELETE(mini);
-
-	SAFE_DELETE(model);
 	SAFE_DELETE(loadThread);
+
+	DeleteSingleTon();
+}
+void ExeModel::DeleteSingleTon()
+{
+	Texture::Delete();
+	BinModel::Delete();
+	FbxModel::Delete();
+	Sky::Delete();
+	Plane::Delete();
+	Ui::Delete();
+	ShaderManager::Delete();
 }
 
 void ExeModel::Update()
 {
-	if(Keyboard::Get()->Down('N')) isWire=!isWire;
+	static bool isplay1 = false, isplay2 = false;
+	if (Keyboard::Get()->Down('Y'))
+	{
+		if (isplay1) music->Stop();
+		else music->Start();
+		isplay1 = !isplay1;
+	}
+	if (Keyboard::Get()->Down('H'))
+	{
+		if (isplay2) music2->Stop();
+		else music2->Start();
+		isplay2 = !isplay2;
+	}
+	if (Keyboard::Get()->Down('N')) isWire = !isWire;
 
 	D3DXVECTOR3 origin, direction;
 	GetRay(&origin,&direction);
@@ -60,11 +86,12 @@ void ExeModel::Update()
 			SAFE_DELETE(loadThread);
 		}
 	}	
+
+	Ui::Get()->Update();
 }
 
 void ExeModel::PreRender()
 {	
-	
 	ShaderManager::Get()->PreRender(depth);
 	{
 		Plane::Get()->Render();
@@ -75,7 +102,6 @@ void ExeModel::PreRender()
 	ShaderManager::Get()->PreRender(shadow);
 	{
 		Plane::Get()->Render();
-		group->Render();
 	}
 	
 	ShaderManager::Get()->PreRender(reflect);
@@ -99,25 +125,36 @@ void ExeModel::PreRender()
 		Plane::Get()->ReverseClip();
 		group->Render();
 	}
+
+	ShaderManager::Get()->PreRender(minimap);
+	{
+		Plane::Get()->Render();
+		Plane::Get()->ReverseClip();
+		Plane::Get()->Render();
+		Plane::Get()->ReverseClip();
+	}
+	CameraManager::Get()->DefaultCamera();
 	
+	ShaderManager::Get()->PreRender(screen);
+	{
+		Sky::Get()->Render();
+
+		if (isWire == false)States::SetRasterizerDefault();
+		else States::SetRasterizerWire();
+		{
+			Plane::Get()->Render();
+			Plane::Get()->waterRender();
+			group->Render();
+		}
+	}
+
 	D3D::Get()->SetRenderTarget();
 	ShaderManager::Get()->PreRender();
 }
 
 void ExeModel::Render()
 {
-	Sky::Get()->Render();
-
-	if (isWire == false)States::SetRasterizerDefault();
-	else States::SetRasterizerWire();
-	{
-		Plane::Get()->Render();
-		Plane::Get()->waterRender();
-		group->Render();
-	}
-	static bool isMini = false;
-	if (Keyboard::Get()->Press('B')) isMini = !isMini;
-	if(isMini)	mini->Render();
+	Ui::Get()->Render();
 }
 
 void ExeModel::PostRender()
@@ -139,7 +176,8 @@ void ExeModel::PostRender()
 				SaveModelDialog();
 
 			ImGui::EndMenu();
-		}//if(BeiginMenu)
+		}
+
 		if (ImGui::BeginMenu("Tool"))
 		{
 			if (ImGui::MenuItem("Envireoment", "Ctrl+E"))
@@ -179,11 +217,10 @@ void ExeModel::GetRay(D3DXVECTOR3 * origin, D3DXVECTOR3 * direction)
 {
 	D3DXVECTOR3 mouse = Mouse::Get()->GetPosition();
 
-	D3DXMATRIX view, projection;
-	values->MainCamera->GetMatrix(&view);
-	values->Perspective->GetMatrix(&projection);
-	D3DXVECTOR3 position;
-	values->MainCamera->GetPosition(&position);
+	
+	D3DXMATRIX view=CameraManager::Get()->GetView();
+	D3DXMATRIX projection= CameraManager::Get()->GetProj();
+	D3DXVECTOR3 position=CameraManager::Get()->GetPosition();
 
 	D3DDesc info;
 	D3D::GetDesc(&info);

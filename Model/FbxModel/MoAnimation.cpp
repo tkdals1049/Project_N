@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "MoAnimation.h"
 
 MoAnimation::MoAnimation(string name, int keyFrame, float defaultFrameRate)

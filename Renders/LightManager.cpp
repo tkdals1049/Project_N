@@ -1,14 +1,18 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "LightManager.h"
 
 
-LightManager* LightManager::instance = nullptr;
+LightManager* LightManager::instance = NULL;
 
 LightManager * LightManager::Get()
 {
-	if (instance == nullptr)
+	if (instance == NULL)
 		instance = new LightManager();
 	return instance;
+}
+void LightManager::Delete()
+{
+	SAFE_DELETE(instance);
 }
 
 void LightManager::GetView(D3DXMATRIX * view)
@@ -41,7 +45,7 @@ void LightManager::Update()
 	D3DXMatrixRotationZ(&matRotation, angley);
 	
 	D3DXVec3Normalize(&lightData.lightDirection, &lightData.lightDirection);
-	float size = (float)Plane::Get()->GetWidth()*Time::Get()->GetMagn();
+	float size = (float)Plane::Get()->GetWidth();
 	D3DXMatrixLookAtLH(&lightData.lightView, &(position - lightData.lightDirection*size), &(position), &up);
 	D3DXMatrixOrthoLH(&lightData.lightProjection, size, size, 0.1f, 1000.0f);
 	//D3DXMatrixPerspectiveFovLH(&lightData.lightProjection, D3DX_PI / 4, 1.0f, 0.1f, 1000.0f);
@@ -51,16 +55,12 @@ void LightManager::Update()
 	lightBuffer->SetProjection(lightData.lightProjection);
 }
 
-void LightManager::Delete()
-{
-	SAFE_DELETE(instance);
-}
 
 LightManager::LightManager()
 {
 	lightData.lightDirection=D3DXVECTOR3(0,-1,0);
 
-	anglex = angley = (float)D3DX_PI / 180 * -89;
+	anglex = angley = radian * -89;
 	speed = 0;
 }
 

@@ -25,10 +25,13 @@ public:
 	}
 
 	void Update();
-	void Render();
+	void Render(D3DXVECTOR2 scale, D3DXVECTOR2 position, RenderMode mode);
 
+	void CreateBlock();
+	void CreateCircle();
+	
 private:
-	ID3D11ShaderResourceView* resourceView;
+
 	typedef VertexTexture VertexType;
 	Shader* shader;
 	WorldBuffer* worldBuffer;
@@ -39,8 +42,10 @@ private:
 	D3DXMATRIX center, invCenter;
 	D3DXMATRIX S, T;
 
-	D3DXMATRIX world, view, ortho;
+	D3DXMATRIX world;
 
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
+	ID3D11Buffer* vertexBuffer2;
+	ID3D11Buffer* indexBuffer2;
 };

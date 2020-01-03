@@ -16,8 +16,6 @@ public:
 
 	void Start();
 	void Stop();
-	float GetMagn() { return magnification; }
-	void SetMagn(float other) { magnification=other; }
 
 	float FPS() const { return framePerSecond; }
 	float Running() const { return runningTime; }
@@ -41,5 +39,4 @@ private:
 	UINT frameCount;///< 프레임 수
 	float runningTime;///< 진행 시간
 	float framePerSecond;///< FPS
-	float magnification;//<배율
 };

@@ -1,19 +1,18 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "RenderTarget.h"
 
-RenderTarget::RenderTarget()
+RenderTarget::RenderTarget(DXGI_FORMAT format)
 {
 	D3DDesc desc;
 	D3D::GetDesc(&desc);
 
-	
 	D3D11_TEXTURE2D_DESC textureDesc;
 	ZeroMemory(&textureDesc, sizeof(D3D11_TEXTURE2D_DESC));
 	textureDesc.Width = (UINT)desc.Width;
 	textureDesc.Height = (UINT)desc.Height;
 	textureDesc.MipLevels = 1;
 	textureDesc.ArraySize = 1;
-	textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+	textureDesc.Format = format;
 	textureDesc.SampleDesc.Count = 1;
 	textureDesc.SampleDesc.Quality = 0;
 	textureDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -23,7 +22,6 @@ RenderTarget::RenderTarget()
 	hr = D3D::GetDevice()->CreateTexture2D(&textureDesc, NULL, &texture);
 	assert(SUCCEEDED(hr));
 
-
 	D3D11_RENDER_TARGET_VIEW_DESC renderDesc;
 	ZeroMemory(&renderDesc, sizeof(D3D11_RENDER_TARGET_VIEW_DESC));
 	renderDesc.Format = textureDesc.Format;
@@ -32,7 +30,6 @@ RenderTarget::RenderTarget()
 
 	hr = D3D::GetDevice()->CreateRenderTargetView(texture, &renderDesc, &renderView);
 	assert(SUCCEEDED(hr));
-
 
 	D3D11_SHADER_RESOURCE_VIEW_DESC viewDesc;
 	ZeroMemory(&viewDesc, sizeof(D3D11_SHADER_RESOURCE_VIEW_DESC));

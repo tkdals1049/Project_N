@@ -42,7 +42,6 @@ Sky::Sky()
 	hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &vertexBuffer);
 	assert(SUCCEEDED(hr));
 
-
 	desc = { 0 };
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.ByteWidth = sizeof(UINT) * indexCount;
@@ -57,7 +56,6 @@ Sky::Sky()
 	SAFE_DELETE_ARRAY(vertex);
 	SAFE_DELETE_ARRAY(index);
 
-	
 	D3DXMatrixIdentity(&world);
 	
 	skyBuffer = new SkyBuffer();
@@ -69,23 +67,26 @@ Sky::Sky()
 
 Sky::~Sky()
 {
-
+	SAFE_DELETE(cloud);
 	SAFE_DELETE(worldBuffer);
 	SAFE_DELETE(skyBuffer);
 	SAFE_DELETE(shader);
+
+	SAFE_RELEASE(indexBuffer);
+	SAFE_RELEASE(vertexBuffer);
 }
 
 void Sky::Update()
-{
-	cloud->Update();
-}
-
-void Sky::Render()
 {
 	D3DXVECTOR3 position = CameraManager::Get()->GetPosition();
 	D3DXMatrixTranslation(&world, position.x, position.y, position.z);
 	worldBuffer->SetMatrix(world);
 
+	cloud->Update();
+}
+
+void Sky::Render()
+{
 	UINT stride = sizeof(VertexType);
 	UINT offset = 0;
 
@@ -93,11 +94,10 @@ void Sky::Render()
 	D3D::GetDC()->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	D3D::GetDC()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		worldBuffer->SetVSBuffer(1);
+	worldBuffer->SetVSBuffer(1);
 
 	if (ShaderManager::Get()->GetOther() != depth && ShaderManager::Get()->GetOther() != shadow)
 	{
-
 		skyBuffer->SetPSBuffer(1);
 		shader->Render();
 
@@ -115,7 +115,7 @@ void Sky::Render()
 
 void Sky::PostRender(bool& isUse)
 {
-	ImGui::Begin("Enviroment",&isUse);
+	ImGui::Begin("Enviroment",&isUse); 
 	if (ImGui::CollapsingHeader("Sky"))
 	{
 		ImGui::ColorEdit3("Center", (float *)&skyBuffer->Data.Center);

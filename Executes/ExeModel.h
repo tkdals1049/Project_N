@@ -4,21 +4,21 @@
 class ExeModel : public Execute
 {
 public:
-	ExeModel(ExecuteValues* values);
+	ExeModel();
 	~ExeModel();
 
-	void Update();
+	void CreateSingleTon();
+	void DeleteSingleTon();
 
+	void Update();
 	void PreRender();
 	void Render();
 	void PostRender();
 
 	void ResizeScreen();
-
 	void GetRay(D3DXVECTOR3 * origin, D3DXVECTOR3 * direction);
 
 private:
-	
 	void OpenConvertDialog(wstring file = L"");
 	void Convert(wstring file);
 
@@ -26,9 +26,8 @@ private:
 	void SaveModelDialog(wstring file = L"");
 
 	class ModelGroup* group;
-	class Mini* mini;
-
-	Model* model;
+	class MusicPlayer* music;
+	MusicPlayer* music2;
 	wstring selectedFbxFile;
 
 	bool isLoaded,isEnviroment,isModel, isWire;

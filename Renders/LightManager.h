@@ -11,6 +11,7 @@ public:
 		float padding;
 	};
 	static LightManager* Get();
+	static void Delete();
 
 	void SetBuffer(GlobalLightBuffer* lightBuffer) { this->lightBuffer = lightBuffer; }
 
@@ -25,15 +26,13 @@ public:
 
 	void Update();
 
-	void Delete();
-
 private:
 
 	LightManager();
 	~LightManager();
+	static LightManager* instance;
 	GlobalLightBuffer* lightBuffer;
 	LightData lightData;
-	static LightManager* instance;
 
 	D3DXVECTOR3 up = D3DXVECTOR3(0, 1, 0),forward;
 	D3DXVECTOR3 position = D3DXVECTOR3(0, 0, 0);

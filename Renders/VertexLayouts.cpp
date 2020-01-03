@@ -46,6 +46,14 @@ D3D11_INPUT_ELEMENT_DESC VertexTextureNormal::desc[] =
 };
 UINT VertexTextureNormal::count = 3;
 
+D3D11_INPUT_ELEMENT_DESC VertexTextureColor::desc[] =
+{
+	{ "POSITION", 0, VERTEX_RGB, 0, 0, VERTEX, 0 },
+	{ "TEXCOORD", 0, VERTEX_RG, 0, ALIGNED_ELEMENT, VERTEX, 0 },
+	{ "COLOR", 0, VERTEX_RGBA, 0, ALIGNED_ELEMENT, VERTEX, 0 },
+};
+UINT VertexTextureColor::count = 3;
+
 D3D11_INPUT_ELEMENT_DESC VertexColorTextureNormal::desc[] =
 {
 	{ "POSITION", 0, VERTEX_RGB, 0, 0, VERTEX, 0 },
@@ -148,6 +156,21 @@ VertexTextureNormal::VertexTextureNormal(D3DXVECTOR3 position, D3DXVECTOR2 uv, D
 	this->normal = normal;
 }
 
+//////////////////////////////////////////////////////////
+
+VertexTextureColor::VertexTextureColor()
+{
+	position = D3DXVECTOR3(0, 0, 0);
+	uv = D3DXVECTOR2(0, 0);
+	color = D3DXCOLOR(0, 0, 0, 1);
+}
+
+VertexTextureColor ::VertexTextureColor(D3DXVECTOR3 position, D3DXVECTOR2 uv, D3DXCOLOR color)
+{
+	this->position = position;
+	this->uv = uv;
+	this->color = color;
+}
 //////////////////////////////////////////////////////////
 
 VertexColorTextureNormal::VertexColorTextureNormal()

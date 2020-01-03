@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "ModelAnimationKeyFrames.h"
 
 ModelAnimationKeyFrames::ModelAnimationKeyFrames(string animationName)

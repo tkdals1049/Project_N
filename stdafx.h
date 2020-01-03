@@ -37,6 +37,25 @@ using namespace std;
 #pragma comment(lib, "d3dcompiler.lib")
 #pragma comment(lib, "dxguid.lib")//쉐이더 리플렉션을 사용하기 위해 자동 생성 시켜줌
 
+#include <dsound.h>
+#pragma comment(lib, "dsound.lib")
+#include <MMSystem.h>
+#pragma comment (lib, "winmm.lib")
+
+#include "include/vorbis/codec.h"
+#include "include/vorbis/vorbisfile.h"
+#ifdef _DEBUG    
+#	pragma comment(lib, "lib/libogg_static_d.lib")
+#	pragma comment(lib, "lib/libvorbis_static_d.lib")
+#	pragma comment(lib, "lib/libvorbisenc_static_d.lib")
+#	pragma comment(lib, "lib/libvorbisfile_static_d.lib")
+#else
+#	pragma comment(lib, "lib/libogg_static.lib")
+#	pragma comment(lib, "lib/libvorbis_static.lib")
+#	pragma comment(lib, "lib/libvorbisenc_static.lib")
+#	pragma comment(lib, "lib/libvorbisfile_static.lib")
+#endif
+
 #define FBXSDK_SHARED
 #include <fbxsdk.h>
 #pragma comment(lib, "libfbxsdk.lib")
@@ -52,16 +71,19 @@ using namespace fbxsdk;
 #define SAFE_DELETE_ARRAY(p){ if(p){ delete [] (p); (p) = NULL; } }
 #define IS_IN_RANGE(value,r0,r1) (( ((r0) <= (value)) && ((value) <= (r1)) ) ? 1 : 0)
 #define UINT unsigned int
+#define radian (float)(D3DX_PI / 180)
 
 const wstring Contents = L"../_Contents/";
 const wstring BinModels = L"../_Contents/BinModels/";
 const wstring FbxModels = L"../_Contents/FbxModels/";
 const wstring Shaders = L"../_Shaders/";
+const string Sounds = "../_Sound/";
 
 #include "./Systems/D3D.h"
 #include "./Systems/Keyboard.h"
 #include "./Systems/Mouse.h"
 #include "./Systems/Time.h"
+#include "./Systems/MusicPlayer.h"
 
 #include "./Renders/RenderTarget.h"
 #include "./Renders/VertexLayouts.h"
@@ -83,8 +105,19 @@ const wstring Shaders = L"../_Shaders/";
 
 #include "./Environment/Sky.h"
 #include "./Environment/Plane.h"
+#include "./Ui/Ui.h"
 
 #include "./Model/BinModel/Model.h"
+#include "./Model/BinModel/ModelMaterial.h"
+#include "./Model/BinModel/ModelSkeletonBone.h"
+#include "./Model/BinModel/ModelSkeleton.h"
+#include "./Model/BinModel/ModelAnimation.h"
+#include "./Model/BinModel/ModelAnimationController.h"
 #include "./Model/FbxModel/MoLoader.h"
-#include "./Model/Etc/Domain.h"
-#include "./Model/Etc/Cube.h"
+
+#include "./Model/Actor/Actor.h"
+
+#include "./Content/Texture.h"
+#include "./Content/BinModel.h"
+#include "./Content/FbxModel.h"
+#include "./Content/Test.h"

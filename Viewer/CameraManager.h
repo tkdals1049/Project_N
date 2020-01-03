@@ -21,6 +21,8 @@ public:
 
 	D3DXMATRIX RenderReflection(float depth = 0, D3DXVECTOR3 normal = D3DXVECTOR3(0, 1, 0));
 	void SetViewProjection(D3DXMATRIX view, D3DXMATRIX projection);
+	void SetScreenCamera();
+	void SetScreenSize(D3DXVECTOR2 size);
 	void DefaultCamera();
 private:
 	CameraManager();
@@ -32,6 +34,7 @@ private:
 	class ViewProjectionBuffer* VPbuffer;
 	class Perspective* perspective;
 
+	D3DXMATRIX ScreenView, ScreenPer;
 	D3DXVECTOR3 RePosition,CameraPos;
 	D3DXVECTOR2 ReRotation;
 	bool isAuto, isRe;

@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "BinModel.h"
 
 BinModel * BinModel::instance = NULL;
@@ -24,9 +24,19 @@ BinModel::BinModel()
 	c_binmodelList = new const char*[binmodelList.size()];
 	for (size_t i = 0; i < binmodelList.size(); i++)
 	{
-		c_binmodelList[i] = new char[binmodelList[i].file.size() + 1];
-		strcpy_s((char*)c_binmodelList[i], binmodelList[i].file.size() + 1, binmodelList[i].file.c_str());
+		c_binmodelList[i] = new char[binmodelList[i]->file.size() + 1];
+		strcpy_s((char*)c_binmodelList[i], binmodelList[i]->file.size() + 1, binmodelList[i]->file.c_str());
 	}
+}
+
+BinModel::~BinModel()
+{
+	for (size_t i = 0; i < binmodelList.size(); i++)
+	{
+		SAFE_DELETE(c_binmodelList[i]);
+		SAFE_DELETE(binmodelList[i]);
+	}
+	SAFE_DELETE_ARRAY(c_binmodelList);
 }
 
 void BinModel::Search(string path)
@@ -46,17 +56,8 @@ void BinModel::Search(string path)
 		{
 			if (name != "."&&name != "..")
 			{
-				if (strstr(fd.name, "model"))
-				{
-					BinModelList list;
-					list.file = name;
-					list.path = path +"\\"+ name;
-					binmodelList.push_back(list);
-				}
-				else
-				{
-					Search(path + "\\" + name);
-				}
+				if (strstr(fd.name, "model"))	binmodelList.push_back(new BinModelList(name, path + "\\" + name));
+				else Search(path + "\\" + name);
 			}
 		}
 
@@ -65,40 +66,42 @@ void BinModel::Search(string path)
 	_findclose(handle);
 }
 
-BinModel::~BinModel()
-{
-}
 
 string BinModel::GetBinModelFile(int num)
 {
-	return binmodelList[num].file;
+	return binmodelList[num]->file;
 }
 
 string BinModel::GetBinModelPath(int num)
 {
-	return binmodelList[num].path;
+	return binmodelList[num]->path;
 }
 
 void BinModel::Refresh()
 {
-	binmodelList.clear();
+	for (size_t i = 0; i < binmodelList.size(); i++)
+	{
+		SAFE_DELETE(c_binmodelList[i]);
+		SAFE_DELETE(binmodelList[i]);
+	}
+	SAFE_DELETE_ARRAY(c_binmodelList);
 	Search("..\\_Contents\\BinModels");
 
 	c_binmodelList = new const char*[binmodelList.size()];
 	for (size_t i = 0; i < binmodelList.size(); i++)
 	{
-		c_binmodelList[i] = new char[binmodelList[i].file.size() + 1];
-		strcpy_s((char*)c_binmodelList[i], binmodelList[i].file.size() + 1, binmodelList[i].file.c_str());
+		c_binmodelList[i] = new char[binmodelList[i]->file.size() + 1];
+		strcpy_s((char*)c_binmodelList[i], binmodelList[i]->file.size() + 1, binmodelList[i]->file.c_str());
 	}
 	
 }
 
 string BinModel::Convert(string file)
 {
-	for each(BinModelList temp in binmodelList)
+	for each(BinModelList* temp in binmodelList)
 	{
-		if (file == temp.file)
-			return temp.path;
+		if (file == temp->file)
+			return temp->path;
 	}
 
 	return NULL;

@@ -19,12 +19,10 @@ public:
 	Struct Data;
 };
 
-class PerlinNoise;
 class Cloud {
 public:
 	Cloud();
 	~Cloud();
-
 
 	void Initialize();
 	void Update();
@@ -48,7 +46,6 @@ public:
 		return world;
 	}
 
-
 private:
 	void CreateVertexData();
 	void CreateIndexData();
@@ -57,26 +54,21 @@ private:
 	ID3D11Buffer* vertexBuffer;
 	ID3D11Buffer* indexBuffer;
 
-
 	UINT vertexCount;
 	UINT indexCount;
 	VertexTexture* vertexData;
 	UINT* indexData;
 
-
 	UINT CloudResolution;
 	float CloudWidth, CloudTop, CloudBottom,CloudDepth;
-
-
-	ID3D11ShaderResourceView* diffuse;
 
 	Shader* shader;
 	class CloudBuffer cloudData;
 	float speed;
 
-	PerlinNoise* noise;
-	PerlinNoise* perlinNoise;
+	class PerlinNoise* noise,* perlinNoise;
 	ID3D11ShaderResourceView* perlin;
+	ID3D11ShaderResourceView* diffuse;
 	D3DXMATRIX world;
 
 

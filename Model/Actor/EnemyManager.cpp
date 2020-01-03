@@ -1,5 +1,4 @@
-
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "EnemyManager.h"
 #include "Player.h"
 #include "Boss.h"
@@ -11,8 +10,9 @@ EnemyManager::EnemyManager(Player* player):player(player),isMake(false)
 }
 EnemyManager::~EnemyManager()
 {
+	SAFE_DELETE(boss);
 	for (Monster* monster : monsters)
-		SAFE_DELETE(monster);
+	SAFE_DELETE(monster);
 }
 
 void EnemyManager::Update()
@@ -20,13 +20,20 @@ void EnemyManager::Update()
 	if (!isMake)
 	{
 		if (Keyboard::Get()->Down('M')) {AddMonster();isMake=true;}
-		if (Keyboard::Get()->Down('V')) {AddBoss();	  isMake=true;}
+		//if (Keyboard::Get()->Down('V')) {AddBoss();	  isMake=true;}
 	}
-		boss->Update();
+	boss->Update();
+	if (player->GetModel() != NULL)	boss->Moving(player->GetPosition());
+
 	for(Monster* monster:monsters )
-	{
+	{	
 		monster->Update();
+		if (player->GetModel() != NULL)
+		{
+			monster->Moving(player->GetPosition());
+		}
 	}
+	
 }
 
 void EnemyManager::Render()
@@ -45,7 +52,6 @@ void EnemyManager::Render()
 		}
 	}
 }
-
 
 void EnemyManager::AddMonster()
 {

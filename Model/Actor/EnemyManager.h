@@ -11,7 +11,6 @@ public:
 
 	void Update();
 	void Render();
-	void AddMonster(string Name);
 	void AddMonster();
 	void AddBoss();
 private:

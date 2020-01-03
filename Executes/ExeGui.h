@@ -4,7 +4,7 @@
 class ExeGui : public Execute
 {
 public:
-	ExeGui(ExecuteValues* values);
+	ExeGui();
 	~ExeGui();
 
 	void Update();

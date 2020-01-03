@@ -63,7 +63,7 @@ ZQuadTree::~ZQuadTree()
 }
 
 // 메모리에서 쿼드트리를 삭제한다.
-void	ZQuadTree::_Destroy()
+void ZQuadTree::_Destroy()
 {
 	// 자식 노드들을 소멸 시킨다.
 	for( int i = 0 ; i < 4 ; i++ ) SAFE_DELETE( m_pChild[i] );

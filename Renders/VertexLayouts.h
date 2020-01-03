@@ -85,6 +85,26 @@ struct VertexTextureNormal
 
 ////////////////////////////////////
 
+struct VertexTextureColor
+{
+	VertexTextureColor();
+	VertexTextureColor
+	(
+		D3DXVECTOR3 position
+		, D3DXVECTOR2 uv
+		, D3DXCOLOR color
+	);
+
+	D3DXVECTOR3 position;
+	D3DXVECTOR2 uv;
+	D3DXCOLOR color;
+
+	static D3D11_INPUT_ELEMENT_DESC desc[];
+	static UINT count;
+};
+
+////////////////////////////////////
+
 struct VertexColorTextureNormal
 {
 	VertexColorTextureNormal();

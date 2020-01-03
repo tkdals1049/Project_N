@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "MoModel.h"
 #include "MoMaterial.h"
 #include "MoModelMesh.h"

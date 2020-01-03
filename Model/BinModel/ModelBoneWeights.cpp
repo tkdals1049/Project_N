@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "ModelBoneWeights.h"
 
 const UINT ModelBoneWeights::MaxBonesPerVertex = 4;

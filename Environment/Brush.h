@@ -1,6 +1,5 @@
 #pragma once
 
-class Plane;
 class Brush
 {
 public:
@@ -27,7 +26,7 @@ private:
 		float bottom;
 		Box() { left = top = right = bottom = 0; }
 	};
-	friend Plane;
+	friend class Plane;
 	Plane* plane;
 
 	void AdjustHeight(Box* box);
@@ -41,7 +40,7 @@ private:
 	VertexType* vertex;
 	UINT* index;
 
-	UINT vertexCount,*indexCount;
+	UINT vertexCount;
 	UINT width;
 	UINT height;
 	UINT brushOn;

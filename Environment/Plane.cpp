@@ -38,20 +38,31 @@ Plane::Plane()
 	water=NULL;
 
 	//LoadHeightMap();
-	position = D3DXVECTOR3(-(float)width*Time::Get()->GetMagn() / 2, 0, -(float)height*Time::Get()->GetMagn() / 2);
+	position = D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 	CreateBuffer();
 }
 
 Plane::~Plane()
 {
-	SAFE_DELETE_ARRAY(vertex);
-	SAFE_DELETE_ARRAY(index);
+	for (int i = 0; i < 5; i++)
+	SAFE_DELETE(textures[i]);
+	SAFE_DELETE(sample);
+	SAFE_DELETE(loadThread);
 
 	SAFE_DELETE(worldBuffer);
+	SAFE_DELETE(planeBuffer);
+	SAFE_DELETE(clipBuffer);
 	SAFE_DELETE(shader);
 
 	SAFE_RELEASE(vertexBuffer);
 	SAFE_RELEASE(indexBuffer);
+
+	SAFE_DELETE_ARRAY(vertex);
+	SAFE_DELETE_ARRAY(index);
+
+	if (brush != NULL) SAFE_DELETE(brush);
+	if (water != NULL) SAFE_DELETE(water);
+	if (quadTree != NULL) SAFE_DELETE(quadTree);
 }
 
 void Plane::Update()
@@ -91,14 +102,17 @@ void Plane::Render()
 
 	if (ShaderManager::Get()->GetOther() != depth&& ShaderManager::Get()->GetOther() != shadow)
 	{
+		if(ShaderManager::Get()->GetOther() == minimap) planeBuffer->Data.isshadow = 0;
+		else  planeBuffer->Data.isshadow = 1;
+
 		for (int i = 0; i < 5; i++)
 		{
 			D3D::GetDC()->PSSetShaderResources(i, 1, &(textures[i]->texture));
 		}
 		D3D::GetDC()->PSSetShaderResources(5, 1, ShaderManager::Get()->GetResourceView(shadow));
-
+		
 		planeBuffer->SetPSBuffer(1);
-		clipBuffer->SetVSBuffer(2);
+		clipBuffer->SetVSBuffer(3);
 
 		shader->Render();
 
@@ -229,7 +243,8 @@ void Plane::UpdatePointBuffer(D3DXVECTOR3 origin, D3DXVECTOR3 direction)
 		brush->Update(origin,direction);
 		dot = brush->position;
 
-		D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x)*pow(2, number) / width * Time::Get()->GetMagn()), (float)((dot.y - position.z) * pow(2, number) / height * Time::Get()->GetMagn()), (float)brush->type, (float)brush->size);
+		D3DXVECTOR4 size = D3DXVECTOR4((float)((dot.x - position.x)*pow(2, number) / width), 
+		(float)((dot.y - position.z) * pow(2, number) / height ), (float)brush->type, (float)brush->size);
 		D3DXVECTOR4 point = D3DXVECTOR4((dot.x - position.x), (dot.y - position.z), dot.x, dot.y);
 		
 		planeBuffer->Data.Size=size;
@@ -273,7 +288,7 @@ void Plane::LoadHeightMap()
 	width--;
 	height--;
 
-	position = D3DXVECTOR3(-(float)width *Time::Get()->GetMagn() / 2, 0, -(float)height *Time::Get()->GetMagn() / 2);
+	position = D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 }
 
 void Plane::CreateBuffer()
@@ -287,10 +302,10 @@ void Plane::CreateBuffer()
 		{
 			int index = (width + 1) * z + x;
 
-			vertex[index].position.x = (float)x *Time::Get()->GetMagn() + position.x;
+			vertex[index].position.x = (float)x + position.x;
 			//vertex[index].position.y = (float)heightData[index] * size / 7.5f-5+ position.y;
-			vertex[index].position.y = 0.1f;
-			vertex[index].position.z = (float)z*Time::Get()->GetMagn() + position.z;
+			vertex[index].position.y = 0.0f;
+			vertex[index].position.z = (float)z + position.z;
 
 			vertex[index].uv.x = (float)(x);// (float)width;
 			vertex[index].uv.y = (float)(z);// (float)height;
@@ -356,7 +371,7 @@ void Plane::CreateBuffer()
 	brush = new Brush(this);
 
 	if (water != NULL) SAFE_DELETE(water);
-	water = new Water(width*(UINT)Time::Get()->GetMagn(),height*(UINT)Time::Get()->GetMagn());
+	water = new Water(width,height);
 
 	if(quadTree!=NULL) SAFE_DELETE(quadTree);
 	quadTree = new ZQuadTree(width, height);
@@ -407,7 +422,7 @@ void Plane::ChangeScale(int num)
 	isLoaded=true;
 	number=num;
 	width = height=(UINT)pow(2,num);
-	position=D3DXVECTOR3(-(float)width*Time::Get()->GetMagn() / 2, 0, -(float)height*Time::Get()->GetMagn() / 2);
+	position=D3DXVECTOR3(-(float)width / 2, 0, -(float)height / 2);
 	CreateBuffer();
 }
 

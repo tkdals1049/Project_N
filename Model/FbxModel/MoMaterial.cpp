@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "MoMaterial.h"
 #include "../BinModel/ModelMaterial.h"
 #include "../BinModel/ModelBuffer.h"

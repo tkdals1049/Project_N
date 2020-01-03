@@ -3,7 +3,7 @@
 class RenderTarget
 {
 public:
-	RenderTarget();
+	RenderTarget(DXGI_FORMAT format = DXGI_FORMAT_R32G32B32A32_FLOAT);
 	~RenderTarget();
 
 	ID3D11ShaderResourceView** GetResourceView()
@@ -12,7 +12,7 @@ public:
 	}
 
 	void SetTarget();
-	void Clear(D3DXCOLOR color = D3DXCOLOR(1, 1, 1, 1));
+	void Clear(D3DXCOLOR color = D3DXCOLOR(0xFF555566));
 
 	void SaveTexture(wstring file);
 

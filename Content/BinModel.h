@@ -15,14 +15,25 @@ class BinModel
 	private:
 
 	static BinModel* instance;
+
 	struct BinModelList
 	{
+		BinModelList(string file, string path)
+		{
+			this->file = file;
+			this->path = path;
+		}
+		~BinModelList()
+		{
+			file.clear();
+			path.clear();
+		}
 		string file;
 		string path;
 	};
 	 BinModel();
 	 void Search(string path);
 	 ~BinModel();
-	vector<BinModelList> binmodelList;
+	vector<BinModelList*> binmodelList;
 	const char** c_binmodelList;
 };

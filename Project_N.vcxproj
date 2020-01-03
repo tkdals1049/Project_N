@@ -21,13 +21,14 @@
   <ItemGroup>
     <ClCompile Include="Content\BinModel.cpp" />
     <ClCompile Include="Content\FbxModel.cpp" />
+    <ClCompile Include="Content\Test.cpp" />
     <ClCompile Include="Content\Texture.cpp" />
     <ClCompile Include="Environment\Brush.cpp" />
     <ClCompile Include="Environment\Cloud.cpp" />
-    <ClCompile Include="Environment\Mini.cpp" />
     <ClCompile Include="Environment\Plane.cpp" />
     <ClCompile Include="Environment\Sky.cpp" />
     <ClCompile Include="Environment\Water.cpp" />
+    <ClCompile Include="Executes\Execute.cpp" />
     <ClCompile Include="Executes\ExeGui.cpp" />
     <ClCompile Include="Executes\ExeModel.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -46,9 +47,8 @@
     <ClCompile Include="Model\BinModel\ModelSkeleton.cpp" />
     <ClCompile Include="Model\BinModel\ModelSkeletonBone.cpp" />
     <ClCompile Include="Model\Etc\Blood.cpp" />
-    <ClCompile Include="Model\Etc\Cube.cpp" />
-    <ClCompile Include="Model\Etc\Domain.cpp" />
     <ClCompile Include="Model\Etc\Look.cpp" />
+    <ClCompile Include="Model\Etc\Test.cpp" />
     <ClCompile Include="Model\Etc\Weapon.cpp" />
     <ClCompile Include="Model\FbxModel\MoAnimation.cpp" />
     <ClCompile Include="Model\FbxModel\MoAnimationController.cpp" />
@@ -75,8 +75,14 @@
     <ClCompile Include="Systems\D3D.cpp" />
     <ClCompile Include="Systems\Keyboard.cpp" />
     <ClCompile Include="Systems\Mouse.cpp" />
+    <ClCompile Include="Systems\MusicPlayer.cpp" />
     <ClCompile Include="Systems\Time.cpp" />
     <ClCompile Include="Systems\Window.cpp" />
+    <ClCompile Include="Ui\Bar.cpp" />
+    <ClCompile Include="Ui\Mini.cpp" />
+    <ClCompile Include="Ui\Screen.cpp" />
+    <ClCompile Include="Ui\Ui.cpp" />
+    <ClCompile Include="Ui\UiPart.cpp" />
     <ClCompile Include="Utilities\BinaryFile.cpp" />
     <ClCompile Include="Utilities\Mesh.cpp" />
     <ClCompile Include="Utilities\Path.cpp" />
@@ -94,11 +100,10 @@
   <ItemGroup>
     <ClInclude Include="Content\BinModel.h" />
     <ClInclude Include="Content\FbxModel.h" />
+    <ClInclude Include="Content\Test.h" />
     <ClInclude Include="Content\Texture.h" />
     <ClInclude Include="Environment\Brush.h" />
-    <ClInclude Include="Environment\BrushBuffer.h" />
     <ClInclude Include="Environment\Cloud.h" />
-    <ClInclude Include="Environment\Mini.h" />
     <ClInclude Include="Environment\Plane.h" />
     <ClInclude Include="Environment\Sky.h" />
     <ClInclude Include="Environment\Water.h" />
@@ -123,9 +128,8 @@
     <ClInclude Include="Model\BinModel\ModelSkeleton.h" />
     <ClInclude Include="Model\BinModel\ModelSkeletonBone.h" />
     <ClInclude Include="Model\Etc\Blood.h" />
-    <ClInclude Include="Model\Etc\Cube.h" />
-    <ClInclude Include="Model\Etc\Domain.h" />
     <ClInclude Include="Model\Etc\Look.h" />
+    <ClInclude Include="Model\Etc\Test.h" />
     <ClInclude Include="Model\Etc\Weapon.h" />
     <ClInclude Include="Model\FbxModel\MoAnimation.h" />
     <ClInclude Include="Model\FbxModel\MoAnimationController.h" />
@@ -152,8 +156,14 @@
     <ClInclude Include="Systems\D3D.h" />
     <ClInclude Include="Systems\Keyboard.h" />
     <ClInclude Include="Systems\Mouse.h" />
+    <ClInclude Include="Systems\MusicPlayer.h" />
     <ClInclude Include="Systems\Time.h" />
     <ClInclude Include="Systems\Window.h" />
+    <ClInclude Include="Ui\Bar.h" />
+    <ClInclude Include="Ui\Mini.h" />
+    <ClInclude Include="Ui\Screen.h" />
+    <ClInclude Include="Ui\Ui.h" />
+    <ClInclude Include="Ui\UiPart.h" />
     <ClInclude Include="Utilities\BinaryFile.h" />
     <ClInclude Include="Utilities\Mesh.h" />
     <ClInclude Include="Utilities\Path.h" />
@@ -221,8 +231,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DH);C:\DirectX9\Include</IncludePath>
-    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DL);C:\DirectX9\Lib\x86</LibraryPath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(DH)</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86;$(DL);</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>

@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "CameraManager.h"
 #include "Camera.h"
 #include "Perspective.h"
@@ -21,6 +21,10 @@ void CameraManager::Delete()
 
 CameraManager::CameraManager():isAuto(false),isRe(false)
 {
+	D3DDesc Windesc;
+	D3D::GetDesc(&Windesc);
+	SetScreenSize(D3DXVECTOR2(Windesc.Width, Windesc.Height));
+
 }
 
 
@@ -100,9 +104,6 @@ D3DXMATRIX CameraManager::RenderReflection(float depth, D3DXVECTOR3 normal)
 	D3DXVec3TransformCoord(&up, &D3DXVECTOR3(0, 1, 0), &rotation);
 
 	D3DXMatrixLookAtLH(&view, &position, &(position + forward), &up);
-
-	VPbuffer->SetView(view);
-	VPbuffer->SetVSBuffer(0);
 	
 	isRe = true;
 	RePosition = position;
@@ -116,6 +117,24 @@ void CameraManager::SetViewProjection(D3DXMATRIX view, D3DXMATRIX projection)
 	VPbuffer->SetView(view);
 	VPbuffer->SetProjection(projection);
 	VPbuffer->SetVSBuffer(0);
+}
+
+void CameraManager::SetScreenCamera()
+{
+	VPbuffer->SetView(ScreenView);
+	VPbuffer->SetProjection(ScreenPer);
+	VPbuffer->SetVSBuffer(0);
+}
+
+void CameraManager::SetScreenSize(D3DXVECTOR2 size)
+{
+	D3DXMatrixIdentity(&ScreenView);
+	D3DXMatrixOrthoOffCenterLH(
+		&ScreenPer
+		, 0, size.x
+		, 0, size.y
+		, 0, 1
+	);
 }
 
 void CameraManager::DefaultCamera() 

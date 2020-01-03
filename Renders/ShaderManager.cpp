@@ -1,5 +1,4 @@
-
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "ShaderManager.h"
 
 ShaderManager* ShaderManager::instance = NULL;
@@ -18,14 +17,16 @@ void ShaderManager::Delete()
 
 ShaderManager::ShaderManager():isOther(none)
 {
-	RenderTarget* render = new RenderTarget();
-	renders.push_back(render);
-	RenderTarget* render2 = new RenderTarget();
-	renders.push_back(render2);
-	RenderTarget* render3 = new RenderTarget();
-	renders.push_back(render3);
-	RenderTarget* render4 = new RenderTarget();
-	renders.push_back(render4);
+	for (int i = 0; i < 6; i++)
+	{
+		RenderTarget* render;
+		
+		if (i>1) render = new RenderTarget(DXGI_FORMAT_R8G8B8A8_UNORM);
+		else render = new RenderTarget();
+			
+		renders.push_back(render);
+	}
+
 	Shader*	shader = new Shader(Shaders + L"LightDepthShader.hlsl");
 	shaders.push_back(shader);
 	Shader*	shader2 = new Shader(Shaders + L"Shadow.hlsl");
@@ -57,15 +58,24 @@ void ShaderManager::Update()
 void ShaderManager::PreRender(RenderMode isOther)
 {
 	this->isOther = isOther;
-	if (isOther == none) { return; }
-	else if (isOther == depth)
-	{
-		//CameraManager::Get()->SetViewProjection(view, projection);
-	}
+	if (isOther == none) return;
 	else if (isOther == reflect) 
 	{
 		D3DXVECTOR3 position = CameraManager::Get()->GetPosition();
-		mirrorView=CameraManager::Get()->RenderReflection(position.y +2);
+		mirrorView = CameraManager::Get()->RenderReflection(position.y + 2);
+		CameraManager::Get()-> SetViewProjection(mirrorView,CameraManager::Get()->GetProj());
+	}
+	else if (isOther == minimap)
+	{
+		static float size = 0;
+		static D3DXMATRIX view, projection;
+		if (size != (float)Plane::Get()->GetWidth())
+		{
+			size = (float)Plane::Get()->GetWidth();
+			D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0, 300, 0), &D3DXVECTOR3(0, 299, 0), &D3DXVECTOR3(0, 0, 1));
+			D3DXMatrixOrthoLH(&projection, size, size, 0.1f,1000.0f);
+		}
+		CameraManager::Get()->SetViewProjection(view, projection);
 	}
 	renders[isOther]->SetTarget();
 	renders[isOther]->Clear();

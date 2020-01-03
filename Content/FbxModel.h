@@ -16,12 +16,22 @@ class FbxModel
 	static FbxModel* instance;
 	struct FbxModelList
 	{
+		FbxModelList(string file, string path)
+		{
+			this->file = file;
+			this->path = path;
+		}
+		~FbxModelList()
+		{
+			file.clear();
+			path.clear();
+		}
 		string file;
 		string path;
 	};
 	 FbxModel();
 	 void Search(string path);
 	 ~FbxModel();
-	vector<FbxModelList> fbxmodelList;
+	vector<FbxModelList*> fbxmodelList;
 	const char** c_fbxmodelList;
 };

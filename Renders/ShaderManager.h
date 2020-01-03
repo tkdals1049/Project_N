@@ -1,6 +1,6 @@
 #pragma once
 
-	enum RenderMode{none=-1,depth =0,shadow,reflect,reflact};
+	enum RenderMode{none=-1,depth =0,shadow,reflect,reflact,minimap,screen};
 class ShaderManager{
 public:
 	static ShaderManager* Get();

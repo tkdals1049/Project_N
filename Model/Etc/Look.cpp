@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "Look.h"
 #include "../../Utilities/Mesh.h"
 
@@ -7,22 +7,33 @@ Look::Look()
 
 	shader = new Shader(Shaders + L"Look.hlsl");
 	worldBuffer = new WorldBuffer();
+
 	D3DXMatrixIdentity(&world);
 	D3DXMatrixScaling(&scale, 500, 500, 500);
 	worldBuffer->SetMatrix(scale* world);
 	D3DXMatrixIdentity(&view);
 	D3DXMatrixLookAtLH(&view, &D3DXVECTOR3(0,0,0), &D3DXVECTOR3(0,0,1), &D3DXVECTOR3(0, 1, 0));
 	D3DXMatrixPerspectiveFovLH(&proj, (float)D3DX_PI /3, 1.0f, 0.1f, 100.0f);
+
 	Make();
 	CreateBuffer();
+	lookbuffer = new LookBuffer();
+
 	ZeroMemory(m_vtx, sizeof(m_vtx[0]) * 8);
 	ZeroMemory(m_plane, sizeof(m_plane[0]) * 6);
 }
 
 Look::~Look()
 {
-	SAFE_DELETE(index);
-	SAFE_DELETE(vertex);
+	SAFE_DELETE(shader);
+	SAFE_DELETE(lookbuffer);
+	SAFE_DELETE(worldBuffer);
+
+	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(indexBuffer);
+
+	SAFE_DELETE_ARRAY(index);
+	SAFE_DELETE_ARRAY(vertex);
 }
 
 void Look::PreUpdate()
@@ -43,9 +54,10 @@ void Look::Render()
 
 	dc->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	dc->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
-	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	dc->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 
 	worldBuffer->SetVSBuffer(1);
+	lookbuffer->SetPSBuffer(0);
 
 	shader->Render();
 
@@ -61,6 +73,8 @@ void Look::SetWorld(D3DXMATRIX world)
 	D3DXVec3TransformCoord(&forward, &D3DXVECTOR3(1, 0, 0), &world);
 	D3DXMatrixLookAtLH(&view, &pos, &forward, &D3DXVECTOR3(0, 1, 0));
 	Make();
+
+	lookbuffer->SetColor(D3DXCOLOR(0, 0, 0, 1));
 }
 
 // 카메라(view) * 프로젝션(projection)행렬을 입력받아 6개의 평면을 만든다.
@@ -111,7 +125,10 @@ BOOL Look::IsIn(const D3DXVECTOR3* pv)
 	for (int i = 0; i < 6; i++)
 	{
 		fDist = D3DXPlaneDotCoord(&m_plane[i], pv);
-		if (fDist > PLANE_EPSILON) return FALSE;
+		if (fDist > PLANE_EPSILON) 
+		{
+			return FALSE;
+		}
 	}
 	return TRUE;
 }
@@ -139,10 +156,8 @@ void Look::CreateBuffer()
 	vertex[3].position = D3DXVECTOR3(height, -1, 1);
 	vertex[4].position = D3DXVECTOR3(height, 1, 1);
 
-	for (int i = 0; i < (int)vertexCount; i++) vertex[i].color = D3DXCOLOR(0, 0, 0, 1);
-
-	indexCount = (vertexCount + 1) * 3;
-	index = new UINT[indexCount]{0,1,2,0,2,4,0,4,3,0,3,1,1,3,2,2,3,4};
+	indexCount = 8*2;
+	index = new UINT[indexCount]{0,1,0,2,0,3,0,4,1,2,1,3,4,2,4,3};
 
 	D3D11_BUFFER_DESC desc = { 0 };
 	desc.Usage = D3D11_USAGE_DEFAULT;
@@ -167,4 +182,9 @@ void Look::CreateBuffer()
 
 	hr = D3D::GetDevice()->CreateBuffer(&desc, &data, &indexBuffer);
 	assert(SUCCEEDED(hr));
+}
+
+void Look::ChangeColor()
+{
+	lookbuffer->SetColor(D3DXCOLOR(1, 0, 0, 1));
 }

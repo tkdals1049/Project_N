@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "MoSkeletonBone.h"
 #include "MoKeyFrame.h"
 #include "../BinModel/ModelSkeletonBone.h"

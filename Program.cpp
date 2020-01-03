@@ -8,10 +8,15 @@
 
 Program::Program()
 {
-	States::Create();
+	States::Create(); 
+	ZFrustum::Get();
+	CameraManager::Get();
+	LightManager::Get();
+	Plane::Get();
+	Sky::Get();
 
 	D3DDesc desc;
-	D3D::GetDesc(&desc);
+	D3D::GetDesc(&desc); 
 
 	values = new ExecuteValues();
 	values->GlobalLight = new GlobalLightBuffer();
@@ -20,15 +25,13 @@ Program::Program()
 	values->Viewport = new Viewport(desc.Width, desc.Height);
 	values->MainCamera = new FirstPerson();
 	values->MainCamera->SetPosition(0, 10, -20);
+	LightManager::Get()->SetBuffer(values->GlobalLight);
 	
 	CameraManager::Get()->SetPlayerCamera(values->MainCamera);
 	CameraManager::Get()->SetViewProjectionBuffer(values->ViewProjection);
 	CameraManager::Get()->SetPerspective(values->Perspective);
-
-	LightManager::Get()->SetBuffer(values->GlobalLight);
 	
-	executes.push_back(new ExeModel(values));
-	executes.push_back(new ExeGui(values));
+	executes.push_back(new ExeModel());
 }
 
 Program::~Program()
@@ -42,25 +45,30 @@ Program::~Program()
 	SAFE_DELETE(values->MainCamera);
 	SAFE_DELETE(values->Viewport);
 	SAFE_DELETE(values);
-	
+
+	CameraManager::Delete();
+	ZFrustum::Delete();
 	States::Delete();
+	LightManager::Delete();
+	Plane::Delete();
+	Sky::Delete();
 }
 
 void Program::Update()
 {
 	values->MainCamera->Update();
-
+	
 	D3DXMATRIX view, projection;
 	values->MainCamera->GetMatrix(&view);
 	values->Perspective->GetMatrix(&projection);
 	ZFrustum::Get()->Make(&(view*projection));
-
+	
 	values->ViewProjection->SetView(view);
 	values->ViewProjection->SetProjection(projection);
 	values->ViewProjection->SetVSBuffer(0);
-
+	
 	LightManager::Get()->Update();
-	values->GlobalLight->SetVSBuffer(3);
+	values->GlobalLight->SetVSBuffer(2);
 
 	for (Execute* exe : executes)
 		exe->Update();
@@ -68,8 +76,6 @@ void Program::Update()
 
 void Program::PreRender()
 {
-
-
 	for (Execute* exe : executes)
 		exe->PreRender();
 }

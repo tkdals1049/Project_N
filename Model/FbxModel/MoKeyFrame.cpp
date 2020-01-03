@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "MoKeyFrame.h"
 #include "../BinModel/ModelAnimationKeyFrames.h"
 

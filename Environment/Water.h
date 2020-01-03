@@ -19,7 +19,6 @@ public:
 	Struct Data;
 };
 
-class WaveBuffer;
 class Water
 {
 public:
@@ -38,7 +37,7 @@ private:
 	Shader* shader;
 
 	WorldBuffer* worldBuffer;
-	WaveBuffer* waveBuffer;
+	class WaveBuffer* waveBuffer;
 	ReflectBuffer* reflectBuffer;
 	ID3D11ShaderResourceView* normalMap;
 

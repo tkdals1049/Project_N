@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "ModelAnimation.h"
 
 ModelAnimation::ModelAnimation() 

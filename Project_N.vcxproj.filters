@@ -23,13 +23,13 @@
       <Filter>Executes</Filter>
     </ClCompile>
     <ClCompile Include="Renders\Shader.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Renders\States.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Renders\VertexLayouts.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Systems\D3D.cpp">
       <Filter>Systems</Filter>
@@ -163,12 +163,6 @@
     <ClCompile Include="Model\Etc\Blood.cpp">
       <Filter>Model\Etc</Filter>
     </ClCompile>
-    <ClCompile Include="Model\Etc\Cube.cpp">
-      <Filter>Model\Etc</Filter>
-    </ClCompile>
-    <ClCompile Include="Model\Etc\Domain.cpp">
-      <Filter>Model\Etc</Filter>
-    </ClCompile>
     <ClCompile Include="Model\Etc\Weapon.cpp">
       <Filter>Model\Etc</Filter>
     </ClCompile>
@@ -176,12 +170,9 @@
       <Filter>Viewer\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Renders\RenderTarget.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Environment\Water.cpp">
-      <Filter>Environment</Filter>
-    </ClCompile>
-    <ClCompile Include="Environment\Mini.cpp">
       <Filter>Environment</Filter>
     </ClCompile>
     <ClCompile Include="Environment\Cloud.cpp">
@@ -191,12 +182,37 @@
       <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Renders\LightManager.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Renders\ShaderManager.cpp">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClCompile>
     <ClCompile Include="Model\Etc\Look.cpp">
+      <Filter>Model\Etc</Filter>
+    </ClCompile>
+    <ClCompile Include="Systems\MusicPlayer.cpp">
+      <Filter>Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Mini.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Ui.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\UiPart.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Screen.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Ui\Bar.cpp">
+      <Filter>Ui</Filter>
+    </ClCompile>
+    <ClCompile Include="Content\Test.cpp">
+      <Filter>Content</Filter>
+    </ClCompile>
+    <ClCompile Include="Executes\Execute.cpp" />
+    <ClCompile Include="Model\Etc\Test.cpp">
       <Filter>Model\Etc</Filter>
     </ClCompile>
   </ItemGroup>
@@ -225,13 +241,13 @@
       <Filter>Executes</Filter>
     </ClInclude>
     <ClInclude Include="Renders\Shader.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Renders\States.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Renders\VertexLayouts.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Systems\D3D.h">
       <Filter>Systems</Filter>
@@ -276,9 +292,6 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Environment\Brush.h">
-      <Filter>Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Environment\BrushBuffer.h">
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="Environment\Plane.h">
@@ -377,12 +390,6 @@
     <ClInclude Include="Model\Etc\Blood.h">
       <Filter>Model\Etc</Filter>
     </ClInclude>
-    <ClInclude Include="Model\Etc\Cube.h">
-      <Filter>Model\Etc</Filter>
-    </ClInclude>
-    <ClInclude Include="Model\Etc\Domain.h">
-      <Filter>Model\Etc</Filter>
-    </ClInclude>
     <ClInclude Include="Model\Etc\Weapon.h">
       <Filter>Model\Etc</Filter>
     </ClInclude>
@@ -390,15 +397,12 @@
       <Filter>Viewer\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Renders\RenderTarget.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Environment\Water.h">
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="Environment\WaveBuffer.h">
-      <Filter>Environment</Filter>
-    </ClInclude>
-    <ClInclude Include="Environment\Mini.h">
       <Filter>Environment</Filter>
     </ClInclude>
     <ClInclude Include="Environment\Cloud.h">
@@ -408,12 +412,36 @@
       <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="Renders\LightManager.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Renders\ShaderManager.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </ClInclude>
     <ClInclude Include="Model\Etc\Look.h">
+      <Filter>Model\Etc</Filter>
+    </ClInclude>
+    <ClInclude Include="Systems\MusicPlayer.h">
+      <Filter>Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\Mini.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\Ui.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\UiPart.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\Screen.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Ui\Bar.h">
+      <Filter>Ui</Filter>
+    </ClInclude>
+    <ClInclude Include="Content\Test.h">
+      <Filter>Content</Filter>
+    </ClInclude>
+    <ClInclude Include="Model\Etc\Test.h">
       <Filter>Model\Etc</Filter>
     </ClInclude>
   </ItemGroup>
@@ -436,9 +464,6 @@
     <Filter Include="Model\FbxModel">
       <UniqueIdentifier>{b62eac4c-6323-482c-8385-2a0cd12f99c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Renders">
-      <UniqueIdentifier>{9dc38050-b25b-49c1-97e6-427272d67cf7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Utilities">
       <UniqueIdentifier>{a78e6631-51c9-469e-8a74-6ba82de2c333}</UniqueIdentifier>
     </Filter>
@@ -460,13 +485,19 @@
     <Filter Include="Systems">
       <UniqueIdentifier>{93f6c792-926b-4d1e-a752-4dfc96f735f4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Ui">
+      <UniqueIdentifier>{0686a8c0-6aaf-46ee-8a7c-21d81fcf45ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\Renders">
+      <UniqueIdentifier>{9dc38050-b25b-49c1-97e6-427272d67cf7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Renders\ShaderBuffer.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </None>
     <None Include="Renders\GlobalBuffers.h">
-      <Filter>Renders</Filter>
+      <Filter>Model\Renders</Filter>
     </None>
   </ItemGroup>
 </Project>

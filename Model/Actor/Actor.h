@@ -1,11 +1,10 @@
 #pragma once
 
-class Model;
 class Actor
 {
 public:
 	Actor();
-	~Actor();
+	virtual ~Actor();
 
 	void PreUpdate(D3DXVECTOR3 origin, D3DXVECTOR3 direction);
 	void Update();
@@ -33,10 +32,10 @@ public:
 	bool CalSkeleton(ST_OBB * enemy);
 	void CalMatrix(ST_OBB* box, D3DXVECTOR3 max, D3DXVECTOR3 min, D3DXVECTOR3 size, D3DXMATRIX mat);
 
+	float hp,st;
 protected:
-	class Camera* camera;
+	//class Blood* blood;
 	class Blood* blood;
-
 	BOOL CheckOBBCollision(ST_OBB * Box1, ST_OBB * Box2);
 	
 	Model* model;
@@ -51,7 +50,6 @@ private:
 	bool OnModel;
 	string SaveFile;
 
-	float a;
 	float c_temp1[3];
 	float c_temp2[3];
 	float c_temp3[3];

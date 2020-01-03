@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "Weapon.h"
 #include "../Actor/Actor.h"
 #include "../BinModel/Model.h"
@@ -18,11 +18,13 @@ equipName(equipName), equipName2(equipName2), unequipName(unequipName)
 Weapon::~Weapon()
 {
 	for (size_t i = 0; i <weapons.size(); i++)
-	for (size_t i = 0; i <weapons.size(); i++)
 		SAFE_DELETE(weapons[i].second);
-
-	SAFE_DELETE(index);
-	SAFE_DELETE(vertex);
+	SAFE_DELETE(shader);
+	SAFE_DELETE(worldBuffer);
+	SAFE_RELEASE(vertexBuffer);
+	SAFE_RELEASE(indexBuffer);
+	SAFE_DELETE_ARRAY(index);
+	SAFE_DELETE_ARRAY(vertex);
 }
 
 void Weapon::PreUpdate()
@@ -197,7 +199,7 @@ void Weapon::EffectRender()
 	{
 		dc->DrawIndexed(count*6, 0, 0);
 	}
-	//States::SetBlendOff();
+	States::SetBlendOff();
 	States::SetDepthStencilDefault();
 }
 

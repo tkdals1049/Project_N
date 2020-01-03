@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "Texture.h"
 
 Texture * Texture::instance = NULL;
@@ -23,9 +23,19 @@ Texture::Texture()
 	c_texturelist = new const char*[textureList.size()];
 	for (size_t i = 0; i < textureList.size(); i++) 
 	{
-		c_texturelist[i] = new char[textureList[i].file.size() + 1];
-		strcpy_s((char*)c_texturelist[i], textureList[i].file.size() + 1,textureList[i].file.c_str());
+		c_texturelist[i] = new char[textureList[i]->file.size() + 1];
+		strcpy_s((char*)c_texturelist[i], textureList[i]->file.size() + 1,textureList[i]->file.c_str());
 	}
+}
+
+Texture::~Texture()
+{
+	for (size_t i = 0; i < textureList.size(); i++)
+	{
+		SAFE_DELETE(c_texturelist[i]);
+		SAFE_DELETE(textureList[i]);
+	}
+	SAFE_DELETE_ARRAY(c_texturelist);
 }
 
 void Texture::Search(string path)
@@ -47,9 +57,7 @@ void Texture::Search(string path)
 			{
 				if (strstr(fd.name, ".")!=NULL)
 				{
-					TextureList list;
-					list.file=name;
-					list.path=path + "\\" +name;
+					TextureList* list=new TextureList(name,path + "\\" +name);
 					textureList.push_back(list);
 				}
 				else
@@ -58,40 +66,41 @@ void Texture::Search(string path)
 				}
 			}
 		}
-
 		result = _findnext(handle, &fd);
 	}
 	_findclose(handle);
+}
 
-}
-Texture::~Texture()
-{
-}
 string Texture::GetTexturePath(int num)
 {
-	return textureList[num].path;
+	return textureList[num]->path;
 }
 string Texture::Convert(string file)
 {
-	for each(TextureList temp in textureList)
+	for each(TextureList* temp in textureList)
 	{
-		if (file == temp.file)
-			return temp.path;
+		if (file == temp->file)
+			return temp->path;
 	}
 
 	return NULL;
 }
 
 void Texture::Refresh()
-{	
-	textureList.clear();
+{
+for (size_t i = 0; i < textureList.size(); i++)
+{
+	SAFE_DELETE_ARRAY(c_texturelist[i]);
+	SAFE_DELETE(textureList[i]);
+}
+SAFE_DELETE_ARRAY(c_texturelist);
 	Search("..\\_Contents\\Textures\\Diffuse");
 
 	c_texturelist = new const char*[textureList.size()];
 	for (size_t i = 0; i < textureList.size(); i++) 
 	{
-		c_texturelist[i] = new char[textureList[i].file.size() + 1];
-		strcpy_s((char*)c_texturelist[i], textureList[i].file.size() + 1, textureList[i].file.c_str());
+		c_texturelist[i] = new char[textureList[i]->file.size() + 1];
+		strcpy_s((char*)c_texturelist[i], textureList[i]->file.size() + 1, textureList[i]->file.c_str());
 	}
 }
 void Texture::LoadTexture(wstring fileName, ID3D11Texture2D** texture)

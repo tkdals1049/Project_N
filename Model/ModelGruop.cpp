@@ -1,4 +1,4 @@
-#include "../stdafx.h"
+#include "stdafx.h"
 #include "ModelGroup.h"
 
 #include "./BinModel/Model.h"
@@ -29,6 +29,9 @@ ModelGroup::ModelGroup():dot(D3DXVECTOR2(0,0)),a(0.0f)
 
 ModelGroup::~ModelGroup()
 {
+	SAFE_DELETE(player);
+	SAFE_DELETE(enemy);
+
 	SAFE_DELETE(attitude);
 	SAFE_DELETE(another);
 	SAFE_DELETE(model);

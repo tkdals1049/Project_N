@@ -8,8 +8,7 @@ void Shader::Render()
 	D3D::GetDC()->PSSetShader(pixelShader, NULL, 0);
 }
 
-Shader::Shader(wstring shaderFile)
-	: shaderFile(shaderFile)
+Shader::Shader(wstring shaderFile):shaderFile(shaderFile)
 {
 	CreateVertexShader();
 	CreatePixelShader();

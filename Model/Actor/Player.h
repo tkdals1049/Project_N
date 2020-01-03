@@ -1,5 +1,4 @@
 #pragma once
-#include "Actor.h"
 
 class Player:public Actor
 {
@@ -15,7 +14,6 @@ public:
 	void Input(string mode);
 	
 	void SetPlayer();
-	float SetHeight();
 
 	void AddWeapon(Model * weaponFile, D3DXVECTOR3 scale);
 	void ClearWeapon();

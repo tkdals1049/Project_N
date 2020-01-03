@@ -1,5 +1,23 @@
 #pragma once
 
+class LookBuffer : public ShaderBuffer
+{
+public:
+	LookBuffer() : ShaderBuffer(&Data, sizeof(Struct))
+	{
+		Data.color = D3DXCOLOR(0, 0, 0, 1);
+	}
+	void SetColor(D3DXCOLOR& color)
+	{
+		Data.color = color;
+	}
+	struct Struct
+	{
+		D3DXCOLOR color;
+	};
+	Struct Data;
+};
+
 #define PLANE_EPSILON	5.0f
 class Look
 {
@@ -22,10 +40,12 @@ public:
 	void Render();;
 	void CreateBuffer();
 
+	void ChangeColor();
+
 	void SetWorld(D3DXMATRIX world);
 private:
 	//π´±‚ ¿Ã∆Â∆Æ Ω¶¿Ã¥ı
-	typedef VertexColor VertexType;
+	typedef Vertex VertexType;
 	Shader* shader;
 
 	VertexType* vertex;
@@ -35,6 +55,8 @@ private:
 	ID3D11Buffer* indexBuffer;
 	UINT vertexCount;
 	UINT indexCount;
+
+	LookBuffer* lookbuffer;
 
 	WorldBuffer* worldBuffer;
 	D3DXMATRIX world,view,proj,scale;

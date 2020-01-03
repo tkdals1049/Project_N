@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "ModelMesh.h"
 #include "Model.h"
 #include "ModelMaterial.h"
@@ -30,7 +30,7 @@ void ModelMesh::Update()
 	matGeometricOffset = model->GetGeometricOffset();
 	world = model->GetWorld();
 	worldBuffer->SetMatrix(matGeometricOffset*world);
-	//CreateNormalData();
+	CreateNormalData();
 }
 
 void ModelMesh::Render()

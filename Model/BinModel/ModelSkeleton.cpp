@@ -1,4 +1,4 @@
-#include "../../stdafx.h"
+#include "stdafx.h"
 #include "ModelSkeleton.h"
 #include "ModelSkeletonBone.h"
 #include "ModelAnimation.h"

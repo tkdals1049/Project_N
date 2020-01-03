@@ -68,9 +68,8 @@ void D3D::ResizeScreen(float width, float height)
 		assert(SUCCEEDED(hr));
 	}
 	CreateBackBuffer(width, height);
-	//이 함수를 쓰기 위해서 백버퍼를 조정해야한다.
-	//백버퍼- 텍스쳐, 어떤거 렌더타겟, 뎁스 스텐시 뷰
-	//위의 괄호에서 지워서 넣을 수 있게하고 크리에이트로 새로 만든다.
+	CameraManager::Get()->SetScreenSize(D3DXVECTOR2(width, height));
+	Ui::Get()->SetScreenSize();
 }
 
 D3D::D3D()
@@ -82,7 +81,6 @@ D3D::D3D()
 	CreateSwapChainAndDevice();
 	CreateBackBuffer(d3dDesc.Width, d3dDesc.Height);
 }
-
 D3D::~D3D()
 {
 	DeleteBackBuffer();
@@ -152,7 +150,6 @@ void D3D::SetGpuInfo()
 	gpuDescription = adapterDesc.Description;
 	
 	SAFE_DELETE_ARRAY(displayModeList);
-
 	
 	SAFE_RELEASE(adapterOutput);
 	SAFE_RELEASE(adapter);
@@ -251,6 +248,7 @@ void D3D::CreateBackBuffer(float width, float height)
 
 		SetRenderTarget(renderTargetView, depthStencilView);
 	}
+
 }
 
 void D3D::DeleteBackBuffer()
